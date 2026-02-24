@@ -589,9 +589,13 @@ function selectProduct(key) {
 
   zoomToTarget(key);
   highlightProduct(key);
+
+  /* Animate leverage slider to 8x when selecting Multiply */
+  if (key === 'multiply') animateLeverage(8, 1200);
 }
 
 function resetProduct() {
+  const wasMultiply = activeProduct === 'multiply';
   activeProduct = null;
   productSubtitle.classList.remove('active');
   productSubtitle.classList.remove('selected');
@@ -599,6 +603,7 @@ function resetProduct() {
   terminalEl.style.transform = 'none';
   terminalEl.classList.remove('zoomed-stream', 'zoomed-firepower', 'zoomed-multiply');
   productsEl.classList.remove('zoomed');
+  if (wasMultiply) animateLeverage(2, 600);
   tabs.forEach(t => t.classList.remove('active'));
   tabGroups.forEach(g => {
     g.classList.remove('active');
@@ -656,9 +661,16 @@ function unhoverProduct() {
 }
 
 tabs.forEach(tab => {
-  tab.addEventListener('click', () => selectProduct(tab.dataset.product));
+  tab.addEventListener('click', e => { e.stopPropagation(); selectProduct(tab.dataset.product); });
   tab.addEventListener('mouseenter', () => hoverProduct(tab.dataset.product));
   tab.addEventListener('mouseleave', () => unhoverProduct());
+});
+
+// Click blank space in products section to reset
+productsEl.addEventListener('click', e => {
+  if (!activeProduct) return;
+  if (e.target.closest('.product-tab, .tab-desc')) return;
+  resetProduct();
 });
 
 
@@ -1000,7 +1012,7 @@ window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer
 
 // ── Leverage slider ─────────────────────────────────────────────────────────
 (function () {
-  const MIN = 1, MAX = 10, DEFAULT = 6;
+  const MIN = 1, MAX = 10, DEFAULT = 2;
   const sectionEl = document.getElementById('leverageSection');
   const trackEl  = document.getElementById('leverageTrack');
   const fillEl   = document.getElementById('leverageFill');
@@ -1095,6 +1107,46 @@ window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer
   }, { passive: false });
   window.addEventListener('touchmove',  e => { if (dragging) onMove(e.touches[0].clientX); }, { passive: true });
   window.addEventListener('touchend',   () => { dragging = false; });
+
+  // Expose method to smoothly animate leverage fill/thumb to a target value
+  window.animateLeverage = function(target, duration) {
+    duration = duration || 800;
+    const from = currentLev;
+    if (from === target) return;
+    const fromPct = dotPct(from);
+    const toPct = dotPct(target);
+    const t0 = performance.now();
+    /* Add CSS transition to fill + thumb for buttery smooth movement */
+    fillEl.style.transition = `width ${duration}ms cubic-bezier(.25,.1,.25,1)`;
+    thumbEl.style.transition = `left ${duration}ms cubic-bezier(.25,.1,.25,1)`;
+    /* Set target position — CSS transition handles the glide */
+    fillEl.style.width = toPct + '%';
+    thumbEl.style.left = toPct + '%';
+    /* Step through integer values for the label + stats updates */
+    const steps = Math.abs(target - from);
+    const dir = target > from ? 1 : -1;
+    (function tick(now) {
+      const elapsed = now - t0;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = progress < 1 ? progress * (2 - progress) : 1; /* ease-out */
+      const lev = Math.round(from + eased * steps * dir);
+      if (lev !== currentLev && lev >= MIN && lev <= MAX) {
+        currentLev = lev;
+        valueEl.textContent = lev + 'x';
+        dotEls.forEach((dot, i) => { dot.style.opacity = i < lev ? '0' : ''; });
+        if (lev > 1) {
+          sharesEl.textContent = Math.round((1000 * lev) / 0.33).toLocaleString();
+          posEl.textContent = '$' + (1000 * lev).toLocaleString();
+          liqEl.textContent = '¢' + Math.max(1, Math.round(100 / lev * 0.78));
+        }
+      }
+      if (progress < 1) requestAnimationFrame(tick);
+      else {
+        fillEl.style.transition = '';
+        thumbEl.style.transition = '';
+      }
+    })(t0);
+  };
 
   // Initialise to default
   updateUI(DEFAULT);
