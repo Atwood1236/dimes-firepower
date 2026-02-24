@@ -91,7 +91,7 @@
 
   /* Tabs + subtitle (vertical side tabs) */
   .product-tab{padding:10px 24px;border-radius:100px;font-size:14px;font-weight:500;color:var(--text-dim);background:var(--bg);border:1px solid rgba(255,255,255,.06);cursor:pointer;transition:all .4s;font-family:var(--font);position:relative;width:100%;text-align:center;white-space:nowrap}
-  .product-tab:hover{color:var(--text);border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.03)}
+  .product-tab:hover,.product-tab.hovered{color:var(--text);border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.03)}
   .product-tab.active{color:var(--yellow);font-weight:700;font-size:28px;background:transparent;border:none;text-align:left;padding-left:0;padding-right:0}
   .product-tabs-side{display:flex;flex-direction:column;gap:10px;align-items:stretch;width:196px;z-index:10;position:absolute;top:100px;right:220px}
   .tab-group{display:flex;flex-direction:column;align-items:stretch}
@@ -658,12 +658,34 @@ function unhoverProduct() {
   if (activeProduct) return;
   productSubtitle.classList.remove('active');
   unhighlightProduct();
+  tabs.forEach(t => t.classList.remove('hovered'));
 }
 
 tabs.forEach(tab => {
   tab.addEventListener('click', e => { e.stopPropagation(); selectProduct(tab.dataset.product); });
   tab.addEventListener('mouseenter', () => hoverProduct(tab.dataset.product));
   tab.addEventListener('mouseleave', () => unhoverProduct());
+});
+
+// Hover on terminal sections highlights the corresponding tab + ring
+hlEls.forEach(el => {
+  el.style.cursor = 'pointer';
+  el.addEventListener('mouseenter', () => {
+    if (activeProduct) return;
+    const key = el.dataset.hl;
+    hoverProduct(key);
+    tabs.forEach(t => t.classList.toggle('hovered', t.dataset.product === key));
+  });
+  el.addEventListener('mouseleave', () => {
+    if (activeProduct) return;
+    unhoverProduct();
+    tabs.forEach(t => t.classList.remove('hovered'));
+  });
+  el.addEventListener('click', e => {
+    e.stopPropagation();
+    selectProduct(el.dataset.hl);
+    tabs.forEach(t => t.classList.remove('hovered'));
+  });
 });
 
 // Click blank space in products section to reset
