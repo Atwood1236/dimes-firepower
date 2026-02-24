@@ -83,7 +83,9 @@
   /* ═══════════════════════════════════
      PRODUCTS — TERMINAL v5
      ═══════════════════════════════════ */
-  .products{padding:100px 48px 200px;max-width:1400px;margin:0 auto;overflow:visible}
+  .products{padding:100px 48px 200px;max-width:1400px;margin:0 auto;overflow:visible;position:relative}
+  .products::before{content:'';position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:0;opacity:0;pointer-events:none;transition:opacity .6s ease}
+  .products.zoomed::before{opacity:1}
   .products .section-header{margin-bottom:64px}
   .products .section-header::before,.products .section-header::after{top:50%;width:calc(50% - 270px)}
 
@@ -100,13 +102,16 @@
   .product-subtitle.selected{color:#fff}
 
   /* Scene layout — terminal + side tabs in a row */
-  .terminal-scene{position:relative;overflow:visible;padding:80px 0 140px;margin:-80px 0 -140px;min-height:560px;display:flex;align-items:flex-start;justify-content:flex-end;gap:0;mask-image:linear-gradient(to right, transparent 0%, black 15%),linear-gradient(to bottom, transparent 0%, black 10%, black 85%, transparent 100%);-webkit-mask-image:linear-gradient(to right, transparent 0%, black 15%),linear-gradient(to bottom, transparent 0%, black 10%, black 85%, transparent 100%);mask-composite:intersect;-webkit-mask-composite:source-in}
+  .terminal-scene{position:relative;z-index:1;overflow:visible;padding:80px 0 140px;margin:-80px 0 -140px;min-height:560px;display:flex;align-items:flex-start;justify-content:flex-end;gap:0;mask-image:linear-gradient(to right, transparent 0%, black 15%),linear-gradient(to bottom, transparent 0%, black 10%, black 85%, transparent 100%);-webkit-mask-image:linear-gradient(to right, transparent 0%, black 15%),linear-gradient(to bottom, transparent 0%, black 10%, black 85%, transparent 100%);mask-composite:intersect;-webkit-mask-composite:source-in}
 
   /* Inner wrapper — terminal right-aligns here, overflows left */
   .terminal-center{display:flex;justify-content:flex-end;align-items:flex-start;flex:1 1 0;min-width:0;overflow:visible;margin-right:450px}
 
   /* Terminal — liquid glass */
-  .terminal-wrapper{position:relative;border-radius:20px;overflow:hidden;background:linear-gradient(180deg, rgba(255,255,255,.03) 0%, var(--t-bg) 4%, var(--t-bg) 100%);border:1px solid rgba(255,255,255,.1);box-shadow:0 80px 160px rgba(0,0,0,.6),0 30px 60px rgba(0,0,0,.3),0 0 0 1px rgba(255,255,255,.05),0 0 80px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(255,255,255,.02);width:150vw;max-width:none;flex-shrink:0;backdrop-filter:blur(40px) saturate(1.2);-webkit-backdrop-filter:blur(40px) saturate(1.2)}
+  .terminal-wrapper{position:relative;border-radius:20px;overflow:hidden;background:linear-gradient(180deg, rgba(255,255,255,.03) 0%, var(--t-bg) 4%, var(--t-bg) 100%);border:1px solid rgba(255,255,255,.1);box-shadow:0 80px 160px rgba(0,0,0,.6),0 30px 60px rgba(0,0,0,.3),0 0 0 1px rgba(255,255,255,.05),0 0 80px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(255,255,255,.02);width:150vw;max-width:none;flex-shrink:0;backdrop-filter:blur(40px) saturate(1.2);-webkit-backdrop-filter:blur(40px) saturate(1.2);transition:transform 1.2s cubic-bezier(.16,1,.3,1),mask-image .6s ease,-webkit-mask-image .6s ease;transform-origin:top right}
+  .terminal-wrapper.zoomed-stream{mask-image:linear-gradient(to right, transparent 60%, black 78%, black 100%),linear-gradient(to bottom, black 0%, black 80%, transparent 100%);-webkit-mask-image:linear-gradient(to right, transparent 60%, black 78%, black 100%),linear-gradient(to bottom, black 0%, black 80%, transparent 100%);mask-composite:intersect;-webkit-mask-composite:source-in}
+  .terminal-wrapper.zoomed-firepower{mask-image:linear-gradient(to right, transparent 55%, black 68%, black 82%, transparent 90%),linear-gradient(to bottom, black 0%, black 50%, transparent 68%);-webkit-mask-image:linear-gradient(to right, transparent 55%, black 68%, black 82%, transparent 90%),linear-gradient(to bottom, black 0%, black 50%, transparent 68%);mask-composite:intersect;-webkit-mask-composite:source-in}
+  .terminal-wrapper.zoomed-multiply{mask-image:linear-gradient(to right, transparent 50%, black 65%, black 100%),linear-gradient(to bottom, transparent 42%, black 52%, black 100%);-webkit-mask-image:linear-gradient(to right, transparent 50%, black 65%, black 100%),linear-gradient(to bottom, transparent 42%, black 52%, black 100%);mask-composite:intersect;-webkit-mask-composite:source-in}
 
   /* Browser chrome */
   .terminal-chrome{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:linear-gradient(180deg,rgba(255,255,255,.05) 0%,rgba(255,255,255,.015) 100%);border-bottom:1px solid var(--t-border);position:relative}
@@ -181,13 +186,15 @@
     background:linear-gradient(180deg, rgba(238,255,0,0.33) -41.67%, rgba(90,97,0,0.066) 87.04%);
     border:1px solid rgba(238,255,0,.25);
     box-shadow:0 0 30px rgba(238,255,0,.06),0 4px 20px rgba(0,0,0,.85);
+    transition:border-color .6s cubic-bezier(.16,1,.3,1),box-shadow .6s cubic-bezier(.16,1,.3,1);
   }
   /* Top header bar — covers header + slider (~74px) */
   /* Glowy upper frame — inset by -1px so borders perfectly overlap outer border */
-  .leverage-section::before{content:'';position:absolute;left:-1px;right:-1px;top:-1px;height:74px;background:linear-gradient(90deg, rgba(58,61,20,0.25) 0%, rgba(155,163,53,0.15) 100%);border:1px solid rgba(238,255,0,.3);box-shadow:0 0 12px rgba(238,255,0,.12),0px 4px 15.9px -1px rgba(0,0,0,0.5);border-radius:13px;pointer-events:none;transition:height .35s cubic-bezier(.16,1,.3,1)}
+  .leverage-section::before{content:'';position:absolute;left:-1px;right:-1px;top:-1px;height:74px;background:linear-gradient(90deg, rgba(58,61,20,0.25) 0%, rgba(155,163,53,0.15) 100%);border:1px solid rgba(238,255,0,.3);box-shadow:0 0 12px rgba(238,255,0,.12),0px 4px 15.9px -1px rgba(0,0,0,0.5);border-radius:13px;pointer-events:none;transition:height .6s cubic-bezier(.16,1,.3,1)}
+  .leverage-section.lev-min{border-color:transparent;box-shadow:none}
   .leverage-section.lev-min::before{height:calc(100% + 2px)}
 
-  .leverage-inner{position:relative;z-index:1;padding:14px 16px 12px;transition:padding .35s cubic-bezier(.16,1,.3,1)}
+  .leverage-inner{position:relative;z-index:1;padding:14px 16px 12px;transition:padding .6s cubic-bezier(.16,1,.3,1)}
   .leverage-section.lev-min .leverage-inner{padding-bottom:14px}
   /* 4. Lift slider — reduce header margin */
   .leverage-header{display:flex;align-items:center;justify-content:flex-start;margin-bottom:8px}
@@ -196,7 +203,7 @@
   .leverage-info{width:9px;height:9px;border-radius:50%;border:.5px solid rgba(255,255,255,.25);display:inline-flex;align-items:center;justify-content:center;font-size:6px;line-height:1;color:rgba(255,255,255,.3);background:transparent;box-sizing:border-box}
   .leverage-value{font-size:15px;font-weight:700;color:var(--yellow);text-shadow:0 0 20px rgba(238,255,0,.7),0 0 50px rgba(238,255,0,.35),0 0 80px rgba(238,255,0,.15);flex-shrink:0}
 
-  .leverage-track-wrap{position:relative;height:24px;margin-bottom:14px;display:flex;align-items:center;gap:10px;cursor:ew-resize;transition:margin .35s cubic-bezier(.16,1,.3,1)}
+  .leverage-track-wrap{position:relative;height:24px;margin-bottom:14px;display:flex;align-items:center;gap:10px;cursor:ew-resize;transition:margin .6s cubic-bezier(.16,1,.3,1)}
   .leverage-section.lev-min .leverage-track-wrap{margin-bottom:0}
   .leverage-track{flex:1;height:10px;border-radius:32px;background:#000;position:relative;border:0.25px solid var(--yellow)}
   .leverage-fill{height:4px;border-radius:32px 0 0 32px;background:linear-gradient(90deg, transparent 0%, var(--yellow) 100%);width:48%;position:absolute;top:50%;transform:translateY(-50%);left:0;z-index:1}
@@ -204,7 +211,7 @@
   .track-dot{width:4px;height:4px;border-radius:50%;background:rgba(238,255,0,.16)}
   .leverage-thumb{width:3px;height:16px;border-radius:13px;background:#393D00;border:1px solid var(--yellow);position:absolute;top:50%;transform:translate(-50%,-50%);box-shadow:0 0 12.5px -2px var(--yellow);z-index:3;cursor:ew-resize}
 
-  .leverage-stats{display:flex;flex-direction:column;gap:2px;padding-top:6px;overflow:hidden;transition:max-height .35s cubic-bezier(.16,1,.3,1),opacity .3s ease,padding .35s cubic-bezier(.16,1,.3,1)}
+  .leverage-stats{display:flex;flex-direction:column;gap:2px;padding-top:6px;overflow:hidden;transition:max-height .6s cubic-bezier(.16,1,.3,1),opacity .6s ease,padding .6s cubic-bezier(.16,1,.3,1)}
   .leverage-stat{display:flex;justify-content:space-between;align-items:center;font-size:12px;line-height:200%}
   .leverage-stat .label{color:#fff;font-weight:400}
   .leverage-stat .val{color:#fff;font-weight:600;text-align:right}
@@ -216,7 +223,7 @@
   .action-skel-btn{height:48px;border-radius:12px;background:var(--t-skel);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:500;color:rgba(255,255,255,.3);border:1px solid rgba(255,255,255,.08)}
 
   /* Highlight ring for product hover */
-  .highlight-ring{position:absolute;pointer-events:none;border:1.5px solid rgba(238,255,0,.5);box-shadow:0 0 0 4px rgba(238,255,0,.06),0 0 30px rgba(238,255,0,.08);opacity:0;z-index:51;transition:opacity .3s ease}
+  .highlight-ring{position:absolute;pointer-events:none;border:none;outline:1.5px solid rgba(238,255,0,.5);box-shadow:0 0 0 4px rgba(238,255,0,.06),0 0 30px rgba(238,255,0,.08);opacity:0;z-index:51;transition:opacity .3s ease}
   .highlight-ring.active{opacity:1;animation:pulse-ring 3s ease-in-out infinite}
   .highlight-ring.animate-position{transition:opacity .3s ease,left .6s cubic-bezier(.25,.1,.25,1),top .6s cubic-bezier(.25,.1,.25,1),width .6s cubic-bezier(.25,.1,.25,1),height .6s cubic-bezier(.25,.1,.25,1)}
   @keyframes pulse-ring{0%,100%{box-shadow:0 0 0 4px rgba(238,255,0,.06),0 0 30px rgba(238,255,0,.08)}50%{box-shadow:0 0 0 6px rgba(238,255,0,.1),0 0 40px rgba(238,255,0,.14)}}
@@ -534,10 +541,30 @@ function positionSubtitle(key, mode) {
   }
 }
 
+const productsEl = document.querySelector('.products');
+const terminalEl = document.getElementById('terminal');
+const ringEl = document.getElementById('highlightRing');
+const hlEls = document.querySelectorAll('.term-hl');
+
+/* Zoom configs — all use transform-origin: top right for smooth inter-product transitions */
+const zoomConfigs = {
+  stream:    { scale: 2.0,  tx: '0px',    ty: '0px'   },  /* top-right corner locked */
+  firepower: { scale: 2.0,  tx: '16.5vw', ty: '-7px'  },  /* equivalent of origin 78% 12% — centers icon on page */
+  multiply:  { scale: 1.5,  tx: '0px',    ty: '-310px'},  /* slide up so leverage box aligns with multiply description */
+};
+
+function zoomToTarget(key) {
+  const cfg = zoomConfigs[key];
+  if (!cfg) return;
+  terminalEl.classList.remove('zoomed-stream', 'zoomed-firepower', 'zoomed-multiply');
+  terminalEl.style.transform = `scale(${cfg.scale}) translate(${cfg.tx}, ${cfg.ty})`;
+  terminalEl.classList.add(`zoomed-${key}`);
+  productsEl.classList.add('zoomed');
+}
+
 function selectProduct(key) {
   if (activeProduct === key) { resetProduct(); return; }
 
-  /* Fade out subtitle first, then reposition while hidden */
   productSubtitle.classList.remove('active');
   productSubtitle.classList.remove('selected');
 
@@ -559,6 +586,8 @@ function selectProduct(key) {
     productSubtitle.classList.add('selected');
     requestAnimationFrame(() => productSubtitle.classList.add('active'));
   }, 250);
+
+  zoomToTarget(key);
   highlightProduct(key);
 }
 
@@ -567,6 +596,9 @@ function resetProduct() {
   productSubtitle.classList.remove('active');
   productSubtitle.classList.remove('selected');
   unhighlightProduct();
+  terminalEl.style.transform = 'none';
+  terminalEl.classList.remove('zoomed-stream', 'zoomed-firepower', 'zoomed-multiply');
+  productsEl.classList.remove('zoomed');
   tabs.forEach(t => t.classList.remove('active'));
   tabGroups.forEach(g => {
     g.classList.remove('active');
@@ -574,23 +606,29 @@ function resetProduct() {
   });
 }
 
-const terminalEl = document.getElementById('terminal');
-const ringEl = document.getElementById('highlightRing');
-const hlEls = document.querySelectorAll('.term-hl');
+/* terminalEl, ringEl, hlEls already declared above */
 
 function highlightProduct(key) {
   const target = document.querySelector(`.term-hl[data-hl="${key}"]`);
   if (!target) { unhighlightProduct(); return; }
-  const termRect = terminalEl.getBoundingClientRect();
-  const termBorder = parseFloat(getComputedStyle(terminalEl).borderLeftWidth) || 0;
-  const tRect = target.getBoundingClientRect();
+
+  /* Walk up offsetParent chain to get position relative to terminal */
+  let el = target, left = 0, top = 0;
+  while (el && el !== terminalEl) {
+    left += el.offsetLeft;
+    top += el.offsetTop;
+    el = el.offsetParent;
+  }
+
   const pad = 6;
   const targetRadius = parseFloat(getComputedStyle(target).borderRadius) || 0;
-  ringEl.style.left = (tRect.left - termRect.left - termBorder - pad) + 'px';
-  ringEl.style.top = (tRect.top - termRect.top - termBorder - pad) + 'px';
-  ringEl.style.width = (tRect.width + pad * 2) + 'px';
-  ringEl.style.height = (tRect.height + pad * 2) + 'px';
+
+  ringEl.style.left = (left - pad) + 'px';
+  ringEl.style.top = (top - pad) + 'px';
+  ringEl.style.width = (target.offsetWidth + pad * 2) + 'px';
+  ringEl.style.height = (target.offsetHeight + pad * 2) + 'px';
   ringEl.style.borderRadius = (targetRadius + pad) + 'px';
+
   if (ringEl.classList.contains('active')) {
     ringEl.classList.add('animate-position');
   }
@@ -622,6 +660,7 @@ tabs.forEach(tab => {
   tab.addEventListener('mouseenter', () => hoverProduct(tab.dataset.product));
   tab.addEventListener('mouseleave', () => unhoverProduct());
 });
+
 
 // Scroll reveal
 document.querySelectorAll('.reveal').forEach(el => {
@@ -952,7 +991,7 @@ document.querySelectorAll('.reveal').forEach(el => {
 
 // Resize handler
 let resizeTimer;
-window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { if (activeProduct) highlightProduct(activeProduct); }, 200); });
+window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { if (activeProduct) { zoomToTarget(activeProduct); highlightProduct(activeProduct); } }, 200); });
 
 // ── Leverage slider ─────────────────────────────────────────────────────────
 (function () {
@@ -1004,6 +1043,16 @@ window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer
       sharesEl.textContent   = Math.round((1000 * lev) / 0.33).toLocaleString();
       posEl.textContent      = '$' + (1000 * lev).toLocaleString();
       liqEl.textContent      = '¢' + Math.max(1, Math.round(100 / lev * 0.78));
+    }
+    /* Sync highlight ring with collapse/expand in real-time */
+    if (activeProduct === 'multiply') {
+      const t0 = performance.now();
+      (function syncRing(now) {
+        highlightProduct('multiply');
+        ringEl.classList.remove('animate-position');
+        if (now - t0 < 650) requestAnimationFrame(syncRing);
+        else ringEl.classList.add('animate-position');
+      })(t0);
     }
   }
 
