@@ -662,6 +662,11 @@ tabs.forEach(tab => {
 });
 
 
+// Reset product zoom when tabs scroll out of view
+new IntersectionObserver(entries => {
+  entries.forEach(entry => { if (!entry.isIntersecting && activeProduct) resetProduct(); });
+}, { threshold: 0 }).observe(document.querySelector('.product-tabs-side'));
+
 // Scroll reveal
 document.querySelectorAll('.reveal').forEach(el => {
   new IntersectionObserver(entries => {
