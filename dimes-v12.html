@@ -84,14 +84,14 @@
      PRODUCTS — TERMINAL v5
      ═══════════════════════════════════ */
   .products{padding:100px 48px 200px;max-width:1400px;margin:0 auto;overflow:visible}
-  .products .section-header{margin-bottom:40px}
+  .products .section-header{margin-bottom:64px}
   .products .section-header::before,.products .section-header::after{top:50%;width:calc(50% - 270px)}
 
   /* Tabs + subtitle (vertical side tabs) */
-  .product-tab{padding:10px 24px;border-radius:100px;font-size:14px;font-weight:500;color:var(--text-dim);background:transparent;border:1px solid rgba(255,255,255,.06);cursor:pointer;transition:all .4s;font-family:var(--font);position:relative;width:100%;text-align:center;white-space:nowrap}
+  .product-tab{padding:10px 24px;border-radius:100px;font-size:14px;font-weight:500;color:var(--text-dim);background:var(--bg);border:1px solid rgba(255,255,255,.06);cursor:pointer;transition:all .4s;font-family:var(--font);position:relative;width:100%;text-align:center;white-space:nowrap}
   .product-tab:hover{color:var(--text);border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.03)}
   .product-tab.active{color:var(--yellow);font-weight:700;font-size:28px;background:transparent;border:none;text-align:left;padding-left:0;padding-right:0}
-  .product-tabs-side{display:flex;flex-direction:column;gap:10px;align-items:stretch;width:196px;z-index:10;position:absolute;top:20px;right:220px}
+  .product-tabs-side{display:flex;flex-direction:column;gap:10px;align-items:stretch;width:196px;z-index:10;position:absolute;top:100px;right:220px}
   .tab-group{display:flex;flex-direction:column;align-items:stretch}
   .tab-desc{max-height:0;overflow:hidden;opacity:0;transition:max-height .4s cubic-bezier(.16,1,.3,1),opacity .4s ease,margin .4s ease;font-size:13px;color:var(--text-dim);line-height:1.5;margin:0;padding:0 2px;width:300px}
   .tab-group.active .tab-desc{max-height:120px;opacity:1;margin:26px 0 20px}
@@ -100,18 +100,18 @@
   .product-subtitle.selected{color:#fff}
 
   /* Scene layout — terminal + side tabs in a row */
-  .terminal-scene{position:relative;overflow:visible;padding:20px 0;margin:-20px 0;min-height:560px;display:flex;align-items:flex-start;justify-content:flex-end;gap:0}
+  .terminal-scene{position:relative;overflow:visible;padding:80px 0 140px;margin:-80px 0 -140px;min-height:560px;display:flex;align-items:flex-start;justify-content:flex-end;gap:0;mask-image:linear-gradient(to right, transparent 0%, black 15%),linear-gradient(to bottom, transparent 0%, black 10%, black 85%, transparent 100%);-webkit-mask-image:linear-gradient(to right, transparent 0%, black 15%),linear-gradient(to bottom, transparent 0%, black 10%, black 85%, transparent 100%);mask-composite:intersect;-webkit-mask-composite:source-in}
 
   /* Inner wrapper — terminal right-aligns here, overflows left */
   .terminal-center{display:flex;justify-content:flex-end;align-items:flex-start;flex:1 1 0;min-width:0;overflow:visible;margin-right:450px}
 
   /* Terminal — liquid glass */
-  .terminal-wrapper{position:relative;border-radius:20px;overflow:hidden;background:var(--t-bg);border:1px solid rgba(255,255,255,.08);box-shadow:0 60px 140px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.04),inset 0 1px 0 rgba(255,255,255,.06);width:150vw;max-width:none;flex-shrink:0}
+  .terminal-wrapper{position:relative;border-radius:20px;overflow:hidden;background:linear-gradient(180deg, rgba(255,255,255,.03) 0%, var(--t-bg) 4%, var(--t-bg) 100%);border:1px solid rgba(255,255,255,.1);box-shadow:0 80px 160px rgba(0,0,0,.6),0 30px 60px rgba(0,0,0,.3),0 0 0 1px rgba(255,255,255,.05),0 0 80px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(255,255,255,.02);width:150vw;max-width:none;flex-shrink:0;backdrop-filter:blur(40px) saturate(1.2);-webkit-backdrop-filter:blur(40px) saturate(1.2)}
 
   /* Browser chrome */
-  .terminal-chrome{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:linear-gradient(180deg,rgba(255,255,255,.04) 0%,rgba(255,255,255,.01) 100%);border-bottom:1px solid var(--t-border);position:relative}
+  .terminal-chrome{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:linear-gradient(180deg,rgba(255,255,255,.05) 0%,rgba(255,255,255,.015) 100%);border-bottom:1px solid var(--t-border);position:relative}
   /* Top glass highlight */
-  .terminal-chrome::after{content:'';position:absolute;top:0;left:10%;right:10%;height:1px;background:linear-gradient(to right,transparent,rgba(255,255,255,.1),transparent)}
+  .terminal-chrome::after{content:'';position:absolute;top:0;left:5%;right:5%;height:1px;background:linear-gradient(to right,transparent,rgba(255,255,255,.15),transparent)}
   .chrome-dots{display:flex;gap:6px}
   .chrome-dot{width:10px;height:10px;border-radius:50%}
   .chrome-dot.red{background:rgba(255,255,255,.2)}.chrome-dot.yel{background:rgba(255,255,255,.13)}.chrome-dot.grn{background:rgba(255,255,255,.08)}
@@ -125,8 +125,8 @@
   .terminal-main{display:flex;flex-direction:column;position:relative}
 
   /* Glass reflection strips on main area */
-  .terminal-main::before{content:'';position:absolute;top:0;right:0;width:1px;height:100%;background:linear-gradient(to bottom,rgba(255,255,255,.06),transparent 50%);z-index:1;pointer-events:none}
-  .terminal-main::after{content:'';position:absolute;top:40%;left:5%;width:90%;height:1px;background:linear-gradient(to right,transparent,rgba(255,255,255,.02),transparent);pointer-events:none}
+  .terminal-main::before{content:'';position:absolute;top:0;right:0;width:1px;height:100%;background:linear-gradient(to bottom,rgba(255,255,255,.08),transparent 40%);z-index:1;pointer-events:none}
+  .terminal-main::after{content:'';position:absolute;top:0;left:0;width:100%;height:40%;background:linear-gradient(180deg,rgba(255,255,255,.015) 0%,transparent 100%);pointer-events:none}
 
   /* Inner nav */
   .terminal-nav{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-bottom:1px solid var(--t-border);background:rgba(255,255,255,.01)}
@@ -153,14 +153,14 @@
   .skel-chart-line:nth-child(1){top:0%}.skel-chart-line:nth-child(2){top:25%}.skel-chart-line:nth-child(3){top:50%}.skel-chart-line:nth-child(4){top:75%}.skel-chart-line:nth-child(5){top:100%}
   .skel-chart svg{position:absolute;inset:0;width:100%;height:100%}
 
-  .chart-x-labels{display:flex;justify-content:space-between;padding:8px 20px 0}
+  .chart-x-labels{display:flex;justify-content:space-between;padding:0 20px;position:absolute;bottom:10px;left:0;right:0;z-index:1}
   .volume-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;border-top:1px solid var(--t-border)}
   .time-pills{display:flex;gap:4px}
   .time-pill{padding:3px 8px;border-radius:4px;font-size:10px;font-weight:500;color:var(--text-muted);border:1px solid transparent}
   .time-pill.active{color:var(--text);border-color:rgba(255,255,255,.12);background:rgba(255,255,255,.04)}
 
   /* ═══ SIDEBAR ═══ */
-  .terminal-sidebar{border-left:1px solid var(--t-border);display:flex;flex-direction:column;background:rgba(255,255,255,.008);position:relative;padding:20px 22px}
+  .terminal-sidebar{border-left:1px solid var(--t-border);display:flex;flex-direction:column;background:rgba(255,255,255,.008);position:relative;padding:24px 22px}
   /* Subtle glass gradient on sidebar */
   .terminal-sidebar::before{content:'';position:absolute;top:0;left:0;right:0;height:120px;background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);pointer-events:none}
   .sidebar-block{margin-bottom:16px}
@@ -176,15 +176,15 @@
      LEVERAGE — 331 × 183 from Figma
      ═══════════════════════════════════ */
   .leverage-section{
-    margin-top:auto;padding:0;border-radius:13px;position:relative;overflow:hidden;
-    width:calc(100% + 16px);margin-left:-8px;
+    margin-top:auto;padding:0;border-radius:13px;position:relative;overflow:visible;
+    width:100%;
     background:linear-gradient(180deg, rgba(238,255,0,0.33) -41.67%, rgba(90,97,0,0.066) 87.04%);
     border:1px solid rgba(238,255,0,.25);
-    box-shadow:0 0 30px rgba(238,255,0,.06),0 0 60px rgba(0,0,0,.4);
+    box-shadow:0 0 30px rgba(238,255,0,.06),0 4px 20px rgba(0,0,0,.85);
   }
   /* Top header bar — covers header + slider (~74px) */
   /* Glowy upper frame — inset by -1px so borders perfectly overlap outer border */
-  .leverage-section::before{content:'';position:absolute;left:-1px;right:-1px;top:-1px;height:74px;background:linear-gradient(90deg, rgba(58,61,20,0.2) 0%, rgba(155,163,53,0.1) 100%);border:1px solid rgba(238,255,0,.2);box-shadow:0 0 8px rgba(238,255,0,.08),0px 4px 15.9px -1px rgba(0,0,0,0.5);border-radius:13px;pointer-events:none;transition:height .35s cubic-bezier(.16,1,.3,1)}
+  .leverage-section::before{content:'';position:absolute;left:-1px;right:-1px;top:-1px;height:74px;background:linear-gradient(90deg, rgba(58,61,20,0.25) 0%, rgba(155,163,53,0.15) 100%);border:1px solid rgba(238,255,0,.3);box-shadow:0 0 12px rgba(238,255,0,.12),0px 4px 15.9px -1px rgba(0,0,0,0.5);border-radius:13px;pointer-events:none;transition:height .35s cubic-bezier(.16,1,.3,1)}
   .leverage-section.lev-min::before{height:calc(100% + 2px)}
 
   .leverage-inner{position:relative;z-index:1;padding:14px 16px 12px;transition:padding .35s cubic-bezier(.16,1,.3,1)}
@@ -214,6 +214,12 @@
 
   .action-skel{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:auto;padding-top:20px}
   .action-skel-btn{height:48px;border-radius:12px;background:var(--t-skel);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:500;color:rgba(255,255,255,.3);border:1px solid rgba(255,255,255,.08)}
+
+  /* Highlight ring for product hover */
+  .highlight-ring{position:absolute;pointer-events:none;border:1.5px solid rgba(238,255,0,.5);box-shadow:0 0 0 4px rgba(238,255,0,.06),0 0 30px rgba(238,255,0,.08);opacity:0;z-index:51;transition:opacity .3s ease}
+  .highlight-ring.active{opacity:1;animation:pulse-ring 3s ease-in-out infinite}
+  .highlight-ring.animate-position{transition:opacity .3s ease,left .6s cubic-bezier(.25,.1,.25,1),top .6s cubic-bezier(.25,.1,.25,1),width .6s cubic-bezier(.25,.1,.25,1),height .6s cubic-bezier(.25,.1,.25,1)}
+  @keyframes pulse-ring{0%,100%{box-shadow:0 0 0 4px rgba(238,255,0,.06),0 0 30px rgba(238,255,0,.08)}50%{box-shadow:0 0 0 6px rgba(238,255,0,.1),0 0 40px rgba(238,255,0,.14)}}
 
   /* ═══════════════════════════════════
      ZOOM STATES — transform-origin based
@@ -310,13 +316,14 @@
   <div class="terminal-scene reveal" id="terminalScene">
     <div class="terminal-center">
     <div class="terminal-wrapper" id="terminal">
+      <div class="highlight-ring" id="highlightRing"></div>
       <div class="terminal-chrome">
         <div class="chrome-dots"><div class="chrome-dot red"></div><div class="chrome-dot yel"></div><div class="chrome-dot grn"></div></div>
         <div class="chrome-url"><span style="opacity:.4">🔒</span> app.yourapp.com</div>
         <div class="chrome-extensions">
           <div class="ext-icon" id="extPhantom"><svg viewBox="0 0 268.88 224.26" width="16" height="13" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M213.8,1.92C129.66-14.76,28.39,80.57,5.31,156.04c-6.51,21.28-12.84,64.09,18.85,67.79,35.93,4.2,62.45-22.91,81.28-49.71.29,4.89-1.35,9.39-1.04,14.36.73,11.83,8.15,20.1,20.06,21.31,23.84,2.43,46.62-18.99,59.16-37.08-4.72,23.91,16.68,26.04,33.44,16.95,56.57-30.7,81.87-170.86-3.25-187.74ZM171.32,91.39c-12.73-5.22-11.91-31.76,2.3-34.22,25.05-4.34,21.26,43.88-2.3,34.22ZM221.74,92.71c-18.18.91-19.89-32.28-3.95-35.56,22.34-4.59,23.34,34.6,3.95,35.56Z"/></svg></div>
           <div class="ext-icon" id="extX">𝕏</div>
-          <div class="ext-icon dimes-ext" id="extStream" title="Dimes Stream"><svg viewBox="0 0 230 243.24" width="14" height="14" xmlns="http://www.w3.org/2000/svg"><path fill="#ef0" d="M216.65,173.09c-15.47,18.94-42.61,33.06-75.01,38.1-8.3,1.49-17.16,2.3-26.37,2.3v29.74c63.66,0,115.26-34.28,115.26-76.57,0-5.14-.77-10.16-2.22-15.02-2.28,7.61-6.25,14.82-11.66,21.44Z"/><path fill="#ef0" d="M31.6,159.27c-5.48-3.84-10.37-8.06-14.57-12.6-.67-.73-1.33-1.46-1.97-2.21-2.17-2.52-4.12-5.14-5.85-7.83-3.07-4.78-5.42-9.8-6.98-15.02-1.45,4.86-2.22,9.88-2.22,15.02s.77,10.16,2.22,15.02c2.28,7.61,6.25,14.82,11.66,21.44,15.47,18.94,42.61,33.06,75.01,38.1,8.47,1.32,17.3,2.3,26.37,2.3v-30.32c-32.95,0-62.66-9.18-83.67-23.91Z"/><path fill="#ef0" d="M213.5,146.68c.67-.73,1.33-1.46,1.97-2.21,2.17-2.52,4.12-5.14,5.85-7.83,3.07-4.78,5.42-9.8,6.98-15.02,1.45-4.86,2.22-9.88,2.22-15.02s-.77-10.16-2.22-15.02c-10.23-34.18-54.71-60.16-108.67-61.5-.02,0-.04,0-.06,0-1.43-.04-2.86-.06-4.31-.06v30.03c1.39,0,2.76.04,4.13.07,32.98.87,61.01,12.05,73.6,27.8.67.84,1.31,1.68,1.89,2.55,3.38,5.02,5.23,10.44,5.23,16.1,0,2.54-.39,5.04-1.1,7.47-.64,2.16-1.53,4.27-2.69,6.32-5.41-5.35-11.73-10.15-18.79-14.27-17.21-10.04-38.81-16.01-62.26-16.01v30.36c2.74,0,5.45.08,8.13.22,22.53,1.17,42.48,7.18,56.38,16.11-15.56,9.99-38.68,16.32-64.52,16.32v30.07c32.95,0,62.66-9.18,83.67-23.91,5.48-3.84,10.37-8.06,14.57-12.6Z"/><path fill="#ef0" d="M107.13,120.24c-21.38-1.1-40.42-6.06-54.13-14.13,17.21-10.04,38.81-16.01,62.26-16.01v-30.03c-1.12,0-2.23.02-3.33.05-29.94.74-56.58,11.41-74.4,27.82-.74.68-1.47,1.38-2.18,2.09-1.32-2.1-2.36-4.27-3.1-6.5-.87-2.62-1.35-5.31-1.35-8.06,0-24.3,35.43-44.14,80-45.37.02,0,.04,0,.06,0,1.43-.03,2.86-.06,4.31-.06V0C51.61,0,0,34.28,0,76.57c0,5.14.77,10.16,2.22,15.02,1.56,5.22,3.92,10.24,6.98,15.02,2.42,3.76,5.28,7.37,8.54,10.8,1.37,1.44,2.81,2.85,4.31,4.22,1.98,1.81,4.07,3.55,6.28,5.24,5.81,4.43,12.38,8.41,19.56,11.85,18.95,9.08,42.22,14.4,67.37,14.4v-32.65c-2.74,0-5.45-.08-8.13-.21Z"/></svg></div>
+          <div class="ext-icon dimes-ext term-hl" data-hl="stream" id="extStream" title="Dimes Stream"><svg viewBox="0 0 230 243.24" width="14" height="14" xmlns="http://www.w3.org/2000/svg"><path fill="#ef0" d="M216.65,173.09c-15.47,18.94-42.61,33.06-75.01,38.1-8.3,1.49-17.16,2.3-26.37,2.3v29.74c63.66,0,115.26-34.28,115.26-76.57,0-5.14-.77-10.16-2.22-15.02-2.28,7.61-6.25,14.82-11.66,21.44Z"/><path fill="#ef0" d="M31.6,159.27c-5.48-3.84-10.37-8.06-14.57-12.6-.67-.73-1.33-1.46-1.97-2.21-2.17-2.52-4.12-5.14-5.85-7.83-3.07-4.78-5.42-9.8-6.98-15.02-1.45,4.86-2.22,9.88-2.22,15.02s.77,10.16,2.22,15.02c2.28,7.61,6.25,14.82,11.66,21.44,15.47,18.94,42.61,33.06,75.01,38.1,8.47,1.32,17.3,2.3,26.37,2.3v-30.32c-32.95,0-62.66-9.18-83.67-23.91Z"/><path fill="#ef0" d="M213.5,146.68c.67-.73,1.33-1.46,1.97-2.21,2.17-2.52,4.12-5.14,5.85-7.83,3.07-4.78,5.42-9.8,6.98-15.02,1.45-4.86,2.22-9.88,2.22-15.02s-.77-10.16-2.22-15.02c-10.23-34.18-54.71-60.16-108.67-61.5-.02,0-.04,0-.06,0-1.43-.04-2.86-.06-4.31-.06v30.03c1.39,0,2.76.04,4.13.07,32.98.87,61.01,12.05,73.6,27.8.67.84,1.31,1.68,1.89,2.55,3.38,5.02,5.23,10.44,5.23,16.1,0,2.54-.39,5.04-1.1,7.47-.64,2.16-1.53,4.27-2.69,6.32-5.41-5.35-11.73-10.15-18.79-14.27-17.21-10.04-38.81-16.01-62.26-16.01v30.36c2.74,0,5.45.08,8.13.22,22.53,1.17,42.48,7.18,56.38,16.11-15.56,9.99-38.68,16.32-64.52,16.32v30.07c32.95,0,62.66-9.18,83.67-23.91,5.48-3.84,10.37-8.06,14.57-12.6Z"/><path fill="#ef0" d="M107.13,120.24c-21.38-1.1-40.42-6.06-54.13-14.13,17.21-10.04,38.81-16.01,62.26-16.01v-30.03c-1.12,0-2.23.02-3.33.05-29.94.74-56.58,11.41-74.4,27.82-.74.68-1.47,1.38-2.18,2.09-1.32-2.1-2.36-4.27-3.1-6.5-.87-2.62-1.35-5.31-1.35-8.06,0-24.3,35.43-44.14,80-45.37.02,0,.04,0,.06,0,1.43-.03,2.86-.06,4.31-.06V0C51.61,0,0,34.28,0,76.57c0,5.14.77,10.16,2.22,15.02,1.56,5.22,3.92,10.24,6.98,15.02,2.42,3.76,5.28,7.37,8.54,10.8,1.37,1.44,2.81,2.85,4.31,4.22,1.98,1.81,4.07,3.55,6.28,5.24,5.81,4.43,12.38,8.41,19.56,11.85,18.95,9.08,42.22,14.4,67.37,14.4v-32.65c-2.74,0-5.45-.08-8.13-.21Z"/></svg></div>
         </div>
       </div>
 
@@ -329,7 +336,7 @@
             </div>
             <div class="terminal-nav-right">
               <div class="skel-pill" style="width:120px;height:28px"></div>
-              <div class="firepower-icon" id="firepowerIcon" title="Firepower by Dimes"><svg viewBox="0 0 230 243.24" width="14" height="14" xmlns="http://www.w3.org/2000/svg"><path fill="#ef0" d="M216.65,173.09c-15.47,18.94-42.61,33.06-75.01,38.1-8.3,1.49-17.16,2.3-26.37,2.3v29.74c63.66,0,115.26-34.28,115.26-76.57,0-5.14-.77-10.16-2.22-15.02-2.28,7.61-6.25,14.82-11.66,21.44Z"/><path fill="#ef0" d="M31.6,159.27c-5.48-3.84-10.37-8.06-14.57-12.6-.67-.73-1.33-1.46-1.97-2.21-2.17-2.52-4.12-5.14-5.85-7.83-3.07-4.78-5.42-9.8-6.98-15.02-1.45,4.86-2.22,9.88-2.22,15.02s.77,10.16,2.22,15.02c2.28,7.61,6.25,14.82,11.66,21.44,15.47,18.94,42.61,33.06,75.01,38.1,8.47,1.32,17.3,2.3,26.37,2.3v-30.32c-32.95,0-62.66-9.18-83.67-23.91Z"/><path fill="#ef0" d="M213.5,146.68c.67-.73,1.33-1.46,1.97-2.21,2.17-2.52,4.12-5.14,5.85-7.83,3.07-4.78,5.42-9.8,6.98-15.02,1.45-4.86,2.22-9.88,2.22-15.02s-.77-10.16-2.22-15.02c-10.23-34.18-54.71-60.16-108.67-61.5-.02,0-.04,0-.06,0-1.43-.04-2.86-.06-4.31-.06v30.03c1.39,0,2.76.04,4.13.07,32.98.87,61.01,12.05,73.6,27.8.67.84,1.31,1.68,1.89,2.55,3.38,5.02,5.23,10.44,5.23,16.1,0,2.54-.39,5.04-1.1,7.47-.64,2.16-1.53,4.27-2.69,6.32-5.41-5.35-11.73-10.15-18.79-14.27-17.21-10.04-38.81-16.01-62.26-16.01v30.36c2.74,0,5.45.08,8.13.22,22.53,1.17,42.48,7.18,56.38,16.11-15.56,9.99-38.68,16.32-64.52,16.32v30.07c32.95,0,62.66-9.18,83.67-23.91,5.48-3.84,10.37-8.06,14.57-12.6Z"/><path fill="#ef0" d="M107.13,120.24c-21.38-1.1-40.42-6.06-54.13-14.13,17.21-10.04,38.81-16.01,62.26-16.01v-30.03c-1.12,0-2.23.02-3.33.05-29.94.74-56.58,11.41-74.4,27.82-.74.68-1.47,1.38-2.18,2.09-1.32-2.1-2.36-4.27-3.1-6.5-.87-2.62-1.35-5.31-1.35-8.06,0-24.3,35.43-44.14,80-45.37.02,0,.04,0,.06,0,1.43-.03,2.86-.06,4.31-.06V0C51.61,0,0,34.28,0,76.57c0,5.14.77,10.16,2.22,15.02,1.56,5.22,3.92,10.24,6.98,15.02,2.42,3.76,5.28,7.37,8.54,10.8,1.37,1.44,2.81,2.85,4.31,4.22,1.98,1.81,4.07,3.55,6.28,5.24,5.81,4.43,12.38,8.41,19.56,11.85,18.95,9.08,42.22,14.4,67.37,14.4v-32.65c-2.74,0-5.45-.08-8.13-.21Z"/></svg></div>
+              <div class="firepower-icon term-hl" data-hl="firepower" id="firepowerIcon" title="Firepower by Dimes"><svg viewBox="0 0 230 243.24" width="14" height="14" xmlns="http://www.w3.org/2000/svg"><path fill="#ef0" d="M216.65,173.09c-15.47,18.94-42.61,33.06-75.01,38.1-8.3,1.49-17.16,2.3-26.37,2.3v29.74c63.66,0,115.26-34.28,115.26-76.57,0-5.14-.77-10.16-2.22-15.02-2.28,7.61-6.25,14.82-11.66,21.44Z"/><path fill="#ef0" d="M31.6,159.27c-5.48-3.84-10.37-8.06-14.57-12.6-.67-.73-1.33-1.46-1.97-2.21-2.17-2.52-4.12-5.14-5.85-7.83-3.07-4.78-5.42-9.8-6.98-15.02-1.45,4.86-2.22,9.88-2.22,15.02s.77,10.16,2.22,15.02c2.28,7.61,6.25,14.82,11.66,21.44,15.47,18.94,42.61,33.06,75.01,38.1,8.47,1.32,17.3,2.3,26.37,2.3v-30.32c-32.95,0-62.66-9.18-83.67-23.91Z"/><path fill="#ef0" d="M213.5,146.68c.67-.73,1.33-1.46,1.97-2.21,2.17-2.52,4.12-5.14,5.85-7.83,3.07-4.78,5.42-9.8,6.98-15.02,1.45-4.86,2.22-9.88,2.22-15.02s-.77-10.16-2.22-15.02c-10.23-34.18-54.71-60.16-108.67-61.5-.02,0-.04,0-.06,0-1.43-.04-2.86-.06-4.31-.06v30.03c1.39,0,2.76.04,4.13.07,32.98.87,61.01,12.05,73.6,27.8.67.84,1.31,1.68,1.89,2.55,3.38,5.02,5.23,10.44,5.23,16.1,0,2.54-.39,5.04-1.1,7.47-.64,2.16-1.53,4.27-2.69,6.32-5.41-5.35-11.73-10.15-18.79-14.27-17.21-10.04-38.81-16.01-62.26-16.01v30.36c2.74,0,5.45.08,8.13.22,22.53,1.17,42.48,7.18,56.38,16.11-15.56,9.99-38.68,16.32-64.52,16.32v30.07c32.95,0,62.66-9.18,83.67-23.91,5.48-3.84,10.37-8.06,14.57-12.6Z"/><path fill="#ef0" d="M107.13,120.24c-21.38-1.1-40.42-6.06-54.13-14.13,17.21-10.04,38.81-16.01,62.26-16.01v-30.03c-1.12,0-2.23.02-3.33.05-29.94.74-56.58,11.41-74.4,27.82-.74.68-1.47,1.38-2.18,2.09-1.32-2.1-2.36-4.27-3.1-6.5-.87-2.62-1.35-5.31-1.35-8.06,0-24.3,35.43-44.14,80-45.37.02,0,.04,0,.06,0,1.43-.03,2.86-.06,4.31-.06V0C51.61,0,0,34.28,0,76.57c0,5.14.77,10.16,2.22,15.02,1.56,5.22,3.92,10.24,6.98,15.02,2.42,3.76,5.28,7.37,8.54,10.8,1.37,1.44,2.81,2.85,4.31,4.22,1.98,1.81,4.07,3.55,6.28,5.24,5.81,4.43,12.38,8.41,19.56,11.85,18.95,9.08,42.22,14.4,67.37,14.4v-32.65c-2.74,0-5.45-.08-8.13-.21Z"/></svg></div>
               <div class="profile-skel"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" fill="white"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" fill="white"/></svg></div>
             </div>
           </div>
@@ -353,33 +360,38 @@
               </svg>
               <svg style="position:absolute;inset:0;width:100%;height:100%" viewBox="0 0 600 200" preserveAspectRatio="none" fill="none">
                 <defs>
-                  <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="rgba(255,255,255,.08)"/>
+                  <!-- Vertical fade for area fills -->
+                  <linearGradient id="fillFade1" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="rgba(255,255,255,.06)"/>
                     <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
                   </linearGradient>
-                  <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stop-color="rgba(255,255,255,.06)"/>
-                    <stop offset="70%" stop-color="rgba(255,255,255,.15)"/>
-                    <stop offset="100%" stop-color="rgba(255,255,255,.2)"/>
+                  <linearGradient id="fillFade2" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="rgba(255,255,255,.03)"/>
+                    <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
                   </linearGradient>
-                  <filter id="glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                  <linearGradient id="fillFade3" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="rgba(255,255,255,.025)"/>
+                    <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+                  </linearGradient>
+                  <!-- Horizontal mask to fade right edge -->
+                  <linearGradient id="hFade" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="white"/>
+                    <stop offset="75%" stop-color="white"/>
+                    <stop offset="100%" stop-color="black"/>
+                  </linearGradient>
+                  <mask id="rightFade"><rect width="600" height="200" fill="url(#hFade)"/></mask>
                 </defs>
-                <!-- Area fill -->
-                <path d="M0 170Q60 168 120 165Q180 160 240 148Q300 135 360 118Q420 95 480 72Q540 55 600 40L600 200L0 200Z" fill="url(#chartGrad)"/>
-                <!-- Main line with glow -->
-                <path d="M0 170Q60 168 120 165Q180 160 240 148Q300 135 360 118Q420 95 480 72Q540 55 600 40" stroke="url(#lineGrad)" stroke-width="2" filter="url(#glow)"/>
-                <!-- Bright tip dot -->
-                <circle cx="590" cy="43" r="3" fill="rgba(255,255,255,.25)"/>
-                <circle cx="590" cy="43" r="6" fill="rgba(255,255,255,.06)"/>
-                <!-- Secondary subtle line -->
-                <path d="M0 175Q80 174 160 172Q240 170 320 167Q400 162 480 155Q540 148 600 140" stroke="rgba(255,255,255,.04)" stroke-width="1.5"/>
+                <g mask="url(#rightFade)">
+                  <!-- Main line area fill -->
+                  <path d="M0 170Q60 168 120 165Q180 160 240 148Q300 135 360 118Q420 95 480 72Q540 55 600 40L600 200L0 200Z" fill="url(#fillFade1)"/>
+                  <!-- Main line — fine, no glow -->
+                  <path d="M0 170Q60 168 120 165Q180 160 240 148Q300 135 360 118Q420 95 480 72Q540 55 600 40" stroke="rgba(255,255,255,.45)" stroke-width="1"/>
+                </g>
               </svg>
             </div>
           </div>
 
-          <div class="chart-x-labels">
-            <div class="skel" style="width:24px;height:8px"></div><div class="skel" style="width:24px;height:8px"></div><div class="skel" style="width:24px;height:8px"></div><div class="skel" style="width:24px;height:8px"></div><div class="skel" style="width:24px;height:8px"></div>
-          </div>
+
 
           <div class="volume-bar">
             <div class="skel" style="width:90px;height:10px"></div>
@@ -408,7 +420,7 @@
           </div>
 
           <!-- LEVERAGE — refined -->
-          <div class="leverage-section" id="leverageSection">
+          <div class="leverage-section term-hl" data-hl="multiply" id="leverageSection">
             <div class="leverage-inner">
               <div class="leverage-header">
                 <span class="leverage-label">Leverage <span class="leverage-info">i</span></span>
@@ -547,17 +559,47 @@ function selectProduct(key) {
     productSubtitle.classList.add('selected');
     requestAnimationFrame(() => productSubtitle.classList.add('active'));
   }, 250);
+  highlightProduct(key);
 }
 
 function resetProduct() {
   activeProduct = null;
   productSubtitle.classList.remove('active');
   productSubtitle.classList.remove('selected');
+  unhighlightProduct();
   tabs.forEach(t => t.classList.remove('active'));
   tabGroups.forEach(g => {
     g.classList.remove('active');
     g.querySelector('.tab-desc').textContent = '';
   });
+}
+
+const terminalEl = document.getElementById('terminal');
+const ringEl = document.getElementById('highlightRing');
+const hlEls = document.querySelectorAll('.term-hl');
+
+function highlightProduct(key) {
+  const target = document.querySelector(`.term-hl[data-hl="${key}"]`);
+  if (!target) { unhighlightProduct(); return; }
+  const termRect = terminalEl.getBoundingClientRect();
+  const termBorder = parseFloat(getComputedStyle(terminalEl).borderLeftWidth) || 0;
+  const tRect = target.getBoundingClientRect();
+  const pad = 6;
+  const targetRadius = parseFloat(getComputedStyle(target).borderRadius) || 0;
+  ringEl.style.left = (tRect.left - termRect.left - termBorder - pad) + 'px';
+  ringEl.style.top = (tRect.top - termRect.top - termBorder - pad) + 'px';
+  ringEl.style.width = (tRect.width + pad * 2) + 'px';
+  ringEl.style.height = (tRect.height + pad * 2) + 'px';
+  ringEl.style.borderRadius = (targetRadius + pad) + 'px';
+  if (ringEl.classList.contains('active')) {
+    ringEl.classList.add('animate-position');
+  }
+  ringEl.classList.add('active');
+}
+
+function unhighlightProduct() {
+  ringEl.classList.remove('active');
+  ringEl.classList.remove('animate-position');
 }
 
 function hoverProduct(key) {
@@ -566,11 +608,13 @@ function hoverProduct(key) {
   productSubtitle.innerHTML = products[key].subHover;
   positionSubtitle(key, 'hover');
   requestAnimationFrame(() => productSubtitle.classList.add('active'));
+  highlightProduct(key);
 }
 
 function unhoverProduct() {
   if (activeProduct) return;
   productSubtitle.classList.remove('active');
+  unhighlightProduct();
 }
 
 tabs.forEach(tab => {
@@ -956,7 +1000,7 @@ window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer
     } else {
       statsEl.classList.remove('collapsed');
       sectionEl.classList.remove('lev-min');
-      statsEl.style.maxHeight = statsEl.scrollHeight + 'px';
+      statsEl.style.maxHeight = '200px';
       sharesEl.textContent   = Math.round((1000 * lev) / 0.33).toLocaleString();
       posEl.textContent      = '$' + (1000 * lev).toLocaleString();
       liqEl.textContent      = '¢' + Math.max(1, Math.round(100 / lev * 0.78));
