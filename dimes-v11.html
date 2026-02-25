@@ -247,6 +247,7 @@
      ═══════════════════════════════════ */
   /* ═══ WHY / BACKERS / CTA / FOOTER ═══ */
   .why{padding:40px 48px 140px;max-width:1200px;margin:0 auto;position:relative}
+  .why .section-header::before,.why .section-header::after{width:calc(50% - 230px)}
   .why-grid{display:grid;grid-template-columns:repeat(2,1fr);grid-template-rows:1fr 1fr;gap:8px;margin-top:80px;position:relative}
   .why-card{padding:30px 36px;cursor:default;background:rgba(255,255,255,.015);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);border-radius:16px;border:1px solid rgba(255,255,255,.04);position:relative;overflow:hidden;transition:all .4s}
   .why-card:nth-child(1)::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at bottom right,rgba(255,255,255,.08) 0%,transparent 70%);opacity:0;transition:opacity .5s ease;pointer-events:none}
@@ -267,22 +268,28 @@
   .why-center img{width:120px;mix-blend-mode:screen}
 
   .backers{padding:100px 48px;max-width:1200px;margin:0 auto}
-  .backer-logos{display:flex;align-items:center;justify-content:center;gap:64px;margin-top:60px}
-  .backer-name{font-weight:500;font-size:18px;color:var(--text);opacity:.35;transition:opacity .3s;white-space:nowrap}
-  .backer-name:hover{opacity:.7}
+  .backers .section-header::before,.backers .section-header::after{width:calc(50% - 130px)}
+  .backer-logos{display:flex;align-items:flex-start;justify-content:center;gap:64px;margin-top:60px}
+  .backer-item{display:flex;flex-direction:column;align-items:center;position:relative;text-decoration:none;cursor:pointer}
+  .backer-item img{height:28px;opacity:.35;transition:opacity .3s;cursor:default}
+  .backer-item:hover img{opacity:.7}
+  .backer-desc{opacity:0;transform:translateY(-4px);transition:opacity .3s ease,transform .3s ease;font-size:11px;color:var(--text-dim);line-height:1.5;text-align:center;margin-top:12px;pointer-events:none;white-space:nowrap}
+  .backer-item:hover .backer-desc{opacity:1;transform:translateY(0)}
 
-  .cta-section{padding:80px 48px 120px}
-  .cta-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:80px;min-height:500px}
-  .cta-visual{display:flex;align-items:center;justify-content:center}
-  .hand-clasp-container{position:relative;width:100%;max-width:500px}
-  .hand-clasp-img{width:100%;height:auto;filter:drop-shadow(0 0 80px rgba(238,255,0,.08))}
-  .cta-content h2{font-size:clamp(36px,4vw,52px);font-weight:600;line-height:1.15;letter-spacing:-.03em;margin-bottom:20px}
+  .cta-section{padding:80px 48px 0}
+  .cta-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:0;min-height:500px;overflow:visible}
+  .cta-visual{display:flex;align-items:flex-end;justify-content:flex-start;align-self:end;overflow:visible}
+  .hand-clasp-container{position:relative}
+  .hand-clasp-img{width:800px;mix-blend-mode:screen;display:block;margin-left:-110px}
+  .cta-content{text-align:center;margin-left:-100px}
+  .cta-content h2{font-size:clamp(28px,3.2vw,42px);font-weight:600;line-height:1.15;letter-spacing:-.03em;margin-bottom:20px}
   .cta-content h2 em{font-style:normal;font-weight:300;color:var(--yellow)}
   .cta-content .cta-sub{font-size:16px;color:var(--text-dim);margin-bottom:36px;line-height:1.6}
   .cta-btn{display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:500;color:var(--black);background:var(--yellow);border:none;border-radius:100px;padding:14px 32px;cursor:pointer;text-decoration:none;transition:all .3s;font-family:var(--font)}
   .cta-btn:hover{box-shadow:0 0 40px rgba(238,255,0,.25);transform:translateY(-2px)}
 
-  footer{padding:40px 48px;border-top:1px solid rgba(255,255,255,.04);display:flex;justify-content:space-between;align-items:center;max-width:1300px;margin:0 auto}
+  footer{padding:40px 48px;border-top:none;display:flex;justify-content:space-between;align-items:center;max-width:1300px;margin:0 auto;position:relative}
+  footer::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:100vw;height:1px;background:rgba(255,255,255,.04)}
   .footer-logo{display:flex;align-items:center;text-decoration:none}
   .footer-logo svg{height:18px;width:auto}
   .footer-links{display:flex;gap:32px}
@@ -518,18 +525,23 @@
 
 <section class="backers">
   <div class="section-header reveal"><h2 class="section-title">Backers</h2></div>
-  <div class="backer-logos reveal"><span class="backer-name">Strobe</span><span class="backer-name">White Star Capital</span><span class="backer-name">Coinbase Ventures</span><span class="backer-name">Accel</span></div>
+  <div class="backer-logos reveal">
+    <a class="backer-item" href="https://strobe.fund/" target="_blank" rel="noopener"><img src="assets/Strobe_Logo.svg" alt="Strobe"><div class="backer-desc">Crypto-native fund. Prev. Blocktower VC<br>Backed Ethena, Maple, Centrifuge, Morpho</div></a>
+    <a class="backer-item" href="https://whitestarcapital.com/" target="_blank" rel="noopener"><img src="assets/White_Star_Capital_Logo.svg" alt="White Star Capital"><div class="backer-desc">Crypto-native fund<br>Backed Ledn, Haruko, Paraswap</div></a>
+    <a class="backer-item" href="https://www.coinbase.com/en-ca/ventures" target="_blank" rel="noopener"><img src="assets/Coinbase_Ventures.svg" alt="Coinbase Ventures"><div class="backer-desc">Coinbase VC arm<br>Backed OpenSea, Uniswap, Dune</div></a>
+    <a class="backer-item" href="https://www.accel.com/" target="_blank" rel="noopener"><img src="assets/Accel_Logo.svg" alt="Accel"><div class="backer-desc">Global, tier-1 fund<br>Backed Facebook, Circle, Slack</div></a>
+  </div>
 </section>
 
 <section class="cta-section">
   <div class="cta-inner">
     <div class="cta-visual reveal">
       <div class="hand-clasp-container">
-        <svg viewBox="0 0 500 350" fill="none" class="hand-clasp-img"><defs><radialGradient id="hg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#EEFF00" stop-opacity=".3"/><stop offset="100%" stop-color="#EEFF00" stop-opacity="0"/></radialGradient><linearGradient id="aL" x1="0%" y1="100%" x2="60%" y2="30%"><stop offset="0%" stop-color="#2a2a00"/><stop offset="50%" stop-color="#8aa800"/><stop offset="100%" stop-color="#EEFF00"/></linearGradient><linearGradient id="aR" x1="100%" y1="100%" x2="40%" y2="30%"><stop offset="0%" stop-color="#2a2a00"/><stop offset="50%" stop-color="#8aa800"/><stop offset="100%" stop-color="#EEFF00"/></linearGradient></defs><ellipse cx="250" cy="175" rx="200" ry="150" fill="url(#hg)"/><path d="M50 340Q120 280 200 180Q230 140 260 140Q280 140 300 160Q340 200 380 250Q420 300 450 340" fill="none" stroke="url(#aL)" stroke-width="40" stroke-linecap="round"/><path d="M450 340Q380 280 300 180Q270 140 240 140Q220 140 200 160Q160 200 120 250Q80 300 50 340" fill="none" stroke="url(#aR)" stroke-width="36" stroke-linecap="round" opacity=".7"/><ellipse cx="250" cy="165" rx="50" ry="35" fill="#EEFF00" opacity=".15"/></svg>
+        <img src="assets/Dimes_Clasp.png" alt="Dimes handshake" class="hand-clasp-img">
       </div>
     </div>
     <div class="cta-content reveal">
-      <h2>Stop capping your flow.<br><em>Let your users size up with Dimes.</em></h2>
+      <h2>Stop capping your flow.<br><em style="white-space:nowrap">Let your users size up with Dimes.</em></h2>
       <p class="cta-sub">30% of borrow fees flowing right back to you.</p>
       <a href="#" class="cta-btn">10x your flow</a>
     </div>
