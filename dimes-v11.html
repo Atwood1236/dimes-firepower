@@ -250,12 +250,12 @@
   .why .section-header::before,.why .section-header::after{width:calc(50% - 230px)}
   .why-grid{display:grid;grid-template-columns:repeat(2,1fr);grid-template-rows:1fr 1fr;gap:8px;margin-top:80px;position:relative}
   .why-card{padding:30px 36px;cursor:default;background:rgba(255,255,255,.015);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);border-radius:16px;border:1px solid rgba(255,255,255,.04);position:relative;overflow:hidden;transition:all .4s}
-  .why-card:nth-child(1)::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at bottom right,rgba(255,255,255,.08) 0%,transparent 70%);opacity:0;transition:opacity .5s ease;pointer-events:none}
-  .why-card:nth-child(2)::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at bottom left,rgba(255,255,255,.08) 0%,transparent 70%);opacity:0;transition:opacity .5s ease;pointer-events:none}
-  .why-card:nth-child(3)::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top right,rgba(255,255,255,.08) 0%,transparent 70%);opacity:0;transition:opacity .5s ease;pointer-events:none}
-  .why-card:nth-child(4)::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top left,rgba(255,255,255,.08) 0%,transparent 70%);opacity:0;transition:opacity .5s ease;pointer-events:none}
+  .why-card:nth-child(1)::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at bottom right,rgba(238,255,0,.08) 0%,transparent 70%);opacity:0;transition:opacity .5s ease;pointer-events:none}
+  .why-card:nth-child(2)::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at bottom left,rgba(238,255,0,.08) 0%,transparent 70%);opacity:0;transition:opacity .5s ease;pointer-events:none}
+  .why-card:nth-child(3)::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top right,rgba(238,255,0,.08) 0%,transparent 70%);opacity:0;transition:opacity .5s ease;pointer-events:none}
+  .why-card:nth-child(4)::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top left,rgba(238,255,0,.08) 0%,transparent 70%);opacity:0;transition:opacity .5s ease;pointer-events:none}
   .why-card:hover::after{opacity:1}
-  .why-card:hover{border-color:rgba(255,255,255,.2);box-shadow:inset 0 0 30px rgba(255,255,255,.03);transform:translateY(0) scale(1.02) !important}
+  .why-card:hover{border-color:rgba(238,255,0,.2);box-shadow:inset 0 0 30px rgba(238,255,0,.03);transform:translateY(0) scale(1.02) !important}
   .why-card:hover h3{color:#fff}
   .why-card:hover p{color:var(--text-muted)}
   .why-card:nth-child(1){border-bottom-right-radius:80px;padding-bottom:45px;transform-origin:bottom right}
@@ -265,9 +265,13 @@
   .why-card h3{font-size:20px;font-weight:600;line-height:1.3;margin-bottom:14px;transition:color .4s ease}
   .why-card p{font-size:14px;color:var(--text-dim);line-height:1.6;transition:color .4s ease}
   .why-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:140px;height:140px;display:flex;align-items:center;justify-content:center;z-index:2}
-  .why-center img{width:120px;mix-blend-mode:screen}
+  .why-center svg{width:45px}
+  .why-grid:has(.why-card:nth-child(1):hover) .q1{fill:rgba(238,255,0,.4);opacity:1}
+  .why-grid:has(.why-card:nth-child(2):hover) .q2{fill:rgba(238,255,0,.4);opacity:1}
+  .why-grid:has(.why-card:nth-child(3):hover) .q3{fill:rgba(238,255,0,.4);opacity:1}
+  .why-grid:has(.why-card:nth-child(4):hover) .q4{fill:rgba(238,255,0,.4);opacity:1}
 
-  .backers{padding:100px 48px;max-width:1200px;margin:0 auto}
+  .backers{padding:100px 48px 40px;max-width:1200px;margin:0 auto}
   .backers .section-header::before,.backers .section-header::after{width:calc(50% - 130px)}
   .backer-logos{display:flex;align-items:flex-start;justify-content:center;gap:64px;margin-top:60px}
   .backer-item{display:flex;flex-direction:column;align-items:center;position:relative;text-decoration:none;cursor:pointer}
@@ -276,7 +280,7 @@
   .backer-desc{opacity:0;transform:translateY(-4px);transition:opacity .3s ease,transform .3s ease;font-size:11px;color:var(--text-dim);line-height:1.5;text-align:center;margin-top:12px;pointer-events:none;white-space:nowrap}
   .backer-item:hover .backer-desc{opacity:1;transform:translateY(0)}
 
-  .cta-section{padding:80px 48px 0}
+  .cta-section{padding:40px 48px 0}
   .cta-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:0;min-height:500px;overflow:visible}
   .cta-visual{display:flex;align-items:flex-end;justify-content:flex-start;align-self:end;overflow:visible}
   .hand-clasp-container{position:relative}
@@ -285,8 +289,33 @@
   .cta-content h2{font-size:clamp(28px,3.2vw,42px);font-weight:600;line-height:1.15;letter-spacing:-.03em;margin-bottom:20px}
   .cta-content h2 em{font-style:normal;font-weight:300;color:var(--yellow)}
   .cta-content .cta-sub{font-size:16px;color:var(--text-dim);margin-bottom:36px;line-height:1.6}
-  .cta-btn{display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:500;color:var(--black);background:var(--yellow);border:none;border-radius:100px;padding:14px 32px;cursor:pointer;text-decoration:none;transition:all .3s;font-family:var(--font)}
-  .cta-btn:hover{box-shadow:0 0 40px rgba(238,255,0,.25);transform:translateY(-2px)}
+  .cta-btn{display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:500;color:var(--black);background:var(--yellow);border:none;border-radius:100px;padding:14px 32px;cursor:pointer;text-decoration:none;transition:all .5s cubic-bezier(.16,1,.3,1);font-family:var(--font);position:relative;z-index:1}
+  .cta-btn-wrap{position:relative;display:inline-block}
+  .cta-btn-glow{position:absolute;bottom:45%;left:50%;transform:translateX(-50%);width:800px;height:500px;pointer-events:none;opacity:0;transition:opacity 1.2s cubic-bezier(.16,1,.3,1);z-index:0}
+  .cta-btn-glow .glow-atmo{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:100%;height:100%;background:radial-gradient(ellipse 70% 80% at 50% 100%,rgba(238,255,0,.1) 0%,rgba(238,255,0,.04) 35%,transparent 65%);filter:blur(40px)}
+  .cta-btn-glow .glow-mid{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:500px;height:320px;background:radial-gradient(ellipse 60% 70% at 50% 100%,rgba(255,255,240,.12) 0%,rgba(238,255,0,.06) 30%,transparent 60%);filter:blur(25px)}
+  .cta-btn-glow .glow-core{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:250px;height:160px;background:radial-gradient(ellipse 50% 60% at 50% 100%,rgba(255,255,255,.22) 0%,rgba(255,255,240,.08) 35%,transparent 60%);filter:blur(12px)}
+  .cta-btn-glow .glow-slit{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:180px;height:2px;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.7) 30%,rgba(255,255,255,.9) 50%,rgba(255,255,255,.7) 70%,transparent 100%);filter:blur(1.5px);border-radius:100px}
+  .cta-btn-glow .glow-spill{position:absolute;top:100%;left:50%;transform:translateX(-50%);width:300px;height:80px;background:radial-gradient(ellipse 80% 100% at 50% 0%,rgba(238,255,0,.06) 0%,transparent 70%);filter:blur(15px)}
+  .cta-btn-wrap:hover .cta-btn-glow{opacity:1}
+  .cta-btn-echo{position:absolute;inset:0;border-radius:100px;border:1px solid rgba(238,255,0,.25);background:rgba(238,255,0,.06);pointer-events:none;transform-origin:left center;transform:scaleX(1) translateX(0);opacity:0}
+  .echo-1{transition:all .5s cubic-bezier(.16,1,.3,1)}
+  .echo-2{transition:all .5s cubic-bezier(.16,1,.3,1) .03s}
+  .echo-3{transition:all .5s cubic-bezier(.16,1,.3,1) .06s}
+  .echo-4{transition:all .5s cubic-bezier(.16,1,.3,1) .09s}
+  .echo-5{transition:all .5s cubic-bezier(.16,1,.3,1) .12s}
+  .echo-6{transition:all .5s cubic-bezier(.16,1,.3,1) .15s}
+  .echo-7{transition:all .5s cubic-bezier(.16,1,.3,1) .18s}
+  .echo-8{transition:all .5s cubic-bezier(.16,1,.3,1) .21s}
+  .cta-btn-wrap:hover .echo-1{transform:translateX(6px) scaleX(1.04) scaleY(1.08);opacity:.85}
+  .cta-btn-wrap:hover .echo-2{transform:translateX(14px) scaleX(1.09) scaleY(1.18);opacity:.7}
+  .cta-btn-wrap:hover .echo-3{transform:translateX(24px) scaleX(1.15) scaleY(1.30);opacity:.55}
+  .cta-btn-wrap:hover .echo-4{transform:translateX(36px) scaleX(1.22) scaleY(1.44);opacity:.42}
+  .cta-btn-wrap:hover .echo-5{transform:translateX(50px) scaleX(1.30) scaleY(1.60);opacity:.32}
+  .cta-btn-wrap:hover .echo-6{transform:translateX(66px) scaleX(1.39) scaleY(1.78);opacity:.22}
+  .cta-btn-wrap:hover .echo-7{transform:translateX(84px) scaleX(1.49) scaleY(1.98);opacity:.14}
+  .cta-btn-wrap:hover .echo-8{transform:translateX(104px) scaleX(1.60) scaleY(2.20);opacity:.08}
+  .cta-btn:hover{box-shadow:0 0 50px rgba(238,255,0,.3),0 0 100px rgba(238,255,0,.1);transform:translateY(-2px)}
 
   footer{padding:40px 48px;border-top:none;display:flex;justify-content:space-between;align-items:center;max-width:1300px;margin:0 auto;position:relative}
   footer::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:100vw;height:1px;background:rgba(255,255,255,.04)}
@@ -519,7 +548,7 @@
     <div class="why-card reveal"><h3>Seamless credit, embedded in your UI</h3><p>Your users get instant credit without leaving your app —<br>powered by Dimes' risk engine behind the scenes.</p></div>
     <div class="why-card reveal"><h3>Offer high-conviction products<br>to your users</h3><p>Give your users the tools to take bigger positions on the<br>outcomes they believe in.</p></div>
     <div class="why-card reveal"><h3>Outsource credit to trusted experts,<br>with deep liquidity</h3><p>Without managing credit risk or liquidity yourself.</p></div>
-    <div class="why-center"><img src="assets/why-bg.png" alt=""></div>
+    <div class="why-center"><svg viewBox="0 0 1260.91 1330.81" width="45" xmlns="http://www.w3.org/2000/svg"><style>.ol{fill:none;stroke:#ef0;opacity:.2;stroke-miterlimit:10;stroke-width:15px;transition:opacity .4s ease,fill .4s ease}</style><path class="ol q4" d="M1258.41,910.94c0-28.01-4.16-55.38-12.08-81.84-57.23,191.32-311.21,335.53-615.87,335.53v163.69c346.81,0,627.95-186.86,627.95-417.37Z"/><path class="ol q3" d="M630.45,1000.93c-.09,0-.17,0-.26,0-2.11,0-4.22-.01-6.33-.03-175.96-1.2-334.59-50.5-447.52-129.07-51.73-35.99-93.88-78.12-123.71-124.59-16.71-26.03-29.56-53.42-38.06-81.84-7.92,26.47-12.08,53.83-12.08,81.84s4.16,55.38,12.08,81.84c57.23,191.32,311.21,335.53,615.87,335.53v-163.69Z"/><path class="ol q2" d="M1246.33,501.72c-56.47-188.78-304.51-331.69-603.79-335.44-.21,0-.41,0-.62,0-1.57-.02-3.14-.04-4.72-.05-2.25-.02-4.49-.03-6.75-.03v163.03c32.3,0,63.82,1.84,94.25,5.34,156.71,18.01,284.19,80.04,338.08,161.62,17.94,27.16,27.73,56.48,27.73,87.06,0,13.51-1.92,26.77-5.6,39.71-4.21,14.8-10.73,29.17-19.36,43.01-18.8,30.15-47.58,57.73-84.17,81.54-80.69,52.5-199.34,86.66-332.54,89.55-2.52.05-5.04.11-7.57.13-3.6.05-7.21.07-10.83.07v163.69c.09,0,.17,0,.26,0,2.11,0,4.22-.01,6.33-.03,175.96-1.2,334.59-50.5,447.52-129.07,51.73-35.99,93.88-78.12,123.71-124.59,16.71-26.03,29.56-53.42,38.06-81.84,7.92-26.47,12.08-53.83,12.08-81.84s-4.16-55.38-12.08-81.84Z"/><path class="ol q3" d="M536.21,334.55c-156.71,18.01-284.19,80.04-338.09,161.62,17.62,26.13,43.24,50.21,75.29,71.38,5.25,3.47,10.67,6.86,16.26,10.17,84.09-51.19,205.62-83.34,340.78-83.34v-164.5c-32.03,0-63.5,1.6-94.25,4.68Z"/><path class="ol q4" d="M971.23,577.72c-84.09-51.19-205.62-83.34-340.78-83.34v163.36c9.99,0,19.9.18,29.73.52,128.65,4.53,242.9,38.23,321.22,89.23,36.59-23.81,65.37-51.39,84.17-81.54-20.39-33-52.79-62.94-94.33-88.23Z"/><path class="ol q1" d="M618.37,166.27c.21,0,.41,0,.62,0,1.57-.02,3.14-.04,4.72-.05,2.25-.02,4.49-.03,6.75-.03V2.5C283.64,2.5,2.5,189.36,2.5,419.87c0,28.01,4.16,55.38,12.08,81.84,8.5,28.43,21.35,55.81,38.06,81.84,18.71,29.13,42.24,56.56,69.96,81.84,16.51,15.06,34.5,29.36,53.83,42.8,26.59,18.49,55.72,35.36,87,50.36,98.62,47.29,218.73,76,348.72,78.48,2.48.05,4.97.1,7.47.13,3.61.04,7.21.07,10.83.07v-178.48c-9.99,0-19.9-.17-29.73-.51-123.19-4.22-233.17-34.44-311.05-80.54-5.59-3.31-11.01-6.7-16.26-10.17-32.06-21.17-57.67-45.25-75.29-71.38-8.4-12.47-15-25.4-19.58-38.71-5.03-14.59-7.66-29.62-7.66-44.99,0-133.85,199.26-242.77,447.49-246.2Z"/></svg></div>
   </div>
 </section>
 
@@ -543,7 +572,18 @@
     <div class="cta-content reveal">
       <h2>Stop capping your flow.<br><em style="white-space:nowrap">Let your users size up with Dimes.</em></h2>
       <p class="cta-sub">30% of borrow fees flowing right back to you.</p>
-      <a href="#" class="cta-btn">10x your flow</a>
+      <div class="cta-btn-wrap">
+        <div class="cta-btn-glow"><div class="glow-atmo"></div><div class="glow-mid"></div><div class="glow-core"></div><div class="glow-slit"></div><div class="glow-spill"></div></div>
+        <div class="cta-btn-echo echo-8"></div>
+        <div class="cta-btn-echo echo-7"></div>
+        <div class="cta-btn-echo echo-6"></div>
+        <div class="cta-btn-echo echo-5"></div>
+        <div class="cta-btn-echo echo-4"></div>
+        <div class="cta-btn-echo echo-3"></div>
+        <div class="cta-btn-echo echo-2"></div>
+        <div class="cta-btn-echo echo-1"></div>
+        <a href="#" class="cta-btn">10x your flow</a>
+      </div>
     </div>
   </div>
 </section>
