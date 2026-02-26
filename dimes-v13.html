@@ -118,7 +118,7 @@
   /* ═══════════════════════════════════
      PRODUCTS — TERMINAL v5
      ═══════════════════════════════════ */
-  .products{padding:100px 48px 200px;max-width:1400px;margin:0 auto;overflow:visible;position:relative;z-index:51}
+  .products{padding:100px 48px 200px;max-width:1400px;margin:0 auto;overflow:visible;position:relative;z-index:51;margin-top:60px}
   .page-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:50;opacity:0;pointer-events:none;transition:opacity .6s ease}
   .page-overlay.active{opacity:1}
   .products::before{content:'';position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:0;opacity:0;pointer-events:none;transition:opacity .6s ease}
@@ -284,7 +284,7 @@
      ZOOM STATES — transform-origin based
      ═══════════════════════════════════ */
   /* ═══ WHY / BACKERS / CTA / FOOTER ═══ */
-  .why{padding:40px 48px 140px;max-width:1200px;margin:0 auto;position:relative}
+  .why{padding:40px 48px 60px;max-width:1200px;margin:0 auto;position:relative}
   .why .section-header::before,.why .section-header::after{width:calc(50% - 230px)}
   .why-grid{display:grid;grid-template-columns:repeat(2,1fr);grid-template-rows:1fr 1fr;gap:8px;margin-top:80px;position:relative}
   .why-card{padding:30px 36px;cursor:default;background:rgba(255,255,255,.015);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);border-radius:16px;border:1px solid rgba(255,255,255,.04);position:relative;overflow:hidden;transition:all .4s;text-align:center;display:grid;place-content:center;min-height:230px}
@@ -321,7 +321,7 @@
   .why-grid:has(.why-card:nth-child(3):hover) .q3{fill:rgba(238,255,0,.4);opacity:1}
   .why-grid:has(.why-card:nth-child(4):hover) .q4{fill:rgba(238,255,0,.4);opacity:1}
 
-  .backers{padding:100px 48px 40px;max-width:1200px;margin:0 auto}
+  .backers{padding:80px 48px 40px;max-width:1200px;margin:0 auto}
   .backers .section-header::before,.backers .section-header::after{width:calc(50% - 130px)}
   .backer-logos{display:flex;align-items:flex-start;justify-content:center;gap:64px;margin-top:60px}
   .backer-item{display:flex;flex-direction:column;align-items:center;position:relative;text-decoration:none;cursor:pointer}
@@ -379,6 +379,8 @@
   .reveal.visible{opacity:1;transform:translateY(0)}
   .step-reveal{opacity:0;transform:translateY(40px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1)}
   .step-reveal.visible{opacity:1;transform:translateY(0)}
+  .cta-reveal{opacity:0;transform:translateY(50px);transition:opacity 1.2s cubic-bezier(.16,1,.3,1),transform 1.2s cubic-bezier(.16,1,.3,1)}
+  .cta-reveal.visible{opacity:1;transform:translateY(0)}
 
   @media(max-width:1100px){
     .terminal-scene{flex-direction:column;align-items:center}
@@ -618,15 +620,15 @@
 
 <section class="cta-section">
   <div class="cta-inner">
-    <div class="cta-visual reveal">
+    <div class="cta-visual cta-reveal" style="transition-delay:0s">
       <div class="hand-clasp-container">
         <img src="assets/Dimes_Clasp.png" alt="Dimes handshake" class="hand-clasp-img">
       </div>
     </div>
-    <div class="cta-content reveal">
-      <h2>Stop capping your flow.<br><em style="white-space:nowrap">Let your users size up with Dimes.</em></h2>
-      <p class="cta-sub">30% of borrow fees flowing right back to you.</p>
-      <div class="cta-btn-wrap">
+    <div class="cta-content">
+      <h2 class="cta-reveal" style="transition-delay:.2s">Stop capping your flow.<br><em style="white-space:nowrap">Let your users size up with Dimes.</em></h2>
+      <p class="cta-sub cta-reveal" style="transition-delay:.4s">30% of borrow fees flowing right back to you.</p>
+      <div class="cta-btn-wrap cta-reveal" style="transition-delay:.6s">
         <div class="cta-btn-glow"><div class="glow-atmo"></div><div class="glow-mid"></div><div class="glow-core"></div><div class="glow-slit"></div><div class="glow-spill"></div></div>
         <div class="cta-btn-echo echo-8"></div>
         <div class="cta-btn-echo echo-7"></div>
@@ -896,6 +898,19 @@ productsEl.addEventListener('click', e => {
 new IntersectionObserver(entries => {
   entries.forEach(entry => { if (!entry.isIntersecting && activeProduct) resetProduct(); });
 }, { threshold: 0 }).observe(document.querySelector('.product-tabs-side'));
+
+// CTA section staggered reveal
+(function(){
+  var ctaSection = document.querySelector('.cta-section');
+  if (!ctaSection) return;
+  new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        ctaSection.querySelectorAll('.cta-reveal').forEach(function(el) { el.classList.add('visible'); });
+      }
+    });
+  }, { threshold: 0.15 }).observe(ctaSection);
+})();
 
 // Logo carousel – duplicate logos for seamless loop
 (function(){
