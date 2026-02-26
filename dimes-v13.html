@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dimes — Embedded Credit for Onchain Front-ends</title>
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #191919;
+    --yellow: #EEFF00;
+    --text: #e8e8e8;
+    --text-dim: #777;
+    --text-muted: #555;
+    --font: 'Bai Jamjuree', system-ui, sans-serif;
+    --green: #22c55e;
+    --red: #ef4444;
+    /* Terminal — liquid glass palette */
+    --t-bg: #191919;
+    --t-surface: #222;
+    --t-border: rgba(255,255,255,0.07);
+    --t-skel: rgba(255,255,255,0.04);
+    --t-skel-light: rgba(255,255,255,0.06);
+    --t-glass: rgba(255,255,255,0.03);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--black);color:var(--text);font-family:var(--font);font-weight:300;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+  /* ═══ NAV ═══ */
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:28px 48px;display:flex;justify-content:space-between;align-items:flex-start;background:linear-gradient(to bottom,rgba(25,25,25,0.9),transparent);backdrop-filter:blur(12px)}
+  .logo{display:flex;align-items:center;text-decoration:none}
+  .logo svg{height:22px;width:auto}
+  .nav-cta{font-size:14px;font-weight:500;color:var(--black);background:var(--yellow);border:none;border-radius:100px;padding:10px 24px;cursor:pointer;text-decoration:none;transition:all .3s;font-family:var(--font)}
+  .nav-cta:hover{box-shadow:0 0 30px rgba(238,255,0,.3);transform:translateY(-1px)}
+
+  /* ═══ HERO ═══ */
+  .hero{min-height:auto;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;position:relative;overflow:hidden;padding:80px 48px 0}
+  .hero::before{content:'';position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(238,255,0,.06) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-40%);pointer-events:none}
+  .hero-text{text-align:center;position:relative;z-index:3;max-width:800px;animation:fade-up 1s cubic-bezier(.16,1,.3,1) .2s both;margin-top:40px}
+  .hero-text::before{content:'';position:absolute;inset:-20px -60px;background:rgba(25,25,25,0.85);filter:blur(40px);z-index:-1;pointer-events:none;border-radius:40px}
+  .hero h1{font-size:clamp(38px,4.8vw,60px);font-weight:600;line-height:1.05;letter-spacing:-.03em;margin-bottom:18px}
+  .hero h1 em{font-style:normal;font-weight:300;color:var(--yellow)}
+  .hero-sub{font-size:20px;color:rgba(255,255,255,0.65);line-height:1.5;max-width:none;white-space:nowrap;margin:0 auto 0}
+  .hero-cta{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:500;color:var(--black);background:var(--yellow);border:none;border-radius:100px;padding:12px 28px;cursor:pointer;text-decoration:none;transition:all .3s;font-family:var(--font);margin-top:50px}
+  .hero-cta:hover{box-shadow:0 0 40px rgba(238,255,0,.25);transform:translateY(-2px)}
+  .hero-cta svg{width:16px;height:16px}
+
+  .hero-visual{position:relative;width:100vw;margin-left:calc(-50vw + 50%);margin-top:clamp(-334px,-22vh - 10px,-134px);z-index:0;overflow:hidden;animation:hero-fade 0.6s ease 0s both}
+  @keyframes hero-fade{from{opacity:0}to{opacity:1}}
+  #heroCanvas{width:115%;margin-left:-7.5%;display:block;-webkit-mask-image:radial-gradient(ellipse 55% 55% at 45% 48%,black 40%,transparent 90%),linear-gradient(to right,black 50%,transparent 90%),linear-gradient(to top,transparent 0%,black 12%);-webkit-mask-composite:destination-in;mask-image:radial-gradient(ellipse 55% 55% at 45% 48%,black 40%,transparent 90%),linear-gradient(to right,black 50%,transparent 90%),linear-gradient(to top,transparent 0%,black 12%);mask-composite:intersect}
+
+  /* ═══ SOCIAL PROOF ═══ */
+  .social-proof{display:flex;align-items:center;justify-content:center;gap:40px;padding:40px 48px;position:relative;z-index:2;margin-top:-56px}
+  .social-proof>span{font-size:13px;color:var(--text-muted);letter-spacing:.05em;text-transform:uppercase}
+  .proof-logos{display:flex;align-items:center;gap:36px}
+  .proof-logo{opacity:.25;transition:opacity .4s ease, transform .4s ease;display:flex;align-items:center;height:20px;cursor:pointer}
+  .proof-logo:hover{opacity:.5;transform:scale(1.08)}
+  .proof-logo svg{height:100%;width:auto}
+  a.proof-logo{text-decoration:none}
+  .proof-logo:first-child{height:14px}
+
+  /* ═══ PROCESS ═══ */
+  .process{padding:80px 48px;position:relative}
+  .process-inner{max-width:1100px;margin:0 auto;position:relative}
+  .process-canvas{position:absolute;inset:0;pointer-events:none;z-index:2}
+  .process-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:155px;position:relative;z-index:3;justify-items:center;text-align:left}
+  .process-step{padding:32px 32px;cursor:default;background:rgba(255,255,255,.015);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);border-radius:16px;width:100%;max-width:320px;box-sizing:border-box;border:1px solid rgba(255,255,255,.04);position:relative;overflow:hidden}
+  .process-step::after{content:'';position:absolute;bottom:-40%;left:10%;right:10%;height:60%;background:radial-gradient(ellipse at center,rgba(255,255,255,.06) 0%,transparent 70%);opacity:0;transition:opacity .5s ease;pointer-events:none}
+  .process-step:hover::after{opacity:1}
+    .step-number{font-size:72px;color:rgba(255,255,255,.85);line-height:1;margin-bottom:16px;font-weight:700;letter-spacing:-.03em}
+  .step-title{font-size:32px;font-weight:600;margin-bottom:12px}
+  .step-desc{font-size:15px;color:var(--text-dim);line-height:1.6}
+  .step-arrow{position:absolute;bottom:12px;right:14px;font-size:18px;color:rgba(255,255,255,.2);transform:scaleX(0.6)}
+
+  /* ═══ SECTION HEADER ═══ */
+  .section-header{text-align:center;margin-bottom:80px;position:relative}
+  .section-header::before,.section-header::after{content:'';position:absolute;top:50%;height:1px;width:calc(50% - 160px);background:linear-gradient(to right,transparent,rgba(255,255,255,.08))}
+  .section-header::before{left:0}.section-header::after{right:0;background:linear-gradient(to left,transparent,rgba(255,255,255,.08))}
+  .section-title{font-size:clamp(32px,4vw,48px);font-weight:600;letter-spacing:-.03em}
+  .section-title em{font-style:normal;font-weight:300;color:var(--yellow)}
+
+  /* ═══════════════════════════════════
+     PRODUCTS — TERMINAL v5
+     ═══════════════════════════════════ */
+  .products{padding:100px 48px 200px;max-width:1400px;margin:0 auto;overflow:visible;position:relative}
+  .products::before{content:'';position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:0;opacity:0;pointer-events:none;transition:opacity .6s ease}
+  .products.zoomed::before{opacity:1}
+  .products .section-header{margin-bottom:64px}
+  .products .section-header::before,.products .section-header::after{top:50%;width:calc(50% - 270px)}
+
+  /* Tabs + subtitle (vertical side tabs) */
+  .product-tab{padding:10px 24px;border-radius:100px;font-size:14px;font-weight:500;color:var(--text-dim);background:var(--bg);border:1px solid rgba(255,255,255,.06);cursor:pointer;transition:all .4s;font-family:var(--font);position:relative;width:100%;text-align:center;white-space:nowrap}
+  .product-tab:hover,.product-tab.hovered{color:var(--text);border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.03)}
+  .product-tab.active{color:var(--yellow);font-weight:700;font-size:28px;background:transparent;border:none;text-align:left;padding-left:0;padding-right:0}
+  .product-tabs-side{display:flex;flex-direction:column;gap:10px;align-items:stretch;width:196px;z-index:10;position:absolute;top:100px;right:220px}
+  .tab-group{display:flex;flex-direction:column;align-items:stretch}
+  .tab-desc{max-height:0;overflow:hidden;opacity:0;transition:max-height .4s cubic-bezier(.16,1,.3,1),opacity .4s ease,margin .4s ease;font-size:13px;color:var(--text-dim);line-height:1.5;margin:0;padding:0 2px;width:300px}
+  .tab-group.active .tab-desc{max-height:120px;opacity:1;margin:26px 0 20px}
+  .docs-link{display:none;font-size:11px;font-weight:500;letter-spacing:.04em;color:var(--text-dim);text-decoration:none;padding:6px 16px;border-radius:100px;border:1px solid rgba(255,255,255,.15);background:var(--bg);cursor:pointer;font-family:var(--font);transition:all .3s ease;margin-right:auto}
+  .docs-link .docs-arrow{display:inline-block;font-size:10px;margin-left:4px;transition:transform .25s ease}
+  .timeline-link{display:none;font-size:11px;font-weight:500;letter-spacing:.04em;color:var(--text-dim);text-decoration:none;padding:6px 16px;border-radius:100px;border:1px solid rgba(255,255,255,.15);background:var(--bg);cursor:pointer;font-family:var(--font);transition:width .45s cubic-bezier(.34,1.56,.64,1),color .3s ease,opacity .3s ease,border-color .3s ease;margin-right:auto;opacity:.7;overflow:hidden}
+  .timeline-link span{display:inline-block;transition:transform .3s cubic-bezier(.4,0,.2,1),opacity .3s cubic-bezier(.4,0,.2,1);white-space:nowrap}
+  .timeline-link.slide-out span{transform:translateY(-8px);opacity:0}
+  .timeline-link.slide-in span{transform:translateY(8px);opacity:0}
+  .timeline-link:hover{color:var(--text-muted);opacity:.7;border-color:rgba(255,255,255,.12)}
+  .tab-group.active .timeline-link{display:inline-block;margin-bottom:16px}
+  @keyframes arrow-bounce{0%,100%{transform:translateX(0)}50%{transform:translateX(4px)}}
+  .tab-group.active .docs-link .docs-arrow{animation:arrow-bounce 1.5s ease-in-out infinite}
+  .docs-link:hover{color:#fff;font-weight:600;border-color:rgba(255,255,255,.15);padding-left:22px;padding-right:22px}
+  .docs-link:hover .docs-arrow{animation:none}
+  .docs-link:hover .docs-arrow{transform:translateX(2px)}
+  .tab-group.active .docs-link{display:inline-block}
+  .product-subtitle{font-size:11px;letter-spacing:.06em;text-transform:uppercase;position:absolute;white-space:nowrap;transition:opacity .5s ease,color .5s ease;opacity:0;color:var(--text-muted);pointer-events:none}
+  .product-subtitle.active{opacity:1;color:var(--text-muted)}
+  .product-subtitle.selected{color:#fff}
+
+  /* Scene layout — terminal + side tabs in a row */
+  .terminal-scene{position:relative;z-index:1;overflow:visible;padding:80px 0 140px;margin:-80px 0 -140px;min-height:560px;display:flex;align-items:flex-start;justify-content:flex-end;gap:0;mask-image:linear-gradient(to right, transparent 0%, black 15%),linear-gradient(to bottom, transparent 0%, black 10%, black 85%, transparent 100%);-webkit-mask-image:linear-gradient(to right, transparent 0%, black 15%),linear-gradient(to bottom, transparent 0%, black 10%, black 85%, transparent 100%);mask-composite:intersect;-webkit-mask-composite:source-in}
+
+  /* Inner wrapper — terminal right-aligns here, overflows left */
+  .terminal-center{display:flex;justify-content:flex-end;align-items:flex-start;flex:1 1 0;min-width:0;overflow:visible;margin-right:450px}
+
+  /* Terminal — liquid glass */
+  .terminal-wrapper{position:relative;border-radius:20px;overflow:hidden;background:linear-gradient(180deg, rgba(255,255,255,.03) 0%, var(--t-bg) 4%, var(--t-bg) 100%);border:1px solid rgba(255,255,255,.1);box-shadow:0 80px 160px rgba(0,0,0,.6),0 30px 60px rgba(0,0,0,.3),0 0 0 1px rgba(255,255,255,.05),0 0 80px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(255,255,255,.02);width:150vw;max-width:none;flex-shrink:0;backdrop-filter:blur(40px) saturate(1.2);-webkit-backdrop-filter:blur(40px) saturate(1.2);transition:transform 1.2s cubic-bezier(.16,1,.3,1),mask-image .6s ease,-webkit-mask-image .6s ease;transform-origin:top right}
+  .terminal-wrapper.zoomed-stream{mask-image:linear-gradient(to right, transparent 60%, black 78%, black 100%),linear-gradient(to bottom, black 0%, black 80%, transparent 100%);-webkit-mask-image:linear-gradient(to right, transparent 60%, black 78%, black 100%),linear-gradient(to bottom, black 0%, black 80%, transparent 100%);mask-composite:intersect;-webkit-mask-composite:source-in}
+  .terminal-wrapper.zoomed-firepower{mask-image:linear-gradient(to right, transparent 55%, black 68%, black 82%, transparent 90%),linear-gradient(to bottom, black 0%, black 50%, transparent 68%);-webkit-mask-image:linear-gradient(to right, transparent 55%, black 68%, black 82%, transparent 90%),linear-gradient(to bottom, black 0%, black 50%, transparent 68%);mask-composite:intersect;-webkit-mask-composite:source-in}
+  .terminal-wrapper.zoomed-multiply{mask-image:linear-gradient(to right, transparent 50%, black 65%, black 100%),linear-gradient(to bottom, transparent 42%, black 52%, black 100%);-webkit-mask-image:linear-gradient(to right, transparent 50%, black 65%, black 100%),linear-gradient(to bottom, transparent 42%, black 52%, black 100%);mask-composite:intersect;-webkit-mask-composite:source-in}
+
+  /* Browser chrome */
+  .terminal-chrome{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:linear-gradient(180deg,rgba(255,255,255,.05) 0%,rgba(255,255,255,.015) 100%);border-bottom:1px solid var(--t-border);position:relative}
+  /* Top glass highlight */
+  .terminal-chrome::after{content:'';position:absolute;top:0;left:5%;right:5%;height:1px;background:linear-gradient(to right,transparent,rgba(255,255,255,.15),transparent)}
+  .chrome-dots{display:flex;gap:6px}
+  .chrome-dot{width:10px;height:10px;border-radius:50%}
+  .chrome-dot.red{background:rgba(255,255,255,.2)}.chrome-dot.yel{background:rgba(255,255,255,.13)}.chrome-dot.grn{background:rgba(255,255,255,.08)}
+  .chrome-url{flex:1;margin:0 16px;padding:7px 16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.04);border-radius:8px;font-size:12px;color:var(--text-muted);text-align:center;display:flex;align-items:center;justify-content:center;gap:6px}
+  .chrome-extensions{display:flex;align-items:center;gap:6px}
+  .ext-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.04);cursor:default;font-size:11px;color:var(--text-muted);transition:all .3s}
+  .ext-icon.dimes-ext{background:rgba(238,255,0,.06);color:var(--yellow);border:1px solid rgba(238,255,0,.12)}
+
+  /* Terminal body */
+  .terminal-body{display:grid;grid-template-columns:1fr 340px;min-height:480px}
+  .terminal-main{display:flex;flex-direction:column;position:relative}
+
+  /* Glass reflection strips on main area */
+  .terminal-main::before{content:'';position:absolute;top:0;right:0;width:1px;height:100%;background:linear-gradient(to bottom,rgba(255,255,255,.08),transparent 40%);z-index:1;pointer-events:none}
+  .terminal-main::after{content:'';position:absolute;top:0;left:0;width:100%;height:40%;background:linear-gradient(180deg,rgba(255,255,255,.015) 0%,transparent 100%);pointer-events:none}
+
+  /* Inner nav */
+  .terminal-nav{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-bottom:1px solid var(--t-border);background:rgba(255,255,255,.01)}
+  .terminal-nav-left{display:flex;align-items:center;gap:12px}
+  .skel{background:var(--t-skel);border-radius:6px}
+  .skel-circle{border-radius:50%;background:var(--t-skel)}
+  .skel-pill{border-radius:100px;background:var(--t-skel)}
+  .terminal-nav-right{display:flex;align-items:center;gap:8px}
+
+  /* Profile icon with person silhouette */
+  .profile-skel{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .profile-skel svg{width:16px;height:16px;opacity:.25}
+
+  .firepower-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;background:rgba(238,255,0,.06);color:var(--yellow);border:1px solid rgba(238,255,0,.12);position:relative;cursor:default}
+  .firepower-icon svg{width:14px;height:14px}
+
+  /* Candidate row */
+  .candidates-row{display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid var(--t-border)}
+
+  /* Chart area */
+  .chart-area{flex:1;padding:24px 20px;position:relative;min-height:260px}
+  .skel-chart{position:relative;width:100%;height:100%}
+  .skel-chart-line{position:absolute;left:0;right:0;height:1px;background:rgba(255,255,255,.025)}
+  .skel-chart-line:nth-child(1){top:0%}.skel-chart-line:nth-child(2){top:25%}.skel-chart-line:nth-child(3){top:50%}.skel-chart-line:nth-child(4){top:75%}.skel-chart-line:nth-child(5){top:100%}
+  .skel-chart svg{position:absolute;inset:0;width:100%;height:100%}
+
+  .chart-x-labels{display:flex;justify-content:space-between;padding:0 20px;position:absolute;bottom:10px;left:0;right:0;z-index:1}
+  .volume-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;border-top:1px solid var(--t-border)}
+  .time-pills{display:flex;gap:4px}
+  .time-pill{padding:3px 8px;border-radius:4px;font-size:10px;font-weight:500;color:var(--text-muted);border:1px solid transparent}
+  .time-pill.active{color:var(--text);border-color:rgba(255,255,255,.12);background:rgba(255,255,255,.04)}
+
+  /* ═══ SIDEBAR ═══ */
+  .terminal-sidebar{border-left:1px solid var(--t-border);display:flex;flex-direction:column;background:rgba(255,255,255,.008);position:relative;padding:24px 22px}
+  /* Subtle glass gradient on sidebar */
+  .terminal-sidebar::before{content:'';position:absolute;top:0;left:0;right:0;height:120px;background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);pointer-events:none}
+  .sidebar-block{margin-bottom:16px}
+  .yn-skel{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0}
+  .yn-skel-btn{padding:14px;border-radius:12px;text-align:center;font-size:14px;font-weight:600;border:1px solid transparent}
+  .yn-skel-btn.yes{background:rgba(34,197,94,.12);color:rgba(34,197,94,.7);border-color:rgba(34,197,94,.15)}
+  .yn-skel-btn.no{background:rgba(239,68,68,.12);color:rgba(239,68,68,.7);border-color:rgba(239,68,68,.15)}
+  .amount-skel{text-align:center;margin:16px 0 20px}
+  .amount-skel-pills{display:flex;gap:8px;margin-top:14px}
+  .amount-skel-pill{flex:1;height:40px;border-radius:10px;background:var(--t-skel);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;color:rgba(255,255,255,.3);border:1px solid rgba(255,255,255,.08)}
+
+  /* ═══════════════════════════════════
+     LEVERAGE — 331 × 183 from Figma
+     ═══════════════════════════════════ */
+  .leverage-section{
+    margin-top:auto;padding:0;border-radius:13px;position:relative;overflow:visible;
+    width:100%;
+    background:linear-gradient(180deg, rgba(238,255,0,0.33) -41.67%, rgba(90,97,0,0.066) 87.04%);
+    border:1px solid rgba(238,255,0,.25);
+    box-shadow:0 0 30px rgba(238,255,0,.06),0 4px 20px rgba(0,0,0,.85);
+    transition:border-color .6s cubic-bezier(.16,1,.3,1),box-shadow .6s cubic-bezier(.16,1,.3,1);
+  }
+  /* Top header bar — covers header + slider (~74px) */
+  /* Glowy upper frame — inset by -1px so borders perfectly overlap outer border */
+  .leverage-section::before{content:'';position:absolute;left:-1px;right:-1px;top:-1px;height:74px;background:linear-gradient(90deg, rgba(58,61,20,0.25) 0%, rgba(155,163,53,0.15) 100%);border:1px solid rgba(238,255,0,.3);box-shadow:0 0 12px rgba(238,255,0,.12),0px 4px 15.9px -1px rgba(0,0,0,0.5);border-radius:13px;pointer-events:none;transition:height .6s cubic-bezier(.16,1,.3,1)}
+  .leverage-section.lev-min{border-color:transparent;box-shadow:none}
+  .leverage-section.lev-min::before{height:calc(100% + 2px)}
+
+  .leverage-inner{position:relative;z-index:1;padding:14px 16px 12px;transition:padding .6s cubic-bezier(.16,1,.3,1)}
+  .leverage-section.lev-min .leverage-inner{padding-bottom:14px}
+  /* 4. Lift slider — reduce header margin */
+  .leverage-header{display:flex;align-items:center;justify-content:flex-start;margin-bottom:8px}
+  .leverage-label{font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px;color:#fff}
+  /* 3. Info icon smaller, 0.5px border */
+  .leverage-info{width:9px;height:9px;border-radius:50%;border:.5px solid rgba(255,255,255,.25);display:inline-flex;align-items:center;justify-content:center;font-size:6px;line-height:1;color:rgba(255,255,255,.3);background:transparent;box-sizing:border-box}
+  .leverage-value{font-size:15px;font-weight:700;color:var(--yellow);text-shadow:0 0 20px rgba(238,255,0,.7),0 0 50px rgba(238,255,0,.35),0 0 80px rgba(238,255,0,.15);flex-shrink:0}
+
+  .leverage-track-wrap{position:relative;height:24px;margin-bottom:14px;display:flex;align-items:center;gap:10px;cursor:ew-resize;transition:margin .6s cubic-bezier(.16,1,.3,1)}
+  .leverage-section.lev-min .leverage-track-wrap{margin-bottom:0}
+  .leverage-track{flex:1;height:10px;border-radius:32px;background:#000;position:relative;border:0.25px solid var(--yellow)}
+  .leverage-fill{height:4px;border-radius:32px 0 0 32px;background:linear-gradient(90deg, transparent 0%, var(--yellow) 100%);width:48%;position:absolute;top:50%;transform:translateY(-50%);left:0;z-index:1}
+  .track-dots{position:absolute;top:50%;left:5px;right:5px;display:flex;justify-content:space-between;transform:translateY(-50%)}
+  .track-dot{width:4px;height:4px;border-radius:50%;background:rgba(238,255,0,.16)}
+  .leverage-thumb{width:3px;height:16px;border-radius:13px;background:#393D00;border:1px solid var(--yellow);position:absolute;top:50%;transform:translate(-50%,-50%);box-shadow:0 0 12.5px -2px var(--yellow);z-index:3;cursor:ew-resize}
+
+  .leverage-stats{display:flex;flex-direction:column;gap:2px;padding-top:6px;overflow:hidden;transition:max-height .6s cubic-bezier(.16,1,.3,1),opacity .6s ease,padding .6s cubic-bezier(.16,1,.3,1)}
+  .leverage-stat{display:flex;justify-content:space-between;align-items:center;font-size:12px;line-height:200%}
+  .leverage-stat .label{color:#fff;font-weight:400}
+  .leverage-stat .val{color:#fff;font-weight:600;text-align:right}
+  .leverage-stat .val.sm{color:rgba(255,255,255,.3);font-size:9px;font-weight:400;line-height:1.4}
+  .leverage-stat .stat-line{flex:1;margin:0 8px;border-bottom:0.5px solid rgba(255,255,255,.15)}
+  .leverage-stats.collapsed{max-height:0!important;opacity:0;pointer-events:none;padding-top:0}
+
+  .action-skel{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:auto;padding-top:20px}
+  .action-skel-btn{height:48px;border-radius:12px;background:var(--t-skel);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:500;color:rgba(255,255,255,.3);border:1px solid rgba(255,255,255,.08)}
+
+  /* Highlight ring for product hover */
+  .highlight-ring{position:absolute;pointer-events:none;border:none;outline:1.5px solid rgba(238,255,0,.5);box-shadow:0 0 0 4px rgba(238,255,0,.06),0 0 30px rgba(238,255,0,.08);opacity:0;z-index:51;transition:opacity .3s ease}
+  .highlight-ring.active{opacity:1;animation:pulse-ring 3s ease-in-out infinite}
+  .highlight-ring.animate-position{transition:opacity .3s ease,left .6s cubic-bezier(.25,.1,.25,1),top .6s cubic-bezier(.25,.1,.25,1),width .6s cubic-bezier(.25,.1,.25,1),height .6s cubic-bezier(.25,.1,.25,1)}
+  @keyframes pulse-ring{0%,100%{box-shadow:0 0 0 4px rgba(238,255,0,.06),0 0 30px rgba(238,255,0,.08)}50%{box-shadow:0 0 0 6px rgba(238,255,0,.1),0 0 40px rgba(238,255,0,.14)}}
+
+  /* ═══════════════════════════════════
+     ZOOM STATES — transform-origin based
+     ═══════════════════════════════════ */
+  /* ═══ WHY / BACKERS / CTA / FOOTER ═══ */
+  .why{padding:40px 48px 140px;max-width:1200px;margin:0 auto;position:relative}
+  .why .section-header::before,.why .section-header::after{width:calc(50% - 230px)}
+  .why-grid{display:grid;grid-template-columns:repeat(2,1fr);grid-template-rows:1fr 1fr;gap:8px;margin-top:80px;position:relative}
+  .why-card{padding:30px 36px;cursor:default;background:rgba(255,255,255,.015);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);border-radius:16px;border:1px solid rgba(255,255,255,.04);position:relative;overflow:hidden;transition:all .4s}
+  .why-card:nth-child(1)::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at bottom right,rgba(238,255,0,.08) 0%,transparent 70%);opacity:0;transition:opacity .5s ease;pointer-events:none}
+  .why-card:nth-child(2)::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at bottom left,rgba(238,255,0,.08) 0%,transparent 70%);opacity:0;transition:opacity .5s ease;pointer-events:none}
+  .why-card:nth-child(3)::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top right,rgba(238,255,0,.08) 0%,transparent 70%);opacity:0;transition:opacity .5s ease;pointer-events:none}
+  .why-card:nth-child(4)::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top left,rgba(238,255,0,.08) 0%,transparent 70%);opacity:0;transition:opacity .5s ease;pointer-events:none}
+  .why-card:hover::after{opacity:1}
+  .why-card:hover{border-color:rgba(238,255,0,.2);box-shadow:inset 0 0 30px rgba(238,255,0,.03);transform:translateY(0) scale(1.02) !important}
+  .why-card:hover h3{color:#fff}
+  .why-card:hover p{color:var(--text-muted)}
+  .why-card:nth-child(1){border-bottom-right-radius:80px;padding-bottom:45px;transform-origin:bottom right}
+  .why-card:nth-child(2){border-bottom-left-radius:80px;padding-bottom:45px;text-align:right;transform-origin:bottom left}
+  .why-card:nth-child(3){border-top-right-radius:80px;padding-top:45px;transform-origin:top right}
+  .why-card:nth-child(4){border-top-left-radius:80px;padding-top:45px;text-align:right;transform-origin:top left}
+  .why-card h3{font-size:20px;font-weight:600;line-height:1.3;margin-bottom:14px;transition:color .4s ease}
+  .why-card p{font-size:14px;color:var(--text-dim);line-height:1.6;transition:color .4s ease}
+  .why-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:140px;height:140px;display:flex;align-items:center;justify-content:center;z-index:2}
+  .why-center svg{width:45px}
+  .why-grid:has(.why-card:nth-child(1):hover) .q1{fill:rgba(238,255,0,.4);opacity:1}
+  .why-grid:has(.why-card:nth-child(2):hover) .q2{fill:rgba(238,255,0,.4);opacity:1}
+  .why-grid:has(.why-card:nth-child(3):hover) .q3{fill:rgba(238,255,0,.4);opacity:1}
+  .why-grid:has(.why-card:nth-child(4):hover) .q4{fill:rgba(238,255,0,.4);opacity:1}
+
+  .backers{padding:100px 48px 40px;max-width:1200px;margin:0 auto}
+  .backers .section-header::before,.backers .section-header::after{width:calc(50% - 130px)}
+  .backer-logos{display:flex;align-items:flex-start;justify-content:center;gap:64px;margin-top:60px}
+  .backer-item{display:flex;flex-direction:column;align-items:center;position:relative;text-decoration:none;cursor:pointer}
+  .backer-item img{height:28px;opacity:.35;transition:opacity .3s;cursor:default}
+  .backer-item:hover img{opacity:.7}
+  .backer-desc{opacity:0;transform:translateY(-4px);transition:opacity .3s ease,transform .3s ease;font-size:11px;color:var(--text-dim);line-height:1.5;text-align:center;margin-top:12px;pointer-events:none;white-space:nowrap}
+  .backer-item:hover .backer-desc{opacity:1;transform:translateY(0)}
+
+  .cta-section{padding:40px 48px 0}
+  .cta-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:0;min-height:500px;overflow:visible}
+  .cta-visual{display:flex;align-items:flex-end;justify-content:flex-start;align-self:end;overflow:visible}
+  .hand-clasp-container{position:relative}
+  .hand-clasp-img{width:800px;mix-blend-mode:screen;display:block;margin-left:-110px}
+  .cta-content{text-align:center;margin-left:-100px}
+  .cta-content h2{font-size:clamp(28px,3.2vw,42px);font-weight:600;line-height:1.15;letter-spacing:-.03em;margin-bottom:20px}
+  .cta-content h2 em{font-style:normal;font-weight:300;color:var(--yellow)}
+  .cta-content .cta-sub{font-size:16px;color:var(--text-dim);margin-bottom:36px;line-height:1.6}
+  .cta-btn{display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:500;color:var(--black);background:var(--yellow);border:none;border-radius:100px;padding:14px 32px;cursor:pointer;text-decoration:none;transition:all .5s cubic-bezier(.16,1,.3,1);font-family:var(--font);position:relative;z-index:1}
+  .cta-btn-wrap{position:relative;display:inline-block}
+  .cta-btn-glow{position:absolute;bottom:45%;left:50%;transform:translateX(-50%);width:800px;height:500px;pointer-events:none;opacity:0;transition:opacity 1.2s cubic-bezier(.16,1,.3,1);z-index:0}
+  .cta-btn-glow .glow-atmo{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:100%;height:100%;background:radial-gradient(ellipse 70% 80% at 50% 100%,rgba(238,255,0,.1) 0%,rgba(238,255,0,.04) 35%,transparent 65%);filter:blur(40px)}
+  .cta-btn-glow .glow-mid{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:500px;height:320px;background:radial-gradient(ellipse 60% 70% at 50% 100%,rgba(255,255,240,.12) 0%,rgba(238,255,0,.06) 30%,transparent 60%);filter:blur(25px)}
+  .cta-btn-glow .glow-core{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:250px;height:160px;background:radial-gradient(ellipse 50% 60% at 50% 100%,rgba(255,255,255,.22) 0%,rgba(255,255,240,.08) 35%,transparent 60%);filter:blur(12px)}
+  .cta-btn-glow .glow-slit{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:180px;height:2px;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.7) 30%,rgba(255,255,255,.9) 50%,rgba(255,255,255,.7) 70%,transparent 100%);filter:blur(1.5px);border-radius:100px}
+  .cta-btn-glow .glow-spill{position:absolute;top:100%;left:50%;transform:translateX(-50%);width:300px;height:80px;background:radial-gradient(ellipse 80% 100% at 50% 0%,rgba(238,255,0,.06) 0%,transparent 70%);filter:blur(15px)}
+  .cta-btn-wrap:hover .cta-btn-glow{opacity:1}
+  .cta-btn-echo{position:absolute;inset:0;border-radius:100px;border:1px solid rgba(238,255,0,.25);background:rgba(238,255,0,.06);pointer-events:none;transform-origin:left center;transform:scaleX(1) translateX(0);opacity:0}
+  .echo-1{transition:all .5s cubic-bezier(.16,1,.3,1)}
+  .echo-2{transition:all .5s cubic-bezier(.16,1,.3,1) .03s}
+  .echo-3{transition:all .5s cubic-bezier(.16,1,.3,1) .06s}
+  .echo-4{transition:all .5s cubic-bezier(.16,1,.3,1) .09s}
+  .echo-5{transition:all .5s cubic-bezier(.16,1,.3,1) .12s}
+  .echo-6{transition:all .5s cubic-bezier(.16,1,.3,1) .15s}
+  .echo-7{transition:all .5s cubic-bezier(.16,1,.3,1) .18s}
+  .echo-8{transition:all .5s cubic-bezier(.16,1,.3,1) .21s}
+  .cta-btn-wrap:hover .echo-1{transform:translateX(6px) scaleX(1.04) scaleY(1.08);opacity:.85}
+  .cta-btn-wrap:hover .echo-2{transform:translateX(14px) scaleX(1.09) scaleY(1.18);opacity:.7}
+  .cta-btn-wrap:hover .echo-3{transform:translateX(24px) scaleX(1.15) scaleY(1.30);opacity:.55}
+  .cta-btn-wrap:hover .echo-4{transform:translateX(36px) scaleX(1.22) scaleY(1.44);opacity:.42}
+  .cta-btn-wrap:hover .echo-5{transform:translateX(50px) scaleX(1.30) scaleY(1.60);opacity:.32}
+  .cta-btn-wrap:hover .echo-6{transform:translateX(66px) scaleX(1.39) scaleY(1.78);opacity:.22}
+  .cta-btn-wrap:hover .echo-7{transform:translateX(84px) scaleX(1.49) scaleY(1.98);opacity:.14}
+  .cta-btn-wrap:hover .echo-8{transform:translateX(104px) scaleX(1.60) scaleY(2.20);opacity:.08}
+  .cta-btn:hover{box-shadow:0 0 50px rgba(238,255,0,.3),0 0 100px rgba(238,255,0,.1);transform:translateY(-2px)}
+
+  footer{padding:40px 48px;border-top:none;display:flex;justify-content:space-between;align-items:center;max-width:1300px;margin:0 auto;position:relative}
+  footer::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:100vw;height:1px;background:rgba(255,255,255,.04)}
+  .footer-logo{display:flex;align-items:center;text-decoration:none}
+  .footer-logo svg{height:18px;width:auto}
+  .footer-links{display:flex;gap:32px}
+  .footer-links a{font-size:14px;color:var(--text-dim);text-decoration:none;transition:color .3s}
+  .footer-links a:hover{color:var(--text)}
+
+  @keyframes fade-up{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+  .reveal{opacity:0;transform:translateY(40px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1)}
+  .reveal.visible{opacity:1;transform:translateY(0)}
+
+  @media(max-width:1100px){
+    .terminal-scene{flex-direction:column;align-items:center}
+    .terminal-center{margin-right:0;justify-content:center;overflow:hidden}
+    .terminal-wrapper{width:100%;max-width:700px;flex-shrink:1}
+    .product-tabs-side{position:static;flex-direction:row;min-width:auto;width:auto}
+    .product-tab{width:auto}
+    .product-subtitle{margin-top:4px}
+    .tab-desc{font-size:13px}
+  }
+  @media(max-width:900px){
+    nav{padding:16px 24px}.hero{padding:100px 24px 60px}
+    .process{padding:80px 24px}.process-grid{grid-template-columns:1fr}.process-step{border-left:none}
+    .products{padding:80px 24px 140px}.terminal-body{grid-template-columns:1fr}.terminal-sidebar{border-left:none;border-top:1px solid var(--t-border)}
+    .why{padding:80px 24px}.why-grid{grid-template-columns:1fr}.why-center{display:none}.why-card:nth-child(n){border-radius:16px;padding:40px 36px}.cta-inner{grid-template-columns:1fr;gap:40px}.cta-content{text-align:center}
+    .backer-logos{flex-wrap:wrap;gap:32px}.social-proof{flex-direction:column;gap:20px}footer{flex-direction:column;gap:20px}.footer-links{flex-wrap:wrap;justify-content:center}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="logo"><svg viewBox="0 0 1222.47 243.24" xmlns="http://www.w3.org/2000/svg"><g><path fill="#fff" d="M344.37,221.83c-5.55-5.34-8.32-12.33-8.32-20.97V14.02h102.98c16.44,0,30.88,3.08,43.32,9.25,12.43,6.17,22.09,14.9,28.98,26.21,6.88,11.31,10.33,24.36,10.33,39.16v60.43c0,26.52-6.89,46.61-20.66,60.28-13.77,13.67-34.02,20.5-60.74,20.5h-74.31c-8.84,0-16.03-2.67-21.58-8.02ZM439.02,192.23c13.15,0,23.12-3.8,29.91-11.41,6.78-7.6,10.17-18.81,10.17-33.61v-56.73c0-11.72-3.81-21.12-11.41-28.21-7.61-7.09-17.57-10.64-29.91-10.64h-59.2v140.6h60.43Z"/><path fill="#fff" d="M558.5,54.56c-4.83-4.62-7.25-10.74-7.25-18.35s2.41-13.72,7.25-18.35c4.83-4.62,11.25-6.94,19.27-6.94s14.44,2.31,19.27,6.94c4.83,4.62,7.25,10.74,7.25,18.35s-2.42,13.72-7.25,18.35c-4.83,4.62-11.25,6.94-19.27,6.94s-14.44-2.31-19.27-6.94ZM556.8,75.99h41.93v153.85h-41.93V75.99Z"/><path fill="#fff" d="M853.41,88.78c9.45,10.18,14.18,23.49,14.18,39.93v101.13h-41.93v-101.13c0-5.75-1.34-10.33-4.01-13.72-2.67-3.39-6.17-5.09-10.48-5.09h-13.26c-5.76,0-10.79,2.11-15.11,6.32-4.32,4.21-6.99,9.82-8.02,16.8v96.81h-41.93v-100.82c0-5.75-1.34-10.38-4.01-13.87-2.67-3.49-6.17-5.24-10.48-5.24h-12.02c-5.96,0-11.21,2.67-15.72,8.02-4.52,5.35-7.4,12.33-8.63,20.97v90.96h-41.93V75.99h38.85v17.88c3.7-6.17,8.48-11.1,14.34-14.8,5.86-3.7,11.76-5.55,17.73-5.55h17.27c7.4,0,14.13,1.96,20.2,5.86,6.06,3.91,10.84,9.36,14.34,16.34,4.52-6.98,9.91-12.43,16.19-16.34,6.27-3.9,12.9-5.86,19.89-5.86h16.96c15.62,0,28.16,5.09,37.62,15.26Z"/><path fill="#fff" d="M926.94,225.06c-9.97-4.83-17.73-11.61-23.28-20.35-5.55-8.73-8.32-18.75-8.32-30.06v-39.77c0-12.13,2.77-22.82,8.32-32.07s13.31-16.44,23.28-21.58c9.97-5.14,21.43-7.71,34.38-7.71h24.67c19.73,0,35.56,5.55,47.48,16.65,11.92,11.1,17.88,25.9,17.88,44.4v32.68h-114.08v7.4c0,6.78,2.16,12.23,6.48,16.34,4.32,4.11,10.17,6.17,17.57,6.17h24.05c7.19,0,13-1.59,17.42-4.78,4.42-3.18,6.63-7.35,6.63-12.49h41.32c0,10.28-2.77,19.42-8.32,27.44-5.55,8.02-13.31,14.18-23.28,18.5-9.97,4.32-21.43,6.47-34.38,6.47h-23.43c-12.95,0-24.41-2.42-34.38-7.25ZM1010.04,137.04v-2.47c0-8.02-2.16-14.44-6.47-19.27-4.32-4.83-10.07-7.24-17.27-7.24h-24.97c-7.4,0-13.36,2.57-17.88,7.71-4.52,5.14-6.78,11.92-6.78,20.35v.93h73.38Z"/><path fill="#fff" d="M1089.27,217.51c-11.31-9.87-16.96-22.82-16.96-38.85h41.32c0,5.55,1.9,10.02,5.7,13.41,3.8,3.39,8.79,5.09,14.95,5.09h27.75c12.33,0,18.5-3.39,18.5-10.18v-5.24c0-2.05-1.03-3.96-3.08-5.71-2.06-1.74-4.83-2.93-8.32-3.54l-53.34-9.25c-12.54-2.05-22.46-6.52-29.75-13.41-7.3-6.88-10.95-14.95-10.95-24.2v-10.18c0-13.15,5.4-23.43,16.19-30.83,10.79-7.4,25.85-11.1,45.17-11.1h24.05c17.27,0,31.19,4.58,41.78,13.72,10.58,9.15,15.88,21.23,15.88,36.23h-41.32c0-4.52-1.49-8.12-4.47-10.79-2.98-2.67-6.94-4.01-11.87-4.01h-23.43c-13.36,0-20.04,3.08-20.04,9.25v4.93c0,2.26.87,4.16,2.62,5.71,1.74,1.54,4.26,2.62,7.55,3.24l56.12,10.18c11.72,2.06,21.17,6.43,28.37,13.1,7.19,6.68,10.79,14.23,10.79,22.66v11.1c0,13.36-5.5,23.95-16.5,31.76-11,7.81-25.64,11.72-43.94,11.72h-27.75c-18.71,0-33.71-4.93-45.02-14.8Z"/><path fill="#ef0" d="M216.65,173.09c-15.47,18.94-42.61,33.06-75.01,38.1-8.3,1.49-17.16,2.3-26.37,2.3v29.74c63.66,0,115.26-34.28,115.26-76.57,0-5.14-.77-10.16-2.22-15.02-2.28,7.61-6.25,14.82-11.66,21.44Z"/><path fill="#ef0" d="M31.6,159.27c-5.48-3.84-10.37-8.06-14.57-12.6-.67-.73-1.33-1.46-1.97-2.21-2.17-2.52-4.12-5.14-5.85-7.83-3.07-4.78-5.42-9.8-6.98-15.02-1.45,4.86-2.22,9.88-2.22,15.02s.77,10.16,2.22,15.02c2.28,7.61,6.25,14.82,11.66,21.44,15.47,18.94,42.61,33.06,75.01,38.1,8.47,1.32,17.3,2.3,26.37,2.3v-30.32c-32.95,0-62.66-9.18-83.67-23.91Z"/><path fill="#ef0" d="M213.5,146.68c.67-.73,1.33-1.46,1.97-2.21,2.17-2.52,4.12-5.14,5.85-7.83,3.07-4.78,5.42-9.8,6.98-15.02,1.45-4.86,2.22-9.88,2.22-15.02s-.77-10.16-2.22-15.02c-10.23-34.18-54.71-60.16-108.67-61.5-.02,0-.04,0-.06,0-1.43-.04-2.86-.06-4.31-.06v30.03c1.39,0,2.76.04,4.13.07,32.98.87,61.01,12.05,73.6,27.8.67.84,1.31,1.68,1.89,2.55,3.38,5.02,5.23,10.44,5.23,16.1,0,2.54-.39,5.04-1.1,7.47-.64,2.16-1.53,4.27-2.69,6.32-5.41-5.35-11.73-10.15-18.79-14.27-17.21-10.04-38.81-16.01-62.26-16.01v30.36c2.74,0,5.45.08,8.13.22,22.53,1.17,42.48,7.18,56.38,16.11-15.56,9.99-38.68,16.32-64.52,16.32v30.07c32.95,0,62.66-9.18,83.67-23.91,5.48-3.84,10.37-8.06,14.57-12.6Z"/><path fill="#ef0" d="M107.13,120.24c-21.38-1.1-40.42-6.06-54.13-14.13,17.21-10.04,38.81-16.01,62.26-16.01v-30.03c-1.12,0-2.23.02-3.33.05-29.94.74-56.58,11.41-74.4,27.82-.74.68-1.47,1.38-2.18,2.09-1.32-2.1-2.36-4.27-3.1-6.5-.87-2.62-1.35-5.31-1.35-8.06,0-24.3,35.43-44.14,80-45.37.02,0,.04,0,.06,0,1.43-.03,2.86-.06,4.31-.06V0C51.61,0,0,34.28,0,76.57c0,5.14.77,10.16,2.22,15.02,1.56,5.22,3.92,10.24,6.98,15.02,2.42,3.76,5.28,7.37,8.54,10.8,1.37,1.44,2.81,2.85,4.31,4.22,1.98,1.81,4.07,3.55,6.28,5.24,5.81,4.43,12.38,8.41,19.56,11.85,18.95,9.08,42.22,14.4,67.37,14.4v-32.65c-2.74,0-5.45-.08-8.13-.21Z"/></g></svg></a>
+  <a href="#" class="nav-cta">Talk with us</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-text">
+    <h1>Embedded credit for<br>onchain front-ends</h1>
+    <p class="hero-sub">10x your users' buying power overnight with Dimes' plug-and-play credit products</p>
+    <a href="#" class="hero-cta">10x your flow <svg viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H5M12 4v7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  </div>
+  <div class="hero-visual">
+    <canvas id="heroCanvas"></canvas>
+  </div>
+</section>
+
+<section class="social-proof"><span>Credit products for</span><div class="proof-logos"><a class="proof-logo" href="https://kalshi.com/" target="_blank" rel="noopener"><svg viewBox="0 0 320.97 85.5" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon fill="#fff" points="17.37 3.3 17.37 40.13 50.64 3.3 71.19 3.3 41.52 36.95 73.31 84.59 52.76 84.59 29.03 50.3 17.37 63.21 17.37 84.59 0 84.59 0 3.3 17.37 3.3"/><path fill="#fff" d="M250.86,3.3v28.79c10.99-12.57,34.54-9.67,40.13,6.69.64,1.88,1.82,6.52,1.82,8.35v37.47h-16.1v-34.93c0-1.63-1.78-6.38-2.78-7.81-4.06-5.75-14.24-5.64-19-.83-1.52,1.54-4.07,6.56-4.07,8.63v34.93h-16.1V3.3h16.1Z"/><path fill="#fff" d="M136.87,71.04v13.55h-11.23c-.47,0-3.71-1.25-4.33-1.61-2.98-1.74-3.91-4.84-3.94-8.13-2.96,3.97-6.51,7.6-11.34,9.2-14.94,4.95-34.52-2.94-29.98-21.49,2.11-8.62,12.76-14.38,21.2-14.38h17.37c1.39-1.84.13-6.33-1.13-8.19-3.5-5.15-14.62-5.32-18.84-.98-1.19,1.22-1.45,2.82-2.48,4.08h-15.04c.98-18.54,27.29-21.96,40.97-16.59,18.51,7.27,11.39,26.57,12.94,42.12.84,2.76,3.42,2.53,5.84,2.42ZM115.26,58.76h-15.47c-2.41,0-7.17,2.8-7.75,5.38-2.33,10.39,10.71,11.55,17.16,7.4,4.69-3.02,5.64-7.55,6.06-12.79Z"/><path fill="#fff" d="M223.74,43.1h-15.25c-1.34-8.02-14.62-9.6-20.12-5.5-3.52,2.62-3.38,7.25.96,8.78,9.91,3.49,30.09.56,34.5,13.37s-5.2,22.32-17.02,24.64c-15.15,2.96-35.92-.87-37.72-19.27h15.68c.47,9.4,16.14,10.81,22.01,6.54,3.73-2.72,2.91-7.84-1.57-9.38-9.45-3.25-29.43-1.11-33.77-12.83-2.69-7.26.06-15.14,5.93-19.88,12.67-10.24,45.32-6.67,46.39,13.54Z"/><rect fill="#fff" x="143.22" y="3.3" width="16.53" height="81.3"/><rect fill="#fff" x="303.4" y="24.89" width="16.53" height="59.7"/><path fill="#fff" d="M311.37,0c11.9-.44,12.77,16.63,2.37,18.07-14.52,2.01-15.06-17.6-2.37-18.07Z"/></svg></a><a class="proof-logo" href="https://polymarket.com/" target="_blank" rel="noopener"><svg viewBox="0 0 121.11 150.42" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill="#fff" d="M121.11,150.42L0,116.68.63,34.92,121.11,0v150.42ZM109.5,16.59L21.57,41.2l87.93,24.61V16.59ZM12.17,50.88v49.77l87.93-25.16L12.17,50.88ZM109.5,85.72l-87.93,24.61,87.93,24.61v-49.22Z"/></svg></a><a class="proof-logo" href="https://jup.ag/" target="_blank" rel="noopener"><svg viewBox="0 0 199.94 199.05" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill="#fff" d="M122.07,126.52c14.76,13.65,32.31,36.36,30.48,57.81-.05.63-.19,1.58-.74,1.96-1.07.74-2.96,1.34-4.17,1.94-1.88.93-3.16,1.59-5.16,2.38-.46.18-.89.67-1.39.77-1.86.37-1.42-1.32-1.79-2.62-10.89-38.97-50.25-68.98-88.46-78.03-14.03-3.32-28.99-4.49-43.2-1.26-2.09.29-4.17.91-6.22,1.44-.13-.03-.21-.12-.3-.22-.54-.65-.62-4.82-.71-5.94-.19-2.38-.59-4.73-.32-7.15.12-.4,3.55-2.51,4.15-2.85,14.19-7.93,34.6-7.1,50.06-3.84,25.09,5.31,49.05,18.29,67.77,35.59Z"/><path fill="#fff" d="M146.37,99.71c15.13,14.13,33.15,36.79,31.86,58.76-.12,2.03-.86,4.78-1.54,6.72-1.06,3.01-2.94,5.22-5.56,7.01-.66-.53-.35-1.34-.47-2.04-4.95-29.53-31.41-57.49-55.42-73.54-30.17-20.18-74.41-34.89-110.3-23.07-.57.19-1.74,1.02-2.2.69-.55-.39.24-1.24.33-1.67,1.12-5.1,3.34-7.87,7.6-10.9,14.37-10.23,37.54-8.74,54-5.18,29.51,6.37,59.66,22.64,81.7,43.22Z"/><path fill="#fff" d="M96.44,151.79c3.74,3.21,7.32,6.78,10.57,10.53,8.36,9.67,15.22,21.22,17.83,33.86-.05.35-3.13,1.01-3.69,1.11-2.9.56-5.82.82-8.75,1.13-1.63.17-5.38.91-6.79.5-.65-.19-1.71-2.77-2.13-3.45-13.88-22.42-36-38.93-61.27-46.49-7.48-2.24-15.67-3.87-23.56-4.27-1.39-.07-6.11.35-6.92-.44-.49-1.4-1.37-2.6-2.01-3.92-1.42-2.97-2.57-6.18-3.65-9.28-.3-.86-1.52-3.63-1.32-4.36.07-.23.41-.55.64-.63,10.27-3.01,21.2-3.25,31.77-1.86,21.73,2.86,42.78,13.42,59.27,27.56Z"/><path fill="#fff" d="M111.11,34.03c.44.27,1,.14,1.43.28.4.14,1.1.8,1.52.99,3.28,1.47,6.47,2.86,9.68,4.5,21.86,11.16,43.57,27.67,58.32,47.46,6.7,8.98,13.82,21.56,14.83,32.94.22,2.44.35,7.5-.3,9.75-.06.21-.68,1.56-.95,1.01l-.86-2.73c-11.59-26.39-32.7-47.49-56.24-63.38-29.97-20.23-65.59-34.52-102.49-33.48l-9.96,1.08c-.34-.3,1.78-2.1,2.07-2.33,11-8.77,30.15-9.03,43.62-7.35,12.94,1.61,25.32,5.47,37.42,10.36.96.39,1.02.34,1.9.88Z"/><path fill="#fff" d="M165.42,22.29c16.72,13.52,27.7,30.74,34.35,51.05.1.31.39,1.89-.08,1.87-.45-.41-.62-1.08-.98-1.53-22.72-28.36-56.64-50.45-90.84-62.54-8.16-2.88-16.88-4.98-25.59-6.56-.46-.08-.93-.39-1.51-.47-1.54-.2-3.28-.01-4.74-.83l5.53-1.3c29.08-5.97,60.86,1.7,83.86,20.3Z"/><path fill="#fff" d="M84.77,189.87c2.11,2.45,3.99,5.05,5.9,7.66.41.85-.71.75-1.27.73-4.09-.21-9.94-1.84-13.97-2.91-22.15-5.87-41.63-19.31-55.34-37.7-.57-1.55,2.03-.61,2.87-.53,22.54,2.04,47.15,15.7,61.81,32.75Z"/></svg></a><a class="proof-logo" href="https://www.meteora.ag/?tab=top" target="_blank" rel="noopener"><svg viewBox="0 0 2616.09 3017.73" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill="#fff" d="M1391.02,2091.52c99.69-42.55,884.07-827.55,1098.63-1052.51,44.5-46.65,81.12-75.58,71.57-146.96-5.63-42.11-70.28-189.25-103.61-214.97-45.45-35.08-108.52-11.96-146.73,22.46-137.67,124.04-1650.07,1650.11-1939.48,1937.08-111.87,110.93-199.14,176.46-136.88,353.76,8.17,23.25,0,35.96,26.39,20.67,237.32-225.52,459.58-468.17,692.71-697.22,69.7-68.48,117.36-124.96,214.11-160.86,72.85-27.03,150.28-30.3,223.29-61.46Z"/><path fill="#fff" d="M2612.81,1128.04c-15.22-29.05-67.68-24.99-86.22-1.33-172.34,169.71-1171.53,1190.22-1385.61,1391.42-44.69,62.56,1.2,132.04,76.6,99.16,64.56-28.15,144.09-83.43,205.6-121.44,804.68-497.23,1070.01-726.92,1189.65-1285.75,3.06-14.27,5.48-71.53-.03-82.05Z"/><path fill="#fff" d="M936.12,1777.59c39.65-10.35,82.72-14.8,122.55-26.87,155.97-47.29,282.67-211.99,395.29-326.45,28.79-29.26,786.16-776.57,861.22-858.56,46.84-51.17,41.89-87.37,9.4-144.66-34.59-61-135.27-183.82-216.82-154.16-10.79,3.92-20.42,10.5-28.36,18.8-301.57,315.24-1550.58,1551.95-1850.41,1856.13-81.92,83.11-162.03,137.85-175.92,266.71-1.99,18.45-.97,132.48,15.19,136.36,7.28,1.75,394.07-384.88,535.77-524.21,108.61-106.79,175.1-202.11,332.08-243.08Z"/><path fill="#fff" d="M383.67,1591.65c78.35-78.09,197.05-229.71,305.52-252.7,74.59-15.81,138.18,3.46,214.09-31.19,68.37-31.22,196.48-172.19,256.06-231.59,49.09-48.94,627.79-634.55,819.05-821.89,48.39-74.15,30.22-123.46-41.41-167.37-117.63-72.11-218.29-81.85-324.15,14.66-87.69,79.95-1163.45,1163.38-1314.71,1314.39C160.5,1553.34-20.26,1681.6,1.85,1906.44c1.51,15.39,15.22,58.76,32.61,35.19,113.84-119.23,232.49-233.63,349.21-349.98Z"/><path fill="#fff" d="M271.2,1312.84c161.25-162.03,960.25-954.8,1217.7-1214.49,13.86-13.98,21.31-33.24,19.78-52.87-4.14-53.15-67.71-46.44-123.79-43.56-205.92,10.57-375.97,92.72-535.73,219.84-132.77,105.64-357.18,374.93-601.36,957.72-11.71,27.96-43.92,81.34-43.05,109.44,1.05,34.14,41.93,46.06,66.46,23.92Z"/></svg></a><a class="proof-logo" href="https://raydium.io/" target="_blank" rel="noopener"><svg viewBox="0 0 1570.45 1810.49" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill="#fff" d="M1569.15,1356.22l-788.1,454.27L0,1361.89,2.05,448.18,780.24.02c10.79-1.07,93.53,48.96,110.51,58.55,172.35,97.34,342.4,199.3,513.37,299.06-22.91,9.9-50.22,33.84-72.23,42.32-4.51,1.74-7.73,2.94-12.35.36L784.26,93.43,80.6,495.99l1.2,815.82,702.43,406.17,702.38-406.22,2.07-631.69,80.47-45.3v721.45Z"/><path fill="#fff" d="M587.47,1036.75v275.04h-118.48v-397.75h425.25c4.66,0,37.38-15.4,44.05-19.42,87.23-52.51,86.92-187.15-.92-239.52-7.96-4.75-40.47-20.33-47.37-20.33h-421.02v-118.48h437.95c27.18,0,91.91,33.01,114.16,50.87,101.8,81.72,136.07,219.54,69.09,335.48-107.63,186.29-325.1,119.52-502.71,134.11Z"/><path fill="#fff" d="M1116.4,1303.32h-133.29l-107.9-186.14c40.64-1.39,83.21-8.67,120.69-24.8l120.5,210.93Z"/><path fill="#fff" d="M1404.78,545l1.49-92.15c2.23-3.71,66.96-41.62,74.34-44.47,5.44-2.1,6.79-2.26,12.45-.44,6.22,1.99,72.13,40.97,74.01,44.86,1.54,25.11,5.18,58.28,2.34,82.78-.9,7.76-.43,9.08-7.02,14.14-6.18,4.75-71.43,41.14-75.74,41.14l-81.86-45.86Z"/></svg></a></div></section>
+
+<section class="process">
+  <canvas class="process-canvas" id="processCanvas"></canvas>
+  <div class="process-inner">
+    <div class="section-header reveal"><h2 class="section-title">How it works</h2></div>
+    <div class="process-grid">
+      <div class="process-step reveal"><div class="step-number">01</div><h3 class="step-title">Integrate</h3><p class="step-desc">Plug Dimes API</p><span class="step-arrow">&gt;</span></div>
+      <div class="process-step reveal"><div class="step-number">02</div><h3 class="step-title">Unlock credit</h3><p class="step-desc">Embed credit capabilities<br>natively in your UI</p><span class="step-arrow">&gt;</span></div>
+      <div class="process-step reveal"><div class="step-number">03</div><h3 class="step-title">Earn fees</h3><p class="step-desc">Multiply your flow and capture<br>30% of Dimes' borrow fees</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ PRODUCTS v5 ═══════════ -->
+<section class="products">
+  <div class="section-header reveal"><h2 class="section-title">Magnify buying power,<br>natively from <em>your app</em></h2></div>
+
+  <div class="terminal-scene reveal" id="terminalScene">
+    <div class="terminal-center">
+    <div class="terminal-wrapper" id="terminal">
+      <div class="highlight-ring" id="highlightRing"></div>
+      <div class="terminal-chrome">
+        <div class="chrome-dots"><div class="chrome-dot red"></div><div class="chrome-dot yel"></div><div class="chrome-dot grn"></div></div>
+        <div class="chrome-url"><span style="opacity:.4">🔒</span> app.yourapp.com</div>
+        <div class="chrome-extensions">
+          <div class="ext-icon" id="extPhantom"><svg viewBox="0 0 268.88 224.26" width="16" height="13" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M213.8,1.92C129.66-14.76,28.39,80.57,5.31,156.04c-6.51,21.28-12.84,64.09,18.85,67.79,35.93,4.2,62.45-22.91,81.28-49.71.29,4.89-1.35,9.39-1.04,14.36.73,11.83,8.15,20.1,20.06,21.31,23.84,2.43,46.62-18.99,59.16-37.08-4.72,23.91,16.68,26.04,33.44,16.95,56.57-30.7,81.87-170.86-3.25-187.74ZM171.32,91.39c-12.73-5.22-11.91-31.76,2.3-34.22,25.05-4.34,21.26,43.88-2.3,34.22ZM221.74,92.71c-18.18.91-19.89-32.28-3.95-35.56,22.34-4.59,23.34,34.6,3.95,35.56Z"/></svg></div>
+          <div class="ext-icon" id="extX">𝕏</div>
+          <div class="ext-icon dimes-ext term-hl" data-hl="stream" id="extStream" title="Dimes Stream"><svg viewBox="0 0 230 243.24" width="14" height="14" xmlns="http://www.w3.org/2000/svg"><path fill="#ef0" d="M216.65,173.09c-15.47,18.94-42.61,33.06-75.01,38.1-8.3,1.49-17.16,2.3-26.37,2.3v29.74c63.66,0,115.26-34.28,115.26-76.57,0-5.14-.77-10.16-2.22-15.02-2.28,7.61-6.25,14.82-11.66,21.44Z"/><path fill="#ef0" d="M31.6,159.27c-5.48-3.84-10.37-8.06-14.57-12.6-.67-.73-1.33-1.46-1.97-2.21-2.17-2.52-4.12-5.14-5.85-7.83-3.07-4.78-5.42-9.8-6.98-15.02-1.45,4.86-2.22,9.88-2.22,15.02s.77,10.16,2.22,15.02c2.28,7.61,6.25,14.82,11.66,21.44,15.47,18.94,42.61,33.06,75.01,38.1,8.47,1.32,17.3,2.3,26.37,2.3v-30.32c-32.95,0-62.66-9.18-83.67-23.91Z"/><path fill="#ef0" d="M213.5,146.68c.67-.73,1.33-1.46,1.97-2.21,2.17-2.52,4.12-5.14,5.85-7.83,3.07-4.78,5.42-9.8,6.98-15.02,1.45-4.86,2.22-9.88,2.22-15.02s-.77-10.16-2.22-15.02c-10.23-34.18-54.71-60.16-108.67-61.5-.02,0-.04,0-.06,0-1.43-.04-2.86-.06-4.31-.06v30.03c1.39,0,2.76.04,4.13.07,32.98.87,61.01,12.05,73.6,27.8.67.84,1.31,1.68,1.89,2.55,3.38,5.02,5.23,10.44,5.23,16.1,0,2.54-.39,5.04-1.1,7.47-.64,2.16-1.53,4.27-2.69,6.32-5.41-5.35-11.73-10.15-18.79-14.27-17.21-10.04-38.81-16.01-62.26-16.01v30.36c2.74,0,5.45.08,8.13.22,22.53,1.17,42.48,7.18,56.38,16.11-15.56,9.99-38.68,16.32-64.52,16.32v30.07c32.95,0,62.66-9.18,83.67-23.91,5.48-3.84,10.37-8.06,14.57-12.6Z"/><path fill="#ef0" d="M107.13,120.24c-21.38-1.1-40.42-6.06-54.13-14.13,17.21-10.04,38.81-16.01,62.26-16.01v-30.03c-1.12,0-2.23.02-3.33.05-29.94.74-56.58,11.41-74.4,27.82-.74.68-1.47,1.38-2.18,2.09-1.32-2.1-2.36-4.27-3.1-6.5-.87-2.62-1.35-5.31-1.35-8.06,0-24.3,35.43-44.14,80-45.37.02,0,.04,0,.06,0,1.43-.03,2.86-.06,4.31-.06V0C51.61,0,0,34.28,0,76.57c0,5.14.77,10.16,2.22,15.02,1.56,5.22,3.92,10.24,6.98,15.02,2.42,3.76,5.28,7.37,8.54,10.8,1.37,1.44,2.81,2.85,4.31,4.22,1.98,1.81,4.07,3.55,6.28,5.24,5.81,4.43,12.38,8.41,19.56,11.85,18.95,9.08,42.22,14.4,67.37,14.4v-32.65c-2.74,0-5.45-.08-8.13-.21Z"/></svg></div>
+        </div>
+      </div>
+
+      <div class="terminal-body">
+        <div class="terminal-main">
+          <div class="terminal-nav">
+            <div class="terminal-nav-left">
+              <div class="skel-circle" style="width:28px;height:28px"></div>
+              <div><div class="skel" style="width:180px;height:14px;margin-bottom:4px"></div><div class="skel" style="width:80px;height:10px"></div></div>
+            </div>
+            <div class="terminal-nav-right">
+              <div class="skel-pill" style="width:120px;height:28px"></div>
+              <div class="firepower-icon term-hl" data-hl="firepower" id="firepowerIcon" title="Firepower by Dimes"><svg viewBox="0 0 230 243.24" width="14" height="14" xmlns="http://www.w3.org/2000/svg"><path fill="#ef0" d="M216.65,173.09c-15.47,18.94-42.61,33.06-75.01,38.1-8.3,1.49-17.16,2.3-26.37,2.3v29.74c63.66,0,115.26-34.28,115.26-76.57,0-5.14-.77-10.16-2.22-15.02-2.28,7.61-6.25,14.82-11.66,21.44Z"/><path fill="#ef0" d="M31.6,159.27c-5.48-3.84-10.37-8.06-14.57-12.6-.67-.73-1.33-1.46-1.97-2.21-2.17-2.52-4.12-5.14-5.85-7.83-3.07-4.78-5.42-9.8-6.98-15.02-1.45,4.86-2.22,9.88-2.22,15.02s.77,10.16,2.22,15.02c2.28,7.61,6.25,14.82,11.66,21.44,15.47,18.94,42.61,33.06,75.01,38.1,8.47,1.32,17.3,2.3,26.37,2.3v-30.32c-32.95,0-62.66-9.18-83.67-23.91Z"/><path fill="#ef0" d="M213.5,146.68c.67-.73,1.33-1.46,1.97-2.21,2.17-2.52,4.12-5.14,5.85-7.83,3.07-4.78,5.42-9.8,6.98-15.02,1.45-4.86,2.22-9.88,2.22-15.02s-.77-10.16-2.22-15.02c-10.23-34.18-54.71-60.16-108.67-61.5-.02,0-.04,0-.06,0-1.43-.04-2.86-.06-4.31-.06v30.03c1.39,0,2.76.04,4.13.07,32.98.87,61.01,12.05,73.6,27.8.67.84,1.31,1.68,1.89,2.55,3.38,5.02,5.23,10.44,5.23,16.1,0,2.54-.39,5.04-1.1,7.47-.64,2.16-1.53,4.27-2.69,6.32-5.41-5.35-11.73-10.15-18.79-14.27-17.21-10.04-38.81-16.01-62.26-16.01v30.36c2.74,0,5.45.08,8.13.22,22.53,1.17,42.48,7.18,56.38,16.11-15.56,9.99-38.68,16.32-64.52,16.32v30.07c32.95,0,62.66-9.18,83.67-23.91,5.48-3.84,10.37-8.06,14.57-12.6Z"/><path fill="#ef0" d="M107.13,120.24c-21.38-1.1-40.42-6.06-54.13-14.13,17.21-10.04,38.81-16.01,62.26-16.01v-30.03c-1.12,0-2.23.02-3.33.05-29.94.74-56.58,11.41-74.4,27.82-.74.68-1.47,1.38-2.18,2.09-1.32-2.1-2.36-4.27-3.1-6.5-.87-2.62-1.35-5.31-1.35-8.06,0-24.3,35.43-44.14,80-45.37.02,0,.04,0,.06,0,1.43-.03,2.86-.06,4.31-.06V0C51.61,0,0,34.28,0,76.57c0,5.14.77,10.16,2.22,15.02,1.56,5.22,3.92,10.24,6.98,15.02,2.42,3.76,5.28,7.37,8.54,10.8,1.37,1.44,2.81,2.85,4.31,4.22,1.98,1.81,4.07,3.55,6.28,5.24,5.81,4.43,12.38,8.41,19.56,11.85,18.95,9.08,42.22,14.4,67.37,14.4v-32.65c-2.74,0-5.45-.08-8.13-.21Z"/></svg></div>
+              <div class="profile-skel"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" fill="white"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" fill="white"/></svg></div>
+            </div>
+          </div>
+
+          <div class="candidates-row">
+            <div class="skel-pill" style="width:100px;height:26px"></div>
+            <div class="skel-pill" style="width:120px;height:26px"></div>
+            <div class="skel-pill" style="width:70px;height:26px"></div>
+          </div>
+
+          <div class="chart-area">
+            <div class="skel-chart">
+              <div class="skel-chart-line"></div><div class="skel-chart-line"></div><div class="skel-chart-line"></div><div class="skel-chart-line"></div><div class="skel-chart-line"></div>
+              <!-- Vertical dashed grid -->
+              <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:.3" viewBox="0 0 600 200" preserveAspectRatio="none" fill="none">
+                <line x1="100" y1="0" x2="100" y2="200" stroke="rgba(255,255,255,.04)" stroke-width="1" stroke-dasharray="2 4"/>
+                <line x1="200" y1="0" x2="200" y2="200" stroke="rgba(255,255,255,.04)" stroke-width="1" stroke-dasharray="2 4"/>
+                <line x1="300" y1="0" x2="300" y2="200" stroke="rgba(255,255,255,.04)" stroke-width="1" stroke-dasharray="2 4"/>
+                <line x1="400" y1="0" x2="400" y2="200" stroke="rgba(255,255,255,.04)" stroke-width="1" stroke-dasharray="2 4"/>
+                <line x1="500" y1="0" x2="500" y2="200" stroke="rgba(255,255,255,.04)" stroke-width="1" stroke-dasharray="2 4"/>
+              </svg>
+              <svg style="position:absolute;inset:0;width:100%;height:100%" viewBox="0 0 600 200" preserveAspectRatio="none" fill="none">
+                <defs>
+                  <!-- Vertical fade for area fills -->
+                  <linearGradient id="fillFade1" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="rgba(255,255,255,.06)"/>
+                    <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+                  </linearGradient>
+                  <linearGradient id="fillFade2" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="rgba(255,255,255,.03)"/>
+                    <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+                  </linearGradient>
+                  <linearGradient id="fillFade3" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="rgba(255,255,255,.025)"/>
+                    <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+                  </linearGradient>
+                  <!-- Horizontal mask to fade right edge -->
+                  <linearGradient id="hFade" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="white"/>
+                    <stop offset="75%" stop-color="white"/>
+                    <stop offset="100%" stop-color="black"/>
+                  </linearGradient>
+                  <mask id="rightFade"><rect width="600" height="200" fill="url(#hFade)"/></mask>
+                </defs>
+                <g mask="url(#rightFade)">
+                  <!-- Main line area fill -->
+                  <path d="M0 170Q60 168 120 165Q180 160 240 148Q300 135 360 118Q420 95 480 72Q540 55 600 40L600 200L0 200Z" fill="url(#fillFade1)"/>
+                  <!-- Main line — fine, no glow -->
+                  <path d="M0 170Q60 168 120 165Q180 160 240 148Q300 135 360 118Q420 95 480 72Q540 55 600 40" stroke="rgba(255,255,255,.45)" stroke-width="1"/>
+                </g>
+              </svg>
+            </div>
+          </div>
+
+
+
+          <div class="volume-bar">
+            <div class="skel" style="width:90px;height:10px"></div>
+            <div class="time-pills"><div class="time-pill">1H</div><div class="time-pill">1D</div><div class="time-pill">1W</div><div class="time-pill active">All</div></div>
+          </div>
+        </div>
+
+        <div class="terminal-sidebar">
+          <div class="sidebar-block">
+            <div class="skel" style="width:60px;height:8px;margin-bottom:10px"></div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <div class="skel" style="width:36px;height:36px;border-radius:8px"></div>
+              <div><div class="skel" style="width:80px;height:12px;margin-bottom:4px"></div><div class="skel" style="width:56px;height:9px"></div></div>
+            </div>
+          </div>
+
+          <div class="yn-skel">
+            <div class="yn-skel-btn yes">Yes 33¢</div>
+            <div class="yn-skel-btn no">No 67¢</div>
+          </div>
+
+          <div class="amount-skel">
+            <div style="font-size:11px;color:var(--text-muted);text-align:right;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">Amount</div>
+            <div style="font-size:28px;font-weight:700;text-align:right;letter-spacing:-.02em;color:rgba(255,255,255,.45)">$1,000</div>
+            <div class="amount-skel-pills"><div class="amount-skel-pill">+$1</div><div class="amount-skel-pill">+$20</div><div class="amount-skel-pill">+$100</div><div class="amount-skel-pill">MAX</div></div>
+          </div>
+
+          <!-- LEVERAGE — refined -->
+          <div class="leverage-section term-hl" data-hl="multiply" id="leverageSection">
+            <div class="leverage-inner">
+              <div class="leverage-header">
+                <span class="leverage-label">Leverage <span class="leverage-info">i</span></span>
+              </div>
+              <div class="leverage-track-wrap" id="leverageTrackWrap">
+                <div class="leverage-track" id="leverageTrack">
+                  <div class="leverage-fill" id="leverageFill"></div>
+                  <div class="track-dots"><div class="track-dot"></div><div class="track-dot"></div><div class="track-dot"></div><div class="track-dot"></div><div class="track-dot"></div><div class="track-dot"></div><div class="track-dot"></div><div class="track-dot"></div><div class="track-dot"></div><div class="track-dot"></div></div>
+                  <div class="leverage-thumb" id="leverageThumb"></div>
+                </div>
+                <span class="leverage-value" id="leverageValue">6x</span>
+              </div>
+              <div class="leverage-stats" id="leverageStats">
+                <div class="leverage-stat"><span class="label">Shares</span><span class="stat-line"></span><span class="val" id="statShares">18,182</span></div>
+                <div class="leverage-stat"><span class="label">Position Value</span><span class="stat-line"></span><span class="val" id="statPosition">$6,000</span></div>
+                <div class="leverage-stat"><span class="label">Liquidation Price</span><span class="stat-line"></span><span class="val" id="statLiquidation">¢26</span></div>
+                <div class="leverage-stat"><span class="val sm">Leverage auto-decays as resolution approaches</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="action-skel"><div class="action-skel-btn">Buy</div><div class="action-skel-btn">Sell</div></div>
+        </div>
+      </div>
+    </div>
+    </div><!-- end terminal-center -->
+
+    <div class="product-tabs-side">
+      <div class="tab-group" data-for="stream">
+        <button class="product-tab" data-product="stream">Stream</button>
+        <div class="tab-desc" id="descStream"></div>
+        <button class="timeline-link" data-default="Q4 2026"><span>Q4 2026</span></button>
+      </div>
+      <div class="tab-group" data-for="firepower">
+        <button class="product-tab" data-product="firepower">Firepower</button>
+        <div class="tab-desc" id="descFirepower"></div>
+        <button class="timeline-link" data-default="H2 2026"><span>H2 2026</span></button>
+      </div>
+      <div class="tab-group" data-for="multiply">
+        <button class="product-tab" data-product="multiply">Multiply</button>
+        <div class="tab-desc" id="descMultiply"></div>
+        <a href="#" class="docs-link">Learn more <span class="docs-arrow">&#8594;</span></a>
+      </div>
+      <div class="product-subtitle" id="productSubtitle">for prediction market terminals</div>
+      <div class="product-subtitle" id="hoverSubtitle"></div>
+    </div>
+
+  </div>
+</section>
+
+<section class="why">
+  <div class="section-header reveal"><h2 class="section-title">Why choose <em>Dimes</em></h2></div>
+  <div class="why-grid">
+    <div class="why-card reveal"><h3>Scale volume and revenues faster</h3><p>Unlock hundreds of millions in buying power for your existing<br>users in one integration.</p></div>
+    <div class="why-card reveal"><h3>Seamless credit, embedded in your UI</h3><p>Your users get instant credit without leaving your app —<br>powered by Dimes' risk engine behind the scenes.</p></div>
+    <div class="why-card reveal"><h3>Offer high-conviction products<br>to your users</h3><p>Give your users the tools to take bigger positions on the<br>outcomes they believe in.</p></div>
+    <div class="why-card reveal"><h3>Outsource credit to trusted experts,<br>with deep liquidity</h3><p>Without managing credit risk or liquidity yourself.</p></div>
+    <div class="why-center"><svg viewBox="0 0 1260.91 1330.81" width="45" xmlns="http://www.w3.org/2000/svg"><style>.ol{fill:none;stroke:#ef0;opacity:.2;stroke-miterlimit:10;stroke-width:15px;transition:opacity .4s ease,fill .4s ease}</style><path class="ol q4" d="M1258.41,910.94c0-28.01-4.16-55.38-12.08-81.84-57.23,191.32-311.21,335.53-615.87,335.53v163.69c346.81,0,627.95-186.86,627.95-417.37Z"/><path class="ol q3" d="M630.45,1000.93c-.09,0-.17,0-.26,0-2.11,0-4.22-.01-6.33-.03-175.96-1.2-334.59-50.5-447.52-129.07-51.73-35.99-93.88-78.12-123.71-124.59-16.71-26.03-29.56-53.42-38.06-81.84-7.92,26.47-12.08,53.83-12.08,81.84s4.16,55.38,12.08,81.84c57.23,191.32,311.21,335.53,615.87,335.53v-163.69Z"/><path class="ol q2" d="M1246.33,501.72c-56.47-188.78-304.51-331.69-603.79-335.44-.21,0-.41,0-.62,0-1.57-.02-3.14-.04-4.72-.05-2.25-.02-4.49-.03-6.75-.03v163.03c32.3,0,63.82,1.84,94.25,5.34,156.71,18.01,284.19,80.04,338.08,161.62,17.94,27.16,27.73,56.48,27.73,87.06,0,13.51-1.92,26.77-5.6,39.71-4.21,14.8-10.73,29.17-19.36,43.01-18.8,30.15-47.58,57.73-84.17,81.54-80.69,52.5-199.34,86.66-332.54,89.55-2.52.05-5.04.11-7.57.13-3.6.05-7.21.07-10.83.07v163.69c.09,0,.17,0,.26,0,2.11,0,4.22-.01,6.33-.03,175.96-1.2,334.59-50.5,447.52-129.07,51.73-35.99,93.88-78.12,123.71-124.59,16.71-26.03,29.56-53.42,38.06-81.84,7.92-26.47,12.08-53.83,12.08-81.84s-4.16-55.38-12.08-81.84Z"/><path class="ol q3" d="M536.21,334.55c-156.71,18.01-284.19,80.04-338.09,161.62,17.62,26.13,43.24,50.21,75.29,71.38,5.25,3.47,10.67,6.86,16.26,10.17,84.09-51.19,205.62-83.34,340.78-83.34v-164.5c-32.03,0-63.5,1.6-94.25,4.68Z"/><path class="ol q4" d="M971.23,577.72c-84.09-51.19-205.62-83.34-340.78-83.34v163.36c9.99,0,19.9.18,29.73.52,128.65,4.53,242.9,38.23,321.22,89.23,36.59-23.81,65.37-51.39,84.17-81.54-20.39-33-52.79-62.94-94.33-88.23Z"/><path class="ol q1" d="M618.37,166.27c.21,0,.41,0,.62,0,1.57-.02,3.14-.04,4.72-.05,2.25-.02,4.49-.03,6.75-.03V2.5C283.64,2.5,2.5,189.36,2.5,419.87c0,28.01,4.16,55.38,12.08,81.84,8.5,28.43,21.35,55.81,38.06,81.84,18.71,29.13,42.24,56.56,69.96,81.84,16.51,15.06,34.5,29.36,53.83,42.8,26.59,18.49,55.72,35.36,87,50.36,98.62,47.29,218.73,76,348.72,78.48,2.48.05,4.97.1,7.47.13,3.61.04,7.21.07,10.83.07v-178.48c-9.99,0-19.9-.17-29.73-.51-123.19-4.22-233.17-34.44-311.05-80.54-5.59-3.31-11.01-6.7-16.26-10.17-32.06-21.17-57.67-45.25-75.29-71.38-8.4-12.47-15-25.4-19.58-38.71-5.03-14.59-7.66-29.62-7.66-44.99,0-133.85,199.26-242.77,447.49-246.2Z"/></svg></div>
+  </div>
+</section>
+
+<section class="backers">
+  <div class="section-header reveal"><h2 class="section-title">Backers</h2></div>
+  <div class="backer-logos reveal">
+    <a class="backer-item" href="https://strobe.fund/" target="_blank" rel="noopener"><img src="assets/Strobe_Logo.svg" alt="Strobe"><div class="backer-desc">Crypto-native fund. Prev. Blocktower VC<br>Backed Ethena, Maple, Centrifuge, Morpho</div></a>
+    <a class="backer-item" href="https://whitestarcapital.com/" target="_blank" rel="noopener"><img src="assets/White_Star_Capital_Logo.svg" alt="White Star Capital"><div class="backer-desc">Crypto-native fund<br>Backed Ledn, Haruko, Paraswap</div></a>
+    <a class="backer-item" href="https://www.coinbase.com/en-ca/ventures" target="_blank" rel="noopener"><img src="assets/Coinbase_Ventures.svg" alt="Coinbase Ventures"><div class="backer-desc">Coinbase VC arm<br>Backed OpenSea, Uniswap, Dune</div></a>
+    <a class="backer-item" href="https://www.accel.com/" target="_blank" rel="noopener"><img src="assets/Accel_Logo.svg" alt="Accel"><div class="backer-desc">Global, tier-1 fund<br>Backed Facebook, Circle, Slack</div></a>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="cta-inner">
+    <div class="cta-visual reveal">
+      <div class="hand-clasp-container">
+        <img src="assets/Dimes_Clasp.png" alt="Dimes handshake" class="hand-clasp-img">
+      </div>
+    </div>
+    <div class="cta-content reveal">
+      <h2>Stop capping your flow.<br><em style="white-space:nowrap">Let your users size up with Dimes.</em></h2>
+      <p class="cta-sub">30% of borrow fees flowing right back to you.</p>
+      <div class="cta-btn-wrap">
+        <div class="cta-btn-glow"><div class="glow-atmo"></div><div class="glow-mid"></div><div class="glow-core"></div><div class="glow-slit"></div><div class="glow-spill"></div></div>
+        <div class="cta-btn-echo echo-8"></div>
+        <div class="cta-btn-echo echo-7"></div>
+        <div class="cta-btn-echo echo-6"></div>
+        <div class="cta-btn-echo echo-5"></div>
+        <div class="cta-btn-echo echo-4"></div>
+        <div class="cta-btn-echo echo-3"></div>
+        <div class="cta-btn-echo echo-2"></div>
+        <div class="cta-btn-echo echo-1"></div>
+        <a href="#" class="cta-btn">10x your flow</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <a href="#" class="footer-logo"><svg viewBox="0 0 1222.47 243.24" xmlns="http://www.w3.org/2000/svg"><g><path fill="#fff" d="M344.37,221.83c-5.55-5.34-8.32-12.33-8.32-20.97V14.02h102.98c16.44,0,30.88,3.08,43.32,9.25,12.43,6.17,22.09,14.9,28.98,26.21,6.88,11.31,10.33,24.36,10.33,39.16v60.43c0,26.52-6.89,46.61-20.66,60.28-13.77,13.67-34.02,20.5-60.74,20.5h-74.31c-8.84,0-16.03-2.67-21.58-8.02ZM439.02,192.23c13.15,0,23.12-3.8,29.91-11.41,6.78-7.6,10.17-18.81,10.17-33.61v-56.73c0-11.72-3.81-21.12-11.41-28.21-7.61-7.09-17.57-10.64-29.91-10.64h-59.2v140.6h60.43Z"/><path fill="#fff" d="M558.5,54.56c-4.83-4.62-7.25-10.74-7.25-18.35s2.41-13.72,7.25-18.35c4.83-4.62,11.25-6.94,19.27-6.94s14.44,2.31,19.27,6.94c4.83,4.62,7.25,10.74,7.25,18.35s-2.42,13.72-7.25,18.35c-4.83,4.62-11.25,6.94-19.27,6.94s-14.44-2.31-19.27-6.94ZM556.8,75.99h41.93v153.85h-41.93V75.99Z"/><path fill="#fff" d="M853.41,88.78c9.45,10.18,14.18,23.49,14.18,39.93v101.13h-41.93v-101.13c0-5.75-1.34-10.33-4.01-13.72-2.67-3.39-6.17-5.09-10.48-5.09h-13.26c-5.76,0-10.79,2.11-15.11,6.32-4.32,4.21-6.99,9.82-8.02,16.8v96.81h-41.93v-100.82c0-5.75-1.34-10.38-4.01-13.87-2.67-3.49-6.17-5.24-10.48-5.24h-12.02c-5.96,0-11.21,2.67-15.72,8.02-4.52,5.35-7.4,12.33-8.63,20.97v90.96h-41.93V75.99h38.85v17.88c3.7-6.17,8.48-11.1,14.34-14.8,5.86-3.7,11.76-5.55,17.73-5.55h17.27c7.4,0,14.13,1.96,20.2,5.86,6.06,3.91,10.84,9.36,14.34,16.34,4.52-6.98,9.91-12.43,16.19-16.34,6.27-3.9,12.9-5.86,19.89-5.86h16.96c15.62,0,28.16,5.09,37.62,15.26Z"/><path fill="#fff" d="M926.94,225.06c-9.97-4.83-17.73-11.61-23.28-20.35-5.55-8.73-8.32-18.75-8.32-30.06v-39.77c0-12.13,2.77-22.82,8.32-32.07s13.31-16.44,23.28-21.58c9.97-5.14,21.43-7.71,34.38-7.71h24.67c19.73,0,35.56,5.55,47.48,16.65,11.92,11.1,17.88,25.9,17.88,44.4v32.68h-114.08v7.4c0,6.78,2.16,12.23,6.48,16.34,4.32,4.11,10.17,6.17,17.57,6.17h24.05c7.19,0,13-1.59,17.42-4.78,4.42-3.18,6.63-7.35,6.63-12.49h41.32c0,10.28-2.77,19.42-8.32,27.44-5.55,8.02-13.31,14.18-23.28,18.5-9.97,4.32-21.43,6.47-34.38,6.47h-23.43c-12.95,0-24.41-2.42-34.38-7.25ZM1010.04,137.04v-2.47c0-8.02-2.16-14.44-6.47-19.27-4.32-4.83-10.07-7.24-17.27-7.24h-24.97c-7.4,0-13.36,2.57-17.88,7.71-4.52,5.14-6.78,11.92-6.78,20.35v.93h73.38Z"/><path fill="#fff" d="M1089.27,217.51c-11.31-9.87-16.96-22.82-16.96-38.85h41.32c0,5.55,1.9,10.02,5.7,13.41,3.8,3.39,8.79,5.09,14.95,5.09h27.75c12.33,0,18.5-3.39,18.5-10.18v-5.24c0-2.05-1.03-3.96-3.08-5.71-2.06-1.74-4.83-2.93-8.32-3.54l-53.34-9.25c-12.54-2.05-22.46-6.52-29.75-13.41-7.3-6.88-10.95-14.95-10.95-24.2v-10.18c0-13.15,5.4-23.43,16.19-30.83,10.79-7.4,25.85-11.1,45.17-11.1h24.05c17.27,0,31.19,4.58,41.78,13.72,10.58,9.15,15.88,21.23,15.88,36.23h-41.32c0-4.52-1.49-8.12-4.47-10.79-2.98-2.67-6.94-4.01-11.87-4.01h-23.43c-13.36,0-20.04,3.08-20.04,9.25v4.93c0,2.26.87,4.16,2.62,5.71,1.74,1.54,4.26,2.62,7.55,3.24l56.12,10.18c11.72,2.06,21.17,6.43,28.37,13.1,7.19,6.68,10.79,14.23,10.79,22.66v11.1c0,13.36-5.5,23.95-16.5,31.76-11,7.81-25.64,11.72-43.94,11.72h-27.75c-18.71,0-33.71-4.93-45.02-14.8Z"/><path fill="#ef0" d="M216.65,173.09c-15.47,18.94-42.61,33.06-75.01,38.1-8.3,1.49-17.16,2.3-26.37,2.3v29.74c63.66,0,115.26-34.28,115.26-76.57,0-5.14-.77-10.16-2.22-15.02-2.28,7.61-6.25,14.82-11.66,21.44Z"/><path fill="#ef0" d="M31.6,159.27c-5.48-3.84-10.37-8.06-14.57-12.6-.67-.73-1.33-1.46-1.97-2.21-2.17-2.52-4.12-5.14-5.85-7.83-3.07-4.78-5.42-9.8-6.98-15.02-1.45,4.86-2.22,9.88-2.22,15.02s.77,10.16,2.22,15.02c2.28,7.61,6.25,14.82,11.66,21.44,15.47,18.94,42.61,33.06,75.01,38.1,8.47,1.32,17.3,2.3,26.37,2.3v-30.32c-32.95,0-62.66-9.18-83.67-23.91Z"/><path fill="#ef0" d="M213.5,146.68c.67-.73,1.33-1.46,1.97-2.21,2.17-2.52,4.12-5.14,5.85-7.83,3.07-4.78,5.42-9.8,6.98-15.02,1.45-4.86,2.22-9.88,2.22-15.02s-.77-10.16-2.22-15.02c-10.23-34.18-54.71-60.16-108.67-61.5-.02,0-.04,0-.06,0-1.43-.04-2.86-.06-4.31-.06v30.03c1.39,0,2.76.04,4.13.07,32.98.87,61.01,12.05,73.6,27.8.67.84,1.31,1.68,1.89,2.55,3.38,5.02,5.23,10.44,5.23,16.1,0,2.54-.39,5.04-1.1,7.47-.64,2.16-1.53,4.27-2.69,6.32-5.41-5.35-11.73-10.15-18.79-14.27-17.21-10.04-38.81-16.01-62.26-16.01v30.36c2.74,0,5.45.08,8.13.22,22.53,1.17,42.48,7.18,56.38,16.11-15.56,9.99-38.68,16.32-64.52,16.32v30.07c32.95,0,62.66-9.18,83.67-23.91,5.48-3.84,10.37-8.06,14.57-12.6Z"/><path fill="#ef0" d="M107.13,120.24c-21.38-1.1-40.42-6.06-54.13-14.13,17.21-10.04,38.81-16.01,62.26-16.01v-30.03c-1.12,0-2.23.02-3.33.05-29.94.74-56.58,11.41-74.4,27.82-.74.68-1.47,1.38-2.18,2.09-1.32-2.1-2.36-4.27-3.1-6.5-.87-2.62-1.35-5.31-1.35-8.06,0-24.3,35.43-44.14,80-45.37.02,0,.04,0,.06,0,1.43-.03,2.86-.06,4.31-.06V0C51.61,0,0,34.28,0,76.57c0,5.14.77,10.16,2.22,15.02,1.56,5.22,3.92,10.24,6.98,15.02,2.42,3.76,5.28,7.37,8.54,10.8,1.37,1.44,2.81,2.85,4.31,4.22,1.98,1.81,4.07,3.55,6.28,5.24,5.81,4.43,12.38,8.41,19.56,11.85,18.95,9.08,42.22,14.4,67.37,14.4v-32.65c-2.74,0-5.45-.08-8.13-.21Z"/></g></svg></a>
+  <div class="footer-links"><a href="#">Terms & Policy</a><a href="#">Multiply Docs</a><a href="#">Telegram</a><a href="#">X</a></div>
+</footer>
+
+<script>
+const tabs = document.querySelectorAll('.product-tab');
+const productSubtitle = document.getElementById('productSubtitle');
+const hoverSubtitle = document.getElementById('hoverSubtitle');
+const tabGroups = document.querySelectorAll('.tab-group');
+
+const products = {
+  multiply: { name:'Multiply', sub:'for prediction market terminals', subHover:'for prediction<br>market terminals', desc:'Offer your users 2-10x leverage on Kalshi and Polymarket.' },
+  firepower: { name:'Firepower', sub:'for launchpads, wallets and terminals', subHover:'for launchpads, wallets<br>and terminals', desc:'Let your users unlock new trades using their existing positions as collateral.' },
+  stream: { name:'Stream', sub:'for wallets', subHover:'for wallets', desc:'Turn any portfolio into a self-managing BTC accumulation engine. No selling, no margin calls.' }
+};
+
+let activeProduct = null;
+
+function positionSubtitle(key, mode, el) {
+  el = el || productSubtitle;
+  const btn = document.querySelector(`.product-tab[data-product="${key}"]`);
+  const side = document.querySelector('.product-tabs-side');
+  if (!btn || !side) return;
+  const sideRect = side.getBoundingClientRect();
+  const btnRect = btn.getBoundingClientRect();
+  if (mode === 'selected') {
+    const range = document.createRange();
+    range.selectNodeContents(btn);
+    const textRect = range.getBoundingClientRect();
+    el.style.top = (textRect.bottom - sideRect.top + 3) + 'px';
+    el.style.left = '0px';
+  } else {
+    const subH = el.offsetHeight || 14;
+    el.style.top = (btnRect.top - sideRect.top + btnRect.height / 2 - subH / 2) + 'px';
+    el.style.left = (sideRect.width + 14) + 'px';
+  }
+}
+
+const productsEl = document.querySelector('.products');
+const terminalEl = document.getElementById('terminal');
+const ringEl = document.getElementById('highlightRing');
+const hlEls = document.querySelectorAll('.term-hl');
+
+/* Zoom configs — all use transform-origin: top right for smooth inter-product transitions */
+const zoomConfigs = {
+  stream:    { scale: 2.0,  tx: '0px',    ty: '0px'   },  /* top-right corner locked */
+  firepower: { scale: 2.0,  tx: '16.5vw', ty: '-7px'  },  /* equivalent of origin 78% 12% — centers icon on page */
+  multiply:  { scale: 1.5,  tx: '0px',    ty: '-310px'},  /* slide up so leverage box aligns with multiply description */
+};
+
+function zoomToTarget(key) {
+  const cfg = zoomConfigs[key];
+  if (!cfg) return;
+  terminalEl.classList.remove('zoomed-stream', 'zoomed-firepower', 'zoomed-multiply');
+  terminalEl.style.transform = `scale(${cfg.scale}) translate(${cfg.tx}, ${cfg.ty})`;
+  terminalEl.classList.add(`zoomed-${key}`);
+  productsEl.classList.add('zoomed');
+}
+
+function selectProduct(key) {
+  if (activeProduct === key) { resetProduct(); return; }
+
+  productSubtitle.classList.remove('active');
+  productSubtitle.classList.remove('selected');
+
+  activeProduct = key;
+  const p = products[key];
+
+  tabs.forEach(t => t.classList.toggle('active', t.dataset.product === key));
+
+  tabGroups.forEach(g => {
+    const isActive = g.dataset.for === key;
+    g.classList.toggle('active', isActive);
+    const desc = g.querySelector('.tab-desc');
+    desc.textContent = isActive ? p.desc : '';
+  });
+
+  productSubtitle.textContent = p.sub;
+  setTimeout(() => {
+    positionSubtitle(key, 'selected');
+    productSubtitle.classList.add('selected');
+    requestAnimationFrame(() => productSubtitle.classList.add('active'));
+  }, 250);
+
+  zoomToTarget(key);
+  highlightProduct(key);
+
+  /* Animate leverage slider to 8x when selecting Multiply */
+  if (key === 'multiply') animateLeverage(8, 1200);
+}
+
+function resetProduct() {
+  const wasMultiply = activeProduct === 'multiply';
+  activeProduct = null;
+  productSubtitle.classList.remove('active');
+  productSubtitle.classList.remove('selected');
+  hoverSubtitle.classList.remove('active');
+  unhighlightProduct();
+  terminalEl.style.transform = 'none';
+  terminalEl.classList.remove('zoomed-stream', 'zoomed-firepower', 'zoomed-multiply');
+  productsEl.classList.remove('zoomed');
+  if (wasMultiply) animateLeverage(2, 600);
+  tabs.forEach(t => t.classList.remove('active'));
+  tabGroups.forEach(g => {
+    g.classList.remove('active');
+    g.querySelector('.tab-desc').textContent = '';
+  });
+}
+
+/* terminalEl, ringEl, hlEls already declared above */
+
+function highlightProduct(key) {
+  const target = document.querySelector(`.term-hl[data-hl="${key}"]`);
+  if (!target) { unhighlightProduct(); return; }
+
+  /* Walk up offsetParent chain to get position relative to terminal */
+  let el = target, left = 0, top = 0;
+  while (el && el !== terminalEl) {
+    left += el.offsetLeft;
+    top += el.offsetTop;
+    el = el.offsetParent;
+  }
+
+  const pad = 6;
+  const targetRadius = parseFloat(getComputedStyle(target).borderRadius) || 0;
+
+  ringEl.style.left = (left - pad) + 'px';
+  ringEl.style.top = (top - pad) + 'px';
+  ringEl.style.width = (target.offsetWidth + pad * 2) + 'px';
+  ringEl.style.height = (target.offsetHeight + pad * 2) + 'px';
+  ringEl.style.borderRadius = (targetRadius + pad) + 'px';
+
+  if (ringEl.classList.contains('active')) {
+    ringEl.classList.add('animate-position');
+  }
+  ringEl.classList.add('active');
+}
+
+function unhighlightProduct() {
+  ringEl.classList.remove('active');
+  ringEl.classList.remove('animate-position');
+}
+
+function hoverProduct(key) {
+  if (activeProduct && activeProduct === key) return;
+  if (activeProduct) {
+    /* Show grey hover subtitle next to hovered tab; selected subtitle stays */
+    hoverSubtitle.classList.remove('active');
+    hoverSubtitle.innerHTML = products[key].subHover;
+    positionSubtitle(key, 'hover', hoverSubtitle);
+    requestAnimationFrame(() => hoverSubtitle.classList.add('active'));
+  } else {
+    highlightProduct(key);
+    productSubtitle.classList.remove('active');
+    productSubtitle.innerHTML = products[key].subHover;
+    positionSubtitle(key, 'hover');
+    requestAnimationFrame(() => productSubtitle.classList.add('active'));
+  }
+}
+
+function unhoverProduct() {
+  if (activeProduct) {
+    hoverSubtitle.classList.remove('active');
+  } else {
+    productSubtitle.classList.remove('active');
+    unhighlightProduct();
+  }
+  tabs.forEach(t => t.classList.remove('hovered'));
+}
+
+tabs.forEach(tab => {
+  tab.addEventListener('click', e => { e.stopPropagation(); selectProduct(tab.dataset.product); });
+  tab.addEventListener('mouseenter', () => hoverProduct(tab.dataset.product));
+  tab.addEventListener('mouseleave', () => unhoverProduct());
+});
+
+// Hover on terminal sections highlights the corresponding tab + ring
+hlEls.forEach(el => {
+  el.style.cursor = 'pointer';
+  el.addEventListener('mouseenter', () => {
+    if (activeProduct) return;
+    const key = el.dataset.hl;
+    hoverProduct(key);
+    tabs.forEach(t => t.classList.toggle('hovered', t.dataset.product === key));
+  });
+  el.addEventListener('mouseleave', () => {
+    if (activeProduct) return;
+    unhoverProduct();
+    tabs.forEach(t => t.classList.remove('hovered'));
+  });
+  el.addEventListener('click', e => {
+    e.stopPropagation();
+    selectProduct(el.dataset.hl);
+    tabs.forEach(t => t.classList.remove('hovered'));
+  });
+});
+
+// Timeline buttons — click to morph to "coming soon" and back
+function morphTimeline(btn, text, cb) {
+  const span = btn.querySelector('span');
+  const oldW = btn.offsetWidth;
+  btn.style.width = oldW + 'px';
+  /* Slide text out upward */
+  btn.classList.add('slide-out');
+  setTimeout(() => {
+    /* Swap text while invisible */
+    span.textContent = text;
+    /* Measure target width off-screen */
+    btn.style.width = 'auto';
+    const newW = btn.offsetWidth;
+    /* Snap back to old width, then transition to new */
+    btn.style.width = oldW + 'px';
+    void btn.offsetWidth;
+    btn.style.width = newW + 'px';
+    /* Slide text in from below */
+    btn.classList.remove('slide-out');
+    btn.classList.add('slide-in');
+    void btn.offsetWidth;
+    requestAnimationFrame(() => btn.classList.remove('slide-in'));
+    setTimeout(() => { btn.style.width = ''; if (cb) cb(); }, 450);
+  }, 300);
+}
+document.querySelectorAll('.timeline-link').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    if (btn.dataset.busy) return;
+    btn.dataset.busy = '1';
+    morphTimeline(btn, 'coming soon', () => {
+      setTimeout(() => {
+        morphTimeline(btn, btn.dataset.default, () => { delete btn.dataset.busy; });
+      }, 1200);
+    });
+  });
+});
+
+// Click blank space in products section to reset
+productsEl.addEventListener('click', e => {
+  if (!activeProduct) return;
+  if (e.target.closest('.product-tab, .tab-desc, .docs-link, .timeline-link')) return;
+  resetProduct();
+});
+
+
+// Reset product zoom when tabs scroll out of view
+new IntersectionObserver(entries => {
+  entries.forEach(entry => { if (!entry.isIntersecting && activeProduct) resetProduct(); });
+}, { threshold: 0 }).observe(document.querySelector('.product-tabs-side'));
+
+// Scroll reveal
+document.querySelectorAll('.reveal').forEach(el => {
+  new IntersectionObserver(entries => {
+    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+  }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' }).observe(el);
+});
+
+// ── Amplifier Effect Hero ───────────────────────────────────────────────────
+(function(){
+  const canvas = document.getElementById('heroCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  const params = {
+    amplifications: 8,
+    captureWidth: 100,
+    magnification: 1.25,
+    blurAmount: 16,
+    backgroundColor: '#191919'
+  };
+
+  const img = new Image();
+  img.src = 'assets/WIDER_HERO.png';
+  img.onload = function(){
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    const total = params.amplifications;
+    const duration = 2800;
+    const imgStartOffset = -250;
+    let startTime = null;
+
+    function easeOutQuart(t){ return 1 - Math.pow(1 - t, 4); }
+
+    function animate(timestamp){
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      const eased = easeOutQuart(progress);
+
+      // Hand slides from left to final position
+      const imgOffset = imgStartOffset * (1 - eased);
+      // Per-strip refraction progress: each strip refracts sequentially
+      const stripRefractions = [];
+      for (let s = 0; s < total; s++){
+        const stripStart = s / (total + 2);
+        const stripEnd = (s + 3) / (total + 2);
+        const stripProg = Math.max(0, Math.min(1, (eased - stripStart) / (stripEnd - stripStart)));
+        stripRefractions.push(stripProg);
+      }
+
+      drawEffect(undefined, imgOffset, total, stripRefractions);
+
+      if (progress < 1) requestAnimationFrame(animate);
+      else requestAnimationFrame(hoverLoop);
+    }
+    requestAnimationFrame(animate);
+  };
+
+  // Pre-create source canvas for performance
+  let sourceCanvas = null;
+
+  // ── Hover parallax ──────────────────────────────────────────────────────────
+  let hoverX = 0, targetHoverX = 0;
+  const HOVER_RANGE = 24, HOVER_LERP = 0.045;
+  const heroEl = document.querySelector('.hero');
+  heroEl.addEventListener('mousemove', function(e){
+    const rect = heroEl.getBoundingClientRect();
+    targetHoverX = ((e.clientX - rect.left) / rect.width - 0.5) * 2 * HOVER_RANGE;
+  });
+  heroEl.addEventListener('mouseleave', function(){ targetHoverX = 0; isHovering = false; });
+  heroEl.addEventListener('mouseenter', function(){ isHovering = true; });
+
+  let isHovering = true;
+  const RETURN_LERP = 0.012;
+
+  function hoverLoop(){
+    const lerp = isHovering ? HOVER_LERP : RETURN_LERP;
+    hoverX += (targetHoverX - hoverX) * lerp;
+    if (Math.abs(hoverX) < 0.05 && targetHoverX === 0){ hoverX = 0; requestAnimationFrame(hoverLoop); return; }
+    drawEffect(undefined, hoverX, params.amplifications, null);
+    requestAnimationFrame(hoverLoop);
+  }
+
+  function drawEffect(posX, imgOffset, numVisible, stripRefractions){
+    const W = canvas.width, H = canvas.height;
+    if (posX === undefined) posX = W * 0.57 + 25;
+    if (imgOffset === undefined) imgOffset = 0;
+    if (numVisible === undefined) numVisible = params.amplifications;
+    const positionXRound = Math.round(posX);
+
+    // Draw background + full image
+    ctx.fillStyle = params.backgroundColor;
+    ctx.fillRect(0, 0, W, H);
+    ctx.drawImage(img, imgOffset, 0, W, H);
+
+    // Source canvas
+    if (!sourceCanvas){
+      sourceCanvas = document.createElement('canvas');
+      sourceCanvas.width = W;
+      sourceCanvas.height = H;
+    }
+    const srcCtx = sourceCanvas.getContext('2d');
+    srcCtx.fillStyle = params.backgroundColor;
+    srcCtx.fillRect(0, 0, W, H);
+    srcCtx.drawImage(img, imgOffset, 0, W, H);
+
+    // How many strips to draw (from left to right)
+    const totalStrips = params.amplifications;
+    const visibleCount = Math.min(numVisible, totalStrips);
+
+    // Position the amplifier effect
+    const positionX = positionXRound;
+    const liftSlope = 0.25; // vertical lift per horizontal pixel of distance
+
+    // Pre-calculate all strip positions (uniform width, progressive magnification)
+    const strips = [];
+    const uniformW = 100;
+    let calcX = positionX;
+    for (let i = 0; i < totalStrips; i++){
+      const mag = Math.pow(params.magnification, i + 1);
+      const srcW = uniformW / mag;
+      const nh = H * mag;
+      strips.push({x: calcX, w: uniformW, h: nh, calcW: srcW, calcH: H});
+      calcX += uniformW;
+    }
+
+    // Black out the area covered by visible strips
+    if (visibleCount > 0){
+      const firstX = strips[0].x;
+      const lastStrip = strips[visibleCount - 1];
+      const endX = lastStrip.x + lastStrip.w;
+      ctx.fillStyle = params.backgroundColor;
+      ctx.fillRect(firstX, 0, endX - firstX, H);
+    }
+
+    // Draw visible strips (left to right)
+    for (let i = 0; i < visibleCount; i++){
+      const s = strips[i];
+      let currentX = s.x;
+      let currentWidth = s.calcW;
+      let currentHeight = s.calcH;
+      const newWidth = s.w;
+      const newHeight = s.h;
+      const captureW = s.calcW;
+      const captureX = Math.max(0, positionX - captureW / 2);
+      const captureH = H;
+
+      // Straight-line vertical lift — animated per strip
+      const stripCenterX = (currentX + newWidth / 2) - positionX;
+      const refractionAmount = stripRefractions ? stripRefractions[i] : 1;
+      const yOffset = -stripCenterX * liftSlope * refractionAmount;
+      const drawY = (H - newHeight) / 2 + yOffset;
+
+      // Copy captured strip from source
+      const tempCanvas = document.createElement('canvas');
+      const tempCtx = tempCanvas.getContext('2d');
+      tempCanvas.width = captureW;
+      tempCanvas.height = captureH;
+      tempCtx.drawImage(sourceCanvas, captureX, 0, captureW, captureH, 0, 0, captureW, captureH);
+
+      // Progressive blur
+      const minBlurPct = 0.1;
+      const blurProgress = params.amplifications > 1
+        ? minBlurPct + (1 - minBlurPct) * (i / (params.amplifications - 1))
+        : 1;
+      const blur = params.blurAmount * blurProgress;
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(currentX, 0, newWidth, H);
+      ctx.clip();
+
+      ctx.filter = blur > 0 ? 'blur(' + blur + 'px)' : 'none';
+      ctx.drawImage(tempCanvas, 0, 0, captureW, captureH, currentX, drawY, newWidth, newHeight);
+      ctx.filter = 'none';
+
+      // Left edge highlight with vertical fade
+      const edgeW = Math.min(newWidth * 0.05, 20);
+      const edgeGrad = ctx.createLinearGradient(currentX, 0, currentX + edgeW, 0);
+      edgeGrad.addColorStop(0, 'rgba(255,255,255,0.15)');
+      edgeGrad.addColorStop(0.5, 'rgba(255,255,255,0.08)');
+      edgeGrad.addColorStop(1, 'rgba(255,255,255,0)');
+      const fadeZone = H * 0.2;
+      for (let y = 0; y < H; y++){
+        let a = 1;
+        if (y < fadeZone) a = y / fadeZone;
+        else if (y > H - fadeZone) a = (H - y) / fadeZone;
+        ctx.globalAlpha = a;
+        ctx.fillStyle = edgeGrad;
+        ctx.fillRect(currentX, y, edgeW, 1);
+      }
+      ctx.globalAlpha = 1;
+
+      // Right edge shadow
+      const shadowW = Math.min(newWidth * 0.03, 15);
+      const shadowGrad = ctx.createLinearGradient(currentX + newWidth - shadowW, 0, currentX + newWidth, 0);
+      shadowGrad.addColorStop(0, 'rgba(0,0,0,0)');
+      shadowGrad.addColorStop(0.5, 'rgba(0,0,0,0.15)');
+      shadowGrad.addColorStop(1, 'rgba(0,0,0,0.3)');
+      ctx.fillStyle = shadowGrad;
+      ctx.fillRect(currentX + newWidth - shadowW, 0, shadowW, H);
+
+      // Glass sheen
+      const sheen = ctx.createLinearGradient(currentX, 0, currentX + newWidth, 0);
+      sheen.addColorStop(0, 'rgba(255,255,255,0.06)');
+      sheen.addColorStop(0.5, 'rgba(255,255,255,0.03)');
+      sheen.addColorStop(1, 'rgba(255,255,255,0.01)');
+      ctx.fillStyle = sheen;
+      ctx.fillRect(currentX, 0, newWidth, H);
+
+      ctx.restore();
+    }
+  }
+})();
+
+// ── Process flashlight (canvas) ───────────────────────────────────────────────
+(function(){
+  const section = document.querySelector('.process');
+  const cv = document.getElementById('processCanvas');
+  if (!section || !cv) return;
+  const ctx = cv.getContext('2d');
+  let mouseX = -9999, mouseY = -9999, active = false;
+  let currentX = -9999, currentY = -9999;
+  const LERP = 0.08, RADIUS = 240;
+
+  function resize(){
+    const dpr = window.devicePixelRatio || 1;
+    cv.width = section.offsetWidth * dpr;
+    cv.height = section.offsetHeight * dpr;
+    cv.style.width = section.offsetWidth + 'px';
+    cv.style.height = section.offsetHeight + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function draw(){
+    const w = section.offsetWidth, h = section.offsetHeight;
+    ctx.clearRect(0, 0, w, h);
+
+    // Lerp toward mouse (only when hovering)
+    if (active){
+      if (currentX === -9999){ currentX = mouseX; currentY = mouseY; }
+      currentX += (mouseX - currentX) * LERP;
+      currentY += (mouseY - currentY) * LERP;
+    } else {
+      currentX = -9999; currentY = -9999;
+    }
+
+    // Position text over the grid area
+    const grid = section.querySelector('.process-grid');
+    const gridRect = grid ? grid.getBoundingClientRect() : null;
+    const sectionRect = section.getBoundingClientRect();
+    const textY = gridRect
+      ? (gridRect.top - sectionRect.top) + gridRect.height * 0.18 - 50
+      : h * 0.45;
+    // Font scales to fill the width
+    const fontSize = Math.min(w * 0.13, 190);
+    const fadeTop = textY - fontSize * 0.5;
+    const fadeBot = textY + fontSize * 0.55;
+    ctx.font = '700 ' + fontSize + 'px "Bai Jamjuree", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.letterSpacing = '-0.04em';
+
+    // Vertical fade mask — light gray at top, fading to nothing at bottom
+    const fadeMask = ctx.createLinearGradient(0, fadeTop, 0, fadeBot);
+    fadeMask.addColorStop(0, 'rgba(255,255,255,0.07)');
+    fadeMask.addColorStop(0.35, 'rgba(255,255,255,0.07)');
+    fadeMask.addColorStop(0.6, 'rgba(255,255,255,0.01)');
+    fadeMask.addColorStop(0.75, 'rgba(255,255,255,0)');
+
+    // Draw filled text with vertical fade (solid interior)
+    ctx.save();
+    ctx.fillStyle = fadeMask;
+    ctx.fillText('10x your flow', w / 2, textY);
+    ctx.restore();
+
+    // Outer edge glow — always visible, fades with same vertical gradient
+    const strokeFade = ctx.createLinearGradient(0, fadeTop, 0, fadeBot);
+    strokeFade.addColorStop(0, 'rgba(255,255,255,0.06)');
+    strokeFade.addColorStop(0.35, 'rgba(255,255,255,0.06)');
+    strokeFade.addColorStop(0.6, 'rgba(255,255,255,0.01)');
+    strokeFade.addColorStop(0.75, 'rgba(255,255,255,0)');
+    ctx.save();
+    ctx.strokeStyle = strokeFade;
+    ctx.lineWidth = 1;
+    ctx.strokeText('10x your flow', w / 2, textY);
+    ctx.restore();
+
+    // Flashlight — only the outer glow brightens on hover
+    if (active || currentX !== -9999){
+      ctx.save();
+      const grad = ctx.createRadialGradient(currentX, currentY, 0, currentX, currentY, RADIUS);
+      grad.addColorStop(0, 'rgba(255,255,255,0.14)');
+      grad.addColorStop(0.5, 'rgba(255,255,255,0.06)');
+      grad.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = 1.5;
+      ctx.strokeText('10x your flow', w / 2, textY);
+      ctx.restore();
+    }
+
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+
+  document.addEventListener('mousemove', function(e){
+    const rect = section.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height){
+      mouseX = x; mouseY = y; active = true;
+    } else {
+      active = false;
+    }
+  }, {passive:true});
+
+  // Scale steps on hover via JS (backdrop-filter blocks CSS transforms)
+  const steps = section.querySelectorAll('.process-step');
+  steps.forEach(function(step){
+    step.style.transition = 'transform .4s cubic-bezier(.25,.46,.45,.94)';
+    step.addEventListener('mouseenter', function(){ step.style.transform = 'scale(1.05)'; step.style.zIndex = '4'; });
+    step.addEventListener('mouseleave', function(){ step.style.transform = 'scale(1)'; step.style.zIndex = ''; });
+  });
+})();
+
+// Resize handler
+let resizeTimer;
+window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { if (activeProduct) { zoomToTarget(activeProduct); highlightProduct(activeProduct); } }, 200); });
+
+// ── Leverage slider ─────────────────────────────────────────────────────────
+(function () {
+  const MIN = 1, MAX = 10, DEFAULT = 2;
+  const sectionEl = document.getElementById('leverageSection');
+  const trackEl  = document.getElementById('leverageTrack');
+  const fillEl   = document.getElementById('leverageFill');
+  const thumbEl  = document.getElementById('leverageThumb');
+  const valueEl  = document.getElementById('leverageValue');
+  const statsEl  = document.getElementById('leverageStats');
+  const sharesEl = document.getElementById('statShares');
+  const posEl    = document.getElementById('statPosition');
+  const liqEl    = document.getElementById('statLiquidation');
+
+  let currentLev = DEFAULT;
+  const DOT_INSET = 5; /* px from track edge to dot center — matches CSS left:5px/right:5px */
+
+  function dotPct(lev) {
+    /* Maps leverage 1–10 to the dot positions (first dot to last dot) */
+    const trackW = trackEl.offsetWidth;
+    if (!trackW) return (lev - MIN) / (MAX - MIN) * 100;
+    const dotStart = DOT_INSET;
+    const dotEnd = trackW - DOT_INSET;
+    const px = dotStart + (lev - MIN) / (MAX - MIN) * (dotEnd - dotStart);
+    return (px / trackW) * 100;
+  }
+
+  const dotEls = trackEl.querySelectorAll('.track-dot');
+
+  function updateUI(lev) {
+    const p = dotPct(lev);
+    fillEl.style.width  = p + '%';
+    thumbEl.style.left  = p + '%';
+    valueEl.textContent = lev + 'x';
+
+    /* Hide dots at or before the thumb position */
+    dotEls.forEach((dot, i) => {
+      dot.style.opacity = i < lev ? '0' : '';
+    });
+
+    if (lev === 1) {
+      statsEl.style.maxHeight = statsEl.scrollHeight + 'px';
+      requestAnimationFrame(() => statsEl.classList.add('collapsed'));
+      sectionEl.classList.add('lev-min');
+    } else {
+      statsEl.classList.remove('collapsed');
+      sectionEl.classList.remove('lev-min');
+      statsEl.style.maxHeight = '200px';
+      sharesEl.textContent   = Math.round((1000 * lev) / 0.33).toLocaleString();
+      posEl.textContent      = '$' + (1000 * lev).toLocaleString();
+      liqEl.textContent      = '¢' + Math.max(1, Math.round(100 / lev * 0.78));
+    }
+    /* Sync highlight ring with collapse/expand in real-time */
+    if (activeProduct === 'multiply') {
+      const t0 = performance.now();
+      (function syncRing(now) {
+        highlightProduct('multiply');
+        ringEl.classList.remove('animate-position');
+        if (now - t0 < 650) requestAnimationFrame(syncRing);
+        else ringEl.classList.add('animate-position');
+      })(t0);
+    }
+  }
+
+  function leverageFromPointer(clientX) {
+    const rect = trackEl.getBoundingClientRect();
+    /* Map pointer to dot range, not full track */
+    const dotStart = DOT_INSET;
+    const dotEnd = rect.width - DOT_INSET;
+    const px = clientX - rect.left;
+    const ratio = Math.max(0, Math.min(1, (px - dotStart) / (dotEnd - dotStart)));
+    return Math.round(MIN + ratio * (MAX - MIN));
+  }
+
+  let dragging = false;
+
+  function onMove(clientX) {
+    const lev = leverageFromPointer(clientX);
+    if (lev !== currentLev) { currentLev = lev; updateUI(lev); }
+  }
+
+  // Mouse
+  trackEl.addEventListener('mousedown', e => {
+    dragging = true;
+    onMove(e.clientX);
+    e.preventDefault();
+  });
+  window.addEventListener('mousemove', e => { if (dragging) onMove(e.clientX); });
+  window.addEventListener('mouseup',   () => { dragging = false; });
+
+  // Touch
+  trackEl.addEventListener('touchstart', e => {
+    dragging = true;
+    onMove(e.touches[0].clientX);
+    e.preventDefault();
+  }, { passive: false });
+  window.addEventListener('touchmove',  e => { if (dragging) onMove(e.touches[0].clientX); }, { passive: true });
+  window.addEventListener('touchend',   () => { dragging = false; });
+
+  // Expose method to smoothly animate leverage fill/thumb to a target value
+  window.animateLeverage = function(target, duration) {
+    duration = duration || 800;
+    const from = currentLev;
+    if (from === target) return;
+    const fromPct = dotPct(from);
+    const toPct = dotPct(target);
+    const t0 = performance.now();
+    /* Add CSS transition to fill + thumb for buttery smooth movement */
+    fillEl.style.transition = `width ${duration}ms cubic-bezier(.25,.1,.25,1)`;
+    thumbEl.style.transition = `left ${duration}ms cubic-bezier(.25,.1,.25,1)`;
+    /* Set target position — CSS transition handles the glide */
+    fillEl.style.width = toPct + '%';
+    thumbEl.style.left = toPct + '%';
+    /* Step through integer values for the label + stats updates */
+    const steps = Math.abs(target - from);
+    const dir = target > from ? 1 : -1;
+    (function tick(now) {
+      const elapsed = now - t0;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = progress < 1 ? progress * (2 - progress) : 1; /* ease-out */
+      const lev = Math.round(from + eased * steps * dir);
+      if (lev !== currentLev && lev >= MIN && lev <= MAX) {
+        currentLev = lev;
+        valueEl.textContent = lev + 'x';
+        dotEls.forEach((dot, i) => { dot.style.opacity = i < lev ? '0' : ''; });
+        if (lev > 1) {
+          sharesEl.textContent = Math.round((1000 * lev) / 0.33).toLocaleString();
+          posEl.textContent = '$' + (1000 * lev).toLocaleString();
+          liqEl.textContent = '¢' + Math.max(1, Math.round(100 / lev * 0.78));
+        }
+      }
+      if (progress < 1) requestAnimationFrame(tick);
+      else {
+        fillEl.style.transition = '';
+        thumbEl.style.transition = '';
+      }
+    })(t0);
+  };
+
+  // Initialise to default
+  updateUI(DEFAULT);
+  // Fix max-height after first render so transition works correctly later
+  requestAnimationFrame(() => { statsEl.style.maxHeight = statsEl.scrollHeight + 'px'; });
+})();
+</script>
+</body>
+</html>
