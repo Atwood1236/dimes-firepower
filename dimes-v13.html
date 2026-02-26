@@ -43,12 +43,17 @@
   .hero h1 em{font-style:normal;font-weight:300;color:var(--yellow)}
   .hero-sub{font-size:20px;color:rgba(255,255,255,0.65);line-height:1.5;max-width:none;white-space:nowrap;margin:0 auto 0}
   .hero-cta-wrap{position:relative;display:inline-block;margin-top:50px;position:relative;top:20px;z-index:4}
-  .hero-cta-wrap::before{content:'';position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:55%;height:2px;background:linear-gradient(90deg,transparent,#fff 30%,#fff 70%,transparent);pointer-events:none;z-index:5}
-  .hero-cta-glow{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:120px;height:1px;pointer-events:none}
+  .hero-cta-wrap::before{content:'';position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:55%;height:2px;background:linear-gradient(90deg,transparent,#fff 30%,#fff 70%,transparent);pointer-events:none;z-index:5;opacity:0;transition:opacity .6s ease}
+  .hero-cta-wrap.glow-on::before{opacity:1}
+  .hero-cta-glow{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:120px;height:1px;pointer-events:none;opacity:0;transition:opacity .8s ease}
+  .hero-cta-wrap.glow-on .hero-cta-glow{opacity:1}
   .hero-cta-glow::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:120px;height:2px;background:linear-gradient(90deg,transparent,rgba(245,240,73,.9),transparent);border-radius:100px;filter:blur(1px)}
   .hero-cta-glow::after{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:200px;height:200px;background:radial-gradient(ellipse 50% 80% at 50% 0%,rgba(245,240,73,.65) 0%,rgba(245,240,73,.3) 25%,rgba(245,240,73,.1) 50%,transparent 70%);-webkit-mask-image:linear-gradient(to bottom,black 0%,black 10%,transparent 100%),linear-gradient(to right,transparent 0%,black 25%,black 75%,transparent 100%);-webkit-mask-composite:destination-in;mask-composite:intersect}
-  .hero-cta-glow-white{position:absolute;top:100%;left:50%;transform:translateX(-50%);width:180px;height:70px;pointer-events:none;background:radial-gradient(ellipse 50% 80% at 50% 0%,rgba(255,255,255,.7) 0%,rgba(255,255,255,.3) 25%,rgba(255,255,255,.1) 50%,transparent 70%);-webkit-mask-image:linear-gradient(to bottom,black 0%,black 10%,transparent 100%),linear-gradient(to right,transparent 0%,black 25%,black 75%,transparent 100%);-webkit-mask-composite:destination-in;mask-composite:intersect}
-  .hero-cta{position:relative;display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:500;color:#fff;background:linear-gradient(180deg,rgba(255,255,255,.04) 0%,rgba(255,255,255,.015) 40%,rgba(245,240,73,.06) 75%,rgba(245,240,73,.12) 100%);border:none;border-radius:100px;padding:13px 29px;cursor:pointer;text-decoration:none;font-family:var(--font);overflow:hidden}
+  .hero-cta-glow-white{position:absolute;top:100%;left:50%;transform:translateX(-50%);width:180px;height:70px;pointer-events:none;background:radial-gradient(ellipse 50% 80% at 50% 0%,rgba(255,255,255,.7) 0%,rgba(255,255,255,.3) 25%,rgba(255,255,255,.1) 50%,transparent 70%);-webkit-mask-image:linear-gradient(to bottom,black 0%,black 10%,transparent 100%),linear-gradient(to right,transparent 0%,black 25%,black 75%,transparent 100%);-webkit-mask-composite:destination-in;mask-composite:intersect;opacity:0;transition:opacity .8s ease}
+  .hero-cta-wrap.glow-on .hero-cta-glow-white{opacity:1}
+  .hero-cta{position:relative;display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:500;color:rgba(255,255,255,0);background:none;border:none;border-radius:100px;padding:13px 29px;cursor:pointer;text-decoration:none;font-family:var(--font);overflow:hidden;box-shadow:none;transition:background 1s ease,box-shadow 1s ease,color .8s ease}
+  .hero-cta.text-on{color:#fff}
+  .cta-fill{position:absolute;inset:0;border-radius:100px;background:linear-gradient(180deg,rgba(255,255,255,.04) 0%,rgba(255,255,255,.015) 40%,rgba(245,240,73,.06) 75%,rgba(245,240,73,.12) 100%);pointer-events:none}
   .hero-cta::before{content:'';position:absolute;top:-60%;left:-25%;width:75%;height:110%;background:linear-gradient(135deg,rgba(255,255,255,.18) 0%,rgba(255,255,255,.04) 50%,transparent 100%);border-radius:50%;pointer-events:none;transform:rotate(-15deg)}
   .hero-cta::after{content:'';position:absolute;inset:0;border-radius:100px;border:1px solid rgba(255,255,255,.4);pointer-events:none;-webkit-mask-image:linear-gradient(180deg,rgba(0,0,0,1) 0%,rgba(0,0,0,.4) 40%,rgba(0,0,0,.1) 70%,rgba(0,0,0,.05) 100%);mask-image:linear-gradient(180deg,rgba(0,0,0,1) 0%,rgba(0,0,0,.4) 40%,rgba(0,0,0,.1) 70%,rgba(0,0,0,.05) 100%)}
   .hero-cta svg{width:16px;height:16px}
@@ -365,7 +370,7 @@
   <div class="hero-text">
     <h1>Embedded credit for<br>onchain front-ends</h1>
     <p class="hero-sub">10x your users' buying power overnight with Dimes' plug-and-play credit products</p>
-    <div class="hero-cta-wrap"><a href="#" class="hero-cta">10x your flow <svg viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H5M12 4v7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a><div class="hero-cta-glow"></div><div class="hero-cta-glow-white"></div></div>
+    <div class="hero-cta-wrap"><a href="#" class="hero-cta"><span class="cta-fill"></span>10x your flow <svg viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H5M12 4v7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a><div class="hero-cta-glow"></div><div class="hero-cta-glow-white"></div></div>
   </div>
   <div class="hero-visual">
     <canvas id="heroCanvas"></canvas>
@@ -895,12 +900,38 @@ document.querySelectorAll('.reveal').forEach(el => {
       }
 
       drawEffect(undefined, imgOffset, total, stripRefractions);
+      updateCta(eased);
 
       if (progress < 1) requestAnimationFrame(animate);
       else requestAnimationFrame(hoverLoop);
     }
     requestAnimationFrame(animate);
   };
+
+  // ── Button animation sequence ───────────────────────────────────────────────
+  const ctaBtn = document.querySelector('.hero-cta');
+  const ctaWrap = document.querySelector('.hero-cta-wrap');
+  function updateCta(p){
+    // Phase 2: reflection fades in gradually
+    const shadowA = p * 0.3;
+    ctaBtn.style.boxShadow = 'inset 0 -12px 24px -8px rgba(245,240,73,' + shadowA + ')';
+    // Phase 3: vertical gradient sweeps in from left-to-right via inner element
+    const sweep = Math.round(p * 130);
+    const fill = document.querySelector('.cta-fill');
+    if (fill){
+      fill.style.webkitMaskImage = 'linear-gradient(to right,black ' + Math.max(0, sweep - 30) + '%,transparent ' + sweep + '%)';
+      fill.style.maskImage = 'linear-gradient(to right,black ' + Math.max(0, sweep - 30) + '%,transparent ' + sweep + '%)';
+      if (p >= 1){
+        fill.style.webkitMaskImage = '';
+        fill.style.maskImage = '';
+      }
+    }
+    // Phase 4: underglow + text at ~85%
+    if (p >= 0.85 && !ctaWrap.classList.contains('glow-on')){
+      ctaWrap.classList.add('glow-on');
+      ctaBtn.classList.add('text-on');
+    }
+  }
 
   // Pre-create source canvas for performance
   let sourceCanvas = null;
