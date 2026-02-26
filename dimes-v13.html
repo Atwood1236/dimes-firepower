@@ -918,6 +918,15 @@ document.querySelectorAll('.reveal').forEach(el => {
     requestAnimationFrame(animate);
   };
 
+  // ── Hero image scale on button hover (image only, not strips) ───────────────
+  var ctaImgScale = 1, ctaImgScaleTarget = 1;
+  document.querySelector('.hero-cta-wrap').addEventListener('mouseenter', function(){
+    ctaImgScaleTarget = 1.03;
+  });
+  document.querySelector('.hero-cta-wrap').addEventListener('mouseleave', function(){
+    ctaImgScaleTarget = 1;
+  });
+
   // ── Button animation sequence ───────────────────────────────────────────────
   const ctaBtn = document.querySelector('.hero-cta');
   const ctaWrap = document.querySelector('.hero-cta-wrap');
@@ -963,7 +972,9 @@ document.querySelectorAll('.reveal').forEach(el => {
   function hoverLoop(){
     const lerp = isHovering ? HOVER_LERP : RETURN_LERP;
     hoverX += (targetHoverX - hoverX) * lerp;
-    if (Math.abs(hoverX) < 0.05 && targetHoverX === 0){ hoverX = 0; requestAnimationFrame(hoverLoop); return; }
+    // Smoothly interpolate image scale for CTA hover
+    if (typeof ctaImgScale !== 'undefined') ctaImgScale += (ctaImgScaleTarget - ctaImgScale) * 0.05;
+    if (Math.abs(hoverX) < 0.05 && targetHoverX === 0 && Math.abs(ctaImgScale - ctaImgScaleTarget) < 0.0005){ hoverX = 0; ctaImgScale = ctaImgScaleTarget; requestAnimationFrame(hoverLoop); return; }
     drawEffect(undefined, hoverX, params.amplifications, null);
     requestAnimationFrame(hoverLoop);
   }
@@ -975,10 +986,16 @@ document.querySelectorAll('.reveal').forEach(el => {
     if (numVisible === undefined) numVisible = params.amplifications;
     const positionXRound = Math.round(posX);
 
-    // Draw background + full image
+    // Draw background + full image (scaled for CTA hover, image only)
     ctx.fillStyle = params.backgroundColor;
     ctx.fillRect(0, 0, W, H);
-    ctx.drawImage(img, imgOffset, 0, W, H);
+    var sc = (typeof ctaImgScale !== 'undefined') ? ctaImgScale : 1;
+    if (sc !== 1){
+      var sw = W * sc, sh = H * sc;
+      ctx.drawImage(img, imgOffset - (sw - W) / 2, -(sh - H) / 2, sw, sh);
+    } else {
+      ctx.drawImage(img, imgOffset, 0, W, H);
+    }
 
     // Source canvas
     if (!sourceCanvas){
@@ -989,7 +1006,11 @@ document.querySelectorAll('.reveal').forEach(el => {
     const srcCtx = sourceCanvas.getContext('2d');
     srcCtx.fillStyle = params.backgroundColor;
     srcCtx.fillRect(0, 0, W, H);
-    srcCtx.drawImage(img, imgOffset, 0, W, H);
+    if (sc !== 1){
+      srcCtx.drawImage(img, imgOffset - (sw - W) / 2, -(sh - H) / 2, sw, sh);
+    } else {
+      srcCtx.drawImage(img, imgOffset, 0, W, H);
+    }
 
     // How many strips to draw (from left to right)
     const totalStrips = params.amplifications;
