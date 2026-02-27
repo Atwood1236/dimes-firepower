@@ -143,9 +143,9 @@ function Popup(){
 
       {/* Header */}
       <div style={{padding:"12px 18px",display:"flex",alignItems:"center",justifyContent:"space-between",borderBottom:"1px solid rgba(255,255,255,0.04)"}}>
-        <div style={{display:"flex",alignItems:"center",gap:7}}>
+        <div style={{display:"flex",alignItems:"center",gap:13}}>
           <img src={DIMES_LOGO} style={{width:13,height:13}} alt="Dimes"/>
-          <span style={{color:"#888",fontSize:12.5,fontWeight:400}}>Borrow against your existing holdings</span>
+          <span style={{color:"#fff",fontSize:12.5,fontWeight:400}}>Borrow against your existing holdings</span>
         </div>
         <div style={{display:"flex",alignItems:"center",gap:6}}>
           <ModeToggle value={mode} onChange={setMode}/>
@@ -162,7 +162,7 @@ function Popup(){
           <span style={{fontSize:10,color:"#444",fontWeight:500,whiteSpace:"nowrap"}}>{"\u2190"} balance used as collateral {"\u2192"}</span>
         </div>
         <div style={{width:C.coll}}/>
-        <div style={{...ltvStyle,textAlign:"right"}}><span style={{fontSize:10,color:"#444",fontWeight:500}}>LTV</span></div>
+        <div style={{...ltvStyle,textAlign:"center",paddingRight:16}}><span style={{fontSize:10,color:"#444",fontWeight:500}}>LTV</span></div>
         <div style={{width:C.borr,marginLeft:C.borrMl,textAlign:"right"}}>
           <span style={{fontSize:10,color:"#444",fontWeight:500}}>Borrowed</span>
         </div>
@@ -187,11 +187,11 @@ function Popup(){
               borderRadius:hl?4:0,transition:"opacity 0.2s, background 0.3s",
             }}>
               <button onClick={()=>toggle(h.id)} style={{background:"none",border:"none",cursor:"pointer",padding:0,width:C.chk,marginRight:C.chkMr,display:"flex",alignItems:"center",justifyContent:"center"}}>
-                <div style={{width:7,height:7,borderRadius:1.5,background:on?"#e8e8e8":"transparent",border:on?"none":"1.5px solid #444",transition:"all 0.15s"}}/>
+                <div style={{width:7,height:7,borderRadius:1.5,background:on?"#e8e8e8":"transparent",border:on?"none":"0.5px solid #fff",transition:"all 0.15s"}}/>
               </button>
               <img src={h.logo} style={{width:C.logo,height:C.logo,borderRadius:"50%",marginRight:C.logoMr}} alt={h.sym}/>
               <div style={{width:C.name,display:"flex",alignItems:"center",gap:3,flexShrink:0}}>
-                <span style={{fontSize:13,fontWeight:500,color:"#e8e8e8",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{h.sym}</span>
+                <span style={{fontSize:13,fontWeight:on?600:300,color:"#e8e8e8",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",transition:"font-weight 0.2s"}}>{h.sym}</span>
                 {h.pm&&<span style={{fontSize:9,fontWeight:600,color:"#fff",background:BLUE,borderRadius:2,padding:"1px 4px",lineHeight:"11px",flexShrink:0}}>{h.side}</span>}
               </div>
               <SliderWithTooltip value={alloc[h.id]} onChange={v=>setAlloc(p=>({...p,[h.id]:v}))} enabled={on} style={{flex:1,minWidth:40,margin:"0 "+C.sMx+"px"}}/>
@@ -229,9 +229,10 @@ function Popup(){
         {calc.borrow>0&&(
           <div style={{display:"grid",gridTemplateRows:isCross?"1fr":"0fr",opacity:isCross?1:0,transition:"grid-template-rows 0.3s ease, opacity 0.25s ease"}}>
             <div style={{overflow:"hidden"}}>
-              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:6}}>
-                <span style={{fontSize:13,color:"#888"}}>LTV</span>
-            <div style={{display:"flex",alignItems:"center",gap:0}}>
+              <div style={{display:"flex",alignItems:"center",padding:"4px 0"}}>
+                <span style={{fontSize:13,color:"#888",flexShrink:0}}>LTV</span>
+                <div style={{flex:1,borderBottom:"1px dotted rgba(255,255,255,0.08)",margin:"0 8px",alignSelf:"center"}}/>
+            <div style={{display:"flex",alignItems:"center",gap:0,flexShrink:0}}>
               <span style={{fontSize:12,fontWeight:600,color:"#e8e8e8"}}>{crossLtvVal}%</span>
               <div style={{display:"flex",flexDirection:"column",gap:0,marginLeft:2}}>
                 <HoldArrow dir="up" disabled={!canUp} onStep={()=>setGlobalLtv(prev=>{const cur=prev!==null?prev:blendedMaxRound;const nv=Math.min(blendedMaxRound,cur+1);return nv>=blendedMaxRound?null:nv})}/>
@@ -242,8 +243,9 @@ function Popup(){
             </div>
           </div>
         )}
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:6}}>
-          <span style={{fontSize:13,color:"#888"}}>Duration</span>
+        <div style={{display:"flex",alignItems:"center",padding:"4px 0"}}>
+          <span style={{fontSize:13,color:"#888",flexShrink:0}}>Duration</span>
+          <div style={{flex:1,borderBottom:"1px dotted rgba(255,255,255,0.08)",margin:"0 8px",alignSelf:"center"}}/>
           <div style={{display:"flex",gap:2}}>
             {durs.map((d,i)=>(
               <button key={d.l} onClick={()=>setDurIdx(i)} style={{
@@ -259,23 +261,26 @@ function Popup(){
         </div>
         {calc.borrow>0&&(
           <>
-            <div style={{display:"flex",justifyContent:"space-between",padding:"3px 0",borderBottom:"1px solid rgba(255,255,255,0.03)"}}>
-              <span style={{fontSize:13,color:"#666"}}>Cost</span>
-              <span style={{fontSize:13,color:"#666"}}>{fmtCost(calc.cost)} ({calc.costPct.toFixed(1)}%)</span>
+            <div style={{display:"flex",alignItems:"center",padding:"4px 0"}}>
+              <span style={{fontSize:13,color:"#666",flexShrink:0,fontWeight:300}}>Cost</span>
+              <div style={{flex:1,borderBottom:"1px dotted rgba(255,255,255,0.08)",margin:"0 8px",alignSelf:"center"}}/>
+              <span style={{fontSize:13,color:"#666",flexShrink:0,fontWeight:300}}>{fmtCost(calc.cost)} ({calc.costPct.toFixed(1)}%)</span>
             </div>
             {isCross?(
-              <div style={{display:"flex",justifyContent:"space-between",padding:"3px 0"}}>
-                <span style={{fontSize:13,color:"#666"}}>Liquidation</span>
-                <div style={{display:"flex",alignItems:"center",gap:5}}>
-                  <span style={{fontSize:13,color:"#666"}}>{fmt(calc.liqValue)}</span>
+              <div style={{display:"flex",alignItems:"center",padding:"4px 0"}}>
+                <span style={{fontSize:13,color:"#666",flexShrink:0,fontWeight:300}}>Liquidation</span>
+                <div style={{flex:1,borderBottom:"1px dotted rgba(255,255,255,0.08)",margin:"0 8px",alignSelf:"center"}}/>
+                <div style={{display:"flex",alignItems:"center",gap:5,flexShrink:0}}>
+                  <span style={{fontSize:13,color:"#666",fontWeight:300}}>{fmt(calc.liqValue)}</span>
                   <span style={{fontSize:12,fontWeight:500,color:"#e8e8e8"}}>{calc.bufferPct.toFixed(0)}%</span>
                 </div>
               </div>
             ):(
               <>
-                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"3px 0",cursor:"pointer",userSelect:"none"}} onClick={()=>setLiqExpanded(p=>!p)}>
-                  <span style={{fontSize:13,color:"#666"}}>Liquidation</span>
-                  <span style={{fontSize:10,color:"#555",transform:liqExpanded?"rotate(180deg)":"none",transition:"transform 0.15s",display:"inline-block"}}>{"\u25BC"}</span>
+                <div style={{display:"flex",alignItems:"center",padding:"4px 0",cursor:"pointer",userSelect:"none"}} onClick={()=>setLiqExpanded(p=>!p)}>
+                  <span style={{fontSize:13,color:"#666",flexShrink:0,fontWeight:300}}>Liquidation</span>
+                  <div style={{flex:1,borderBottom:"1px dotted rgba(255,255,255,0.08)",margin:"0 8px",alignSelf:"center"}}/>
+                  <span style={{fontSize:10,color:"#555",transform:liqExpanded?"rotate(180deg)":"none",transition:"transform 0.15s",display:"inline-block",flexShrink:0}}>{"\u25BC"}</span>
                 </div>
                 {calc.perToken.length>0&&(
                   <div style={{display:"grid",gridTemplateRows:liqExpanded?"1fr":"0fr",opacity:liqExpanded?1:0,transition:"grid-template-rows 0.3s ease, opacity 0.25s ease"}}>
@@ -350,8 +355,8 @@ function SliderWithTooltip({value,onChange,enabled,style}){
           </div>
           <div style={{position:"absolute",left:"calc("+value+"% - 4px)",width:8,height:8,borderRadius:"50%",background:"#e8e8e8",boxShadow:"0 0 4px rgba(255,255,255,0.08)",pointerEvents:"none",transition:dragging?"none":"left 0.05s"}}/>
           {dragging&&(
-            <div style={{position:"absolute",left:"calc("+value+"% - 14px)",bottom:14,background:"#222",border:"1px solid rgba(255,255,255,0.1)",borderRadius:4,padding:"2px 5px",pointerEvents:"none",whiteSpace:"nowrap"}}>
-              <span style={{fontSize:11,fontWeight:600,color:"#e8e8e8"}}>{value}%</span>
+            <div style={{position:"absolute",left:value+"%",bottom:14,transform:"translateX(-50%)",background:"#222",border:"1px solid rgba(255,255,255,0.1)",borderRadius:4,padding:"2px 6px",pointerEvents:"none",whiteSpace:"nowrap",display:"flex",alignItems:"center",justifyContent:"center"}}>
+              <span style={{fontSize:11,fontWeight:600,color:"#e8e8e8",lineHeight:1,display:"block"}}>{value}%</span>
             </div>
           )}
         </>
