@@ -779,6 +779,12 @@ function highlightProduct(key) {
   const pad = 6;
   const targetRadius = parseFloat(getComputedStyle(target).borderRadius) || 0;
 
+  /* Leverage box has border + padding that shifts the offset — compensate */
+  if (key === 'multiply') {
+    left += 0.5;
+    top += 0.5;
+  }
+
   ringEl.style.left = (left - pad) + 'px';
   ringEl.style.top = (top - pad) + 'px';
   ringEl.style.width = (target.offsetWidth + pad * 2) + 'px';
