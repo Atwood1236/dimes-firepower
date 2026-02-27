@@ -128,10 +128,11 @@ function Popup(){
   const canDown=crossLtvVal>1;
 
   const C={chk:10,chkMr:7,logo:18,logoMr:6,name:80,sMx:6,coll:48,ltv:48,ltvMl:4,borr:50,borrMl:4};
+  const ltvStyle={width:isCross?0:C.ltv,marginLeft:isCross?0:C.ltvMl,opacity:isCross?0:1,overflow:"hidden",transition:"width 0.3s ease, margin-left 0.3s ease, opacity 0.3s ease"};
 
   return(
     <div style={{
-      width:480,height:480,position:"relative",overflow:"hidden",
+      width:480,position:"relative",overflow:"hidden",
       background:"radial-gradient(ellipse 120% 160% at 50% 105%, rgba(238,255,0,0.22) 0%, rgba(238,255,0,0.08) 40%, transparent 75%), #0e0e0e",
       border:"1px solid rgba(255,255,255,0.06)",
       borderRadius:14,fontFamily:"'Bai Jamjuree',sans-serif",
@@ -152,29 +153,19 @@ function Popup(){
       </div>
 
       {/* Column headers */}
-      <div style={{padding:"8px 18px 3px",display:"flex",alignItems:"center"}}>
+      <div style={{padding:"8px 18px 5px",display:"flex",alignItems:"baseline"}}>
         <div style={{width:C.chk,marginRight:C.chkMr}}/>
-        <div style={{width:C.logo,marginRight:C.logoMr}}/>
-        <div style={{width:C.name,flexShrink:0}}>
-          <span style={{fontSize:10,color:"#444",fontWeight:500}}>Your tokens</span>
+        <div style={{width:C.logo+C.logoMr+C.name,flexShrink:0}}>
+          <span style={{fontSize:10,color:"#444",fontWeight:500,whiteSpace:"nowrap"}}>Your tokens</span>
         </div>
-        <div style={{flex:1,minWidth:40,margin:"0 "+C.sMx+"px"}}/>
+        <div style={{flex:1,minWidth:40,margin:"0 "+C.sMx+"px",display:"flex",justifyContent:"center"}}>
+          <span style={{fontSize:10,color:"#444",fontWeight:500,whiteSpace:"nowrap"}}>{"\u2190"} balance used as collateral {"\u2192"}</span>
+        </div>
         <div style={{width:C.coll}}/>
-        {!isCross&&<div style={{width:C.ltv,marginLeft:C.ltvMl,textAlign:"right"}}><span style={{fontSize:10,color:"#444",fontWeight:500}}>LTV</span></div>}
+        <div style={{...ltvStyle,textAlign:"right"}}><span style={{fontSize:10,color:"#444",fontWeight:500}}>LTV</span></div>
         <div style={{width:C.borr,marginLeft:C.borrMl,textAlign:"right"}}>
           <span style={{fontSize:10,color:"#444",fontWeight:500}}>Borrowed</span>
         </div>
-      </div>
-      <div style={{padding:"0 18px",marginTop:-2,marginBottom:2,display:"flex",alignItems:"center"}}>
-        <div style={{width:C.chk,marginRight:C.chkMr}}/>
-        <div style={{width:C.logo,marginRight:C.logoMr}}/>
-        <div style={{width:C.name,flexShrink:0}}/>
-        <div style={{flex:1,minWidth:40,margin:"0 "+C.sMx+"px",display:"flex",justifyContent:"center"}}>
-          <span style={{fontSize:9,color:"#3a3a3a",fontWeight:400,whiteSpace:"nowrap"}}>{"\u2190"} balance used as collateral {"\u2192"}</span>
-        </div>
-        <div style={{width:C.coll}}/>
-        {!isCross&&<div style={{width:C.ltv,marginLeft:C.ltvMl}}/>}
-        <div style={{width:C.borr,marginLeft:C.borrMl}}/>
       </div>
 
       {/* Token rows */}
@@ -207,11 +198,9 @@ function Popup(){
               <div style={{width:C.coll,textAlign:"right"}}>
                 <span style={{fontSize:12,fontWeight:500,color:"#666"}}>{on?fmt(pledged):"\u2014"}</span>
               </div>
-              {!isCross&&(
-                <div style={{width:C.ltv,marginLeft:C.ltvMl,display:"flex",justifyContent:"flex-end",alignItems:"center"}}>
-                  {on?<LtvStepper value={tokenLtv[h.id]!==null?tokenLtv[h.id]:h.maxLtv} max={h.maxLtv} onChange={v=>setTokenLtv(p=>({...p,[h.id]:v}))}/>:<span style={{fontSize:12,color:"#333"}}>{"\u2014"}</span>}
-                </div>
-              )}
+              <div style={{...ltvStyle,display:"flex",justifyContent:"flex-end",alignItems:"center"}}>
+                {on?<LtvStepper value={tokenLtv[h.id]!==null?tokenLtv[h.id]:h.maxLtv} max={h.maxLtv} onChange={v=>setTokenLtv(p=>({...p,[h.id]:v}))}/>:<span style={{fontSize:12,color:"#333"}}>{"\u2014"}</span>}
+              </div>
               <div style={{width:C.borr,marginLeft:C.borrMl,textAlign:"right"}}>
                 <span style={{fontSize:12,fontWeight:500,color:on?"#e8e8e8":"#333"}}>{on?fmt(borrowed):"\u2014"}</span>
               </div>
@@ -229,7 +218,7 @@ function Popup(){
             <div style={{width:C.name,flexShrink:0}}/>
             <div style={{flex:1,minWidth:40,margin:"0 "+C.sMx+"px"}}/>
             <div style={{width:C.coll,textAlign:"right"}}><span style={{fontSize:12,fontWeight:600,color:"#e8e8e8"}}>{fmt(calc.coll)}</span></div>
-            {!isCross&&<div style={{width:C.ltv,marginLeft:C.ltvMl}}/>}
+            <div style={ltvStyle}/>
             <div style={{width:C.borr,marginLeft:C.borrMl,textAlign:"right"}}><span style={{fontSize:12,fontWeight:600,color:"#e8e8e8"}}>{fmt(calc.borrow)}</span></div>
           </div>
         </div>
@@ -237,15 +226,19 @@ function Popup(){
 
       {/* Bottom */}
       <div style={{padding:"8px 18px 16px",marginTop:2}}>
-        {isCross&&calc.borrow>0&&(
-          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:6}}>
-            <span style={{fontSize:13,color:"#888"}}>LTV</span>
+        {calc.borrow>0&&(
+          <div style={{display:"grid",gridTemplateRows:isCross?"1fr":"0fr",opacity:isCross?1:0,transition:"grid-template-rows 0.3s ease, opacity 0.25s ease"}}>
+            <div style={{overflow:"hidden"}}>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:6}}>
+                <span style={{fontSize:13,color:"#888"}}>LTV</span>
             <div style={{display:"flex",alignItems:"center",gap:0}}>
               <span style={{fontSize:12,fontWeight:600,color:"#e8e8e8"}}>{crossLtvVal}%</span>
               <div style={{display:"flex",flexDirection:"column",gap:0,marginLeft:2}}>
                 <HoldArrow dir="up" disabled={!canUp} onStep={()=>setGlobalLtv(prev=>{const cur=prev!==null?prev:blendedMaxRound;const nv=Math.min(blendedMaxRound,cur+1);return nv>=blendedMaxRound?null:nv})}/>
                 <HoldArrow dir="down" disabled={!canDown} onStep={()=>setGlobalLtv(prev=>{const cur=prev!==null?prev:blendedMaxRound;return Math.max(1,cur-1)})}/>
               </div>
+            </div>
+          </div>
             </div>
           </div>
         )}
@@ -284,22 +277,26 @@ function Popup(){
                   <span style={{fontSize:13,color:"#666"}}>Liquidation</span>
                   <span style={{fontSize:10,color:"#555",transform:liqExpanded?"rotate(180deg)":"none",transition:"transform 0.15s",display:"inline-block"}}>{"\u25BC"}</span>
                 </div>
-                {liqExpanded&&calc.perToken.length>0&&(
-                  <div style={{padding:"2px 0",animation:"fadeIn 0.15s ease"}}>
-                    <div style={{display:"flex",padding:"2px 0 4px"}}>
-                      <span style={{fontSize:10,color:"#444",flex:1}}>Token</span>
-                      <span style={{fontSize:10,color:"#444",width:44,textAlign:"right"}}>Price</span>
-                      <span style={{fontSize:10,color:"#444",width:44,textAlign:"right"}}>Liq.</span>
-                      <span style={{fontSize:10,color:"#444",width:44,textAlign:"right"}}>Buffer</span>
-                    </div>
-                    {calc.perToken.map(t=>(
-                      <div key={t.sym} style={{display:"flex",alignItems:"center",padding:"2px 0"}}>
-                        <span style={{fontSize:12,color:"#666",flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{t.sym}</span>
-                        <span style={{fontSize:12,color:"#666",width:44,textAlign:"right"}}>{t.pm?"\u00A2"+(t.price*100).toFixed(0):"$"+t.price.toFixed(2)}</span>
-                        <span style={{fontSize:12,color:"#666",width:44,textAlign:"right"}}>{t.pm?"\u00A2"+(t.liqPrice*100).toFixed(0):"$"+t.liqPrice.toFixed(2)}</span>
-                        <span style={{fontSize:12,fontWeight:500,color:"#e8e8e8",width:44,textAlign:"right"}}>{t.bufferPct.toFixed(0)}%</span>
+                {calc.perToken.length>0&&(
+                  <div style={{display:"grid",gridTemplateRows:liqExpanded?"1fr":"0fr",opacity:liqExpanded?1:0,transition:"grid-template-rows 0.3s ease, opacity 0.25s ease"}}>
+                    <div style={{overflow:"hidden"}}>
+                      <div style={{padding:"2px 0"}}>
+                        <div style={{display:"flex",padding:"2px 0 4px"}}>
+                          <span style={{fontSize:10,color:"#444",flex:1}}>Token</span>
+                          <span style={{fontSize:10,color:"#444",width:44,textAlign:"right"}}>Price</span>
+                          <span style={{fontSize:10,color:"#444",width:44,textAlign:"right"}}>Liq.</span>
+                          <span style={{fontSize:10,color:"#444",width:44,textAlign:"right"}}>Buffer</span>
+                        </div>
+                        {calc.perToken.map(t=>(
+                          <div key={t.sym} style={{display:"flex",alignItems:"center",padding:"2px 0"}}>
+                            <span style={{fontSize:12,color:"#666",flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{t.sym}</span>
+                            <span style={{fontSize:12,color:"#666",width:44,textAlign:"right"}}>{t.pm?"\u00A2"+(t.price*100).toFixed(0):"$"+t.price.toFixed(2)}</span>
+                            <span style={{fontSize:12,color:"#666",width:44,textAlign:"right"}}>{t.pm?"\u00A2"+(t.liqPrice*100).toFixed(0):"$"+t.liqPrice.toFixed(2)}</span>
+                            <span style={{fontSize:12,fontWeight:500,color:"#e8e8e8",width:44,textAlign:"right"}}>{t.bufferPct.toFixed(0)}%</span>
+                          </div>
+                        ))}
                       </div>
-                    ))}
+                    </div>
                   </div>
                 )}
               </>
@@ -321,7 +318,7 @@ function Popup(){
         </button>
         {calc.borrow>0&&(
           <div style={{textAlign:"center",marginTop:6}}>
-            <span style={{fontSize:11,color:"#444"}}>Borrowed amount will be reflected in USDC in your [partner] balance</span>
+            <span style={{fontSize:11,color:"#888",fontWeight:300}}>Borrowed amount will be reflected in USDC in your [partner] balance</span>
           </div>
         )}
       </div>
