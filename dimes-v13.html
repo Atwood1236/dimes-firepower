@@ -128,10 +128,11 @@
   .products .section-header::before,.products .section-header::after{top:50%;width:calc(50% - 270px)}
 
   /* Tabs + subtitle (vertical side tabs) */
-  .product-tab{padding:10px 24px;border-radius:100px;font-size:14px;font-weight:500;color:var(--text-dim);background:var(--bg);border:1px solid rgba(255,255,255,.06);cursor:pointer;transition:all .4s;font-family:var(--font);position:relative;width:100%;text-align:center;white-space:nowrap}
-  .product-tab:hover,.product-tab.hovered{color:var(--text);border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.03)}
+  .product-tab{padding:0;border-radius:0;font-size:22px;font-weight:600;color:var(--text-dim);background:transparent;border:none;cursor:pointer;transition:all .4s;font-family:var(--font);position:relative;width:100%;text-align:left;white-space:nowrap;padding-left:0;padding-right:0}
+  .product-tab:hover,.product-tab.hovered{color:var(--text)}
   .product-tab.active{color:var(--yellow);font-weight:700;font-size:28px;background:transparent;border:none;text-align:left;padding-left:0;padding-right:0}
-  .product-tabs-side{display:flex;flex-direction:column;gap:10px;align-items:stretch;width:196px;z-index:10;position:absolute;top:100px;right:220px}
+  .tab-for{font-size:11px;color:var(--text-muted);letter-spacing:.04em;margin-top:4px;line-height:1.4}
+  .product-tabs-side{display:flex;flex-direction:column;gap:10px;align-items:stretch;width:260px;z-index:10;position:absolute;top:100px;right:120px}
   .tab-group{display:flex;flex-direction:column;align-items:stretch}
   .tab-desc{max-height:0;overflow:hidden;opacity:0;transition:max-height .4s cubic-bezier(.16,1,.3,1),opacity .4s ease,margin .4s ease;font-size:13px;color:var(--text-dim);line-height:1.5;margin:0;padding:0 2px;width:300px}
   .tab-group.active .tab-desc{max-height:120px;opacity:1;margin:26px 0 20px}
@@ -149,9 +150,6 @@
   .docs-link:hover .docs-arrow{animation:none}
   .docs-link:hover .docs-arrow{transform:translateX(2px)}
   .tab-group.active .docs-link{display:inline-block}
-  .product-subtitle{font-size:11px;letter-spacing:.06em;text-transform:uppercase;position:absolute;white-space:nowrap;transition:opacity .5s ease,color .5s ease;opacity:0;color:var(--text-muted);pointer-events:none}
-  .product-subtitle.active{opacity:1;color:var(--text-muted)}
-  .product-subtitle.selected{color:#fff}
 
   /* Scene layout — terminal + side tabs in a row */
   .terminal-scene{position:relative;z-index:1;overflow:visible;padding:80px 0 140px;margin:-80px 0 -140px;min-height:560px;display:flex;align-items:flex-start;justify-content:flex-end;gap:0;mask-image:linear-gradient(to right, transparent 0%, black 15%),linear-gradient(to bottom, transparent 0%, black 10%, black 85%, transparent 100%);-webkit-mask-image:linear-gradient(to right, transparent 0%, black 15%),linear-gradient(to bottom, transparent 0%, black 10%, black 85%, transparent 100%);mask-composite:intersect;-webkit-mask-composite:source-in}
@@ -387,8 +385,8 @@
     .terminal-center{margin-right:0;justify-content:center;overflow:hidden}
     .terminal-wrapper{width:100%;max-width:700px;flex-shrink:1}
     .product-tabs-side{position:static;flex-direction:row;min-width:auto;width:auto}
-    .product-tab{width:auto}
-    .product-subtitle{margin-top:4px}
+    .product-tab{width:auto;font-size:16px}
+    .tab-for{display:none}
     .tab-desc{font-size:13px}
   }
   @media(max-width:900px){
@@ -576,21 +574,22 @@
     <div class="product-tabs-side">
       <div class="tab-group" data-for="multiply">
         <button class="product-tab" data-product="multiply">Multiply</button>
+        <div class="tab-for">for prediction market terminals</div>
         <div class="tab-desc" id="descMultiply"></div>
         <a href="#" class="docs-link">Learn more <span class="docs-arrow">&#8594;</span></a>
       </div>
       <div class="tab-group" data-for="firepower">
         <button class="product-tab" data-product="firepower">Firepower</button>
+        <div class="tab-for">for launchpads, wallets and terminals</div>
         <div class="tab-desc" id="descFirepower"></div>
         <button class="timeline-link" data-default="H2 2026"><span>H2 2026</span></button>
       </div>
       <div class="tab-group" data-for="stream">
         <button class="product-tab" data-product="stream">Stream</button>
+        <div class="tab-for">for wallets</div>
         <div class="tab-desc" id="descStream"></div>
         <button class="timeline-link" data-default="Q4 2026"><span>Q4 2026</span></button>
       </div>
-      <div class="product-subtitle" id="productSubtitle">for prediction market terminals</div>
-      <div class="product-subtitle" id="hoverSubtitle"></div>
     </div>
 
   </div>
@@ -650,37 +649,15 @@
 
 <script>
 const tabs = document.querySelectorAll('.product-tab');
-const productSubtitle = document.getElementById('productSubtitle');
-const hoverSubtitle = document.getElementById('hoverSubtitle');
 const tabGroups = document.querySelectorAll('.tab-group');
 
 const products = {
-  multiply: { name:'Multiply', sub:'for prediction market terminals', subHover:'for prediction<br>market terminals', desc:'Offer your users 2-10x leverage on Kalshi and Polymarket.' },
-  firepower: { name:'Firepower', sub:'for launchpads, wallets and terminals', subHover:'for launchpads, wallets<br>and terminals', desc:'Let your users unlock new trades using their existing positions as collateral.' },
-  stream: { name:'Stream', sub:'for wallets', subHover:'for wallets', desc:'Turn any portfolio into a self-managing BTC accumulation engine. No selling, no margin calls.' }
+  multiply: { name:'Multiply', desc:'Offer your users 2-10x leverage on Kalshi and Polymarket.' },
+  firepower: { name:'Firepower', desc:'Let your users unlock new trades using their existing positions as collateral.' },
+  stream: { name:'Stream', desc:'Turn any portfolio into a self-managing BTC accumulation engine. No selling, no margin calls.' }
 };
 
 let activeProduct = null;
-
-function positionSubtitle(key, mode, el) {
-  el = el || productSubtitle;
-  const btn = document.querySelector(`.product-tab[data-product="${key}"]`);
-  const side = document.querySelector('.product-tabs-side');
-  if (!btn || !side) return;
-  const sideRect = side.getBoundingClientRect();
-  const btnRect = btn.getBoundingClientRect();
-  if (mode === 'selected') {
-    const range = document.createRange();
-    range.selectNodeContents(btn);
-    const textRect = range.getBoundingClientRect();
-    el.style.top = (textRect.bottom - sideRect.top + 3) + 'px';
-    el.style.left = '0px';
-  } else {
-    const subH = el.offsetHeight || 14;
-    el.style.top = (btnRect.top - sideRect.top + btnRect.height / 2 - subH / 2) + 'px';
-    el.style.left = (sideRect.width + 14) + 'px';
-  }
-}
 
 const productsEl = document.querySelector('.products');
 const terminalEl = document.getElementById('terminal');
@@ -708,9 +685,6 @@ function zoomToTarget(key) {
 function selectProduct(key) {
   if (activeProduct === key) { resetProduct(); return; }
 
-  productSubtitle.classList.remove('active');
-  productSubtitle.classList.remove('selected');
-
   activeProduct = key;
   const p = products[key];
 
@@ -722,13 +696,6 @@ function selectProduct(key) {
     const desc = g.querySelector('.tab-desc');
     desc.textContent = isActive ? p.desc : '';
   });
-
-  productSubtitle.textContent = p.sub;
-  setTimeout(() => {
-    positionSubtitle(key, 'selected');
-    productSubtitle.classList.add('selected');
-    requestAnimationFrame(() => productSubtitle.classList.add('active'));
-  }, 250);
 
   zoomToTarget(key);
   highlightProduct(key);
@@ -742,9 +709,6 @@ function selectProduct(key) {
 function resetProduct() {
   const wasMultiply = activeProduct === 'multiply';
   activeProduct = null;
-  productSubtitle.classList.remove('active');
-  productSubtitle.classList.remove('selected');
-  hoverSubtitle.classList.remove('active');
   unhighlightProduct();
   terminalEl.style.transform = 'scale(.85)';
   terminalEl.classList.remove('zoomed-stream', 'zoomed-firepower', 'zoomed-multiply');
@@ -801,26 +765,13 @@ function unhighlightProduct() {
 
 function hoverProduct(key) {
   if (activeProduct && activeProduct === key) return;
-  if (activeProduct) {
-    /* Show grey hover subtitle next to hovered tab; selected subtitle stays */
-    hoverSubtitle.classList.remove('active');
-    hoverSubtitle.innerHTML = products[key].subHover;
-    positionSubtitle(key, 'hover', hoverSubtitle);
-    requestAnimationFrame(() => hoverSubtitle.classList.add('active'));
-  } else {
+  if (!activeProduct) {
     highlightProduct(key);
-    productSubtitle.classList.remove('active');
-    productSubtitle.innerHTML = products[key].subHover;
-    positionSubtitle(key, 'hover');
-    requestAnimationFrame(() => productSubtitle.classList.add('active'));
   }
 }
 
 function unhoverProduct() {
-  if (activeProduct) {
-    hoverSubtitle.classList.remove('active');
-  } else {
-    productSubtitle.classList.remove('active');
+  if (!activeProduct) {
     unhighlightProduct();
   }
   tabs.forEach(t => t.classList.remove('hovered'));
