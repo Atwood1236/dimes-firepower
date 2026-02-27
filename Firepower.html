@@ -131,7 +131,7 @@ function Popup(){
 
   return(
     <div style={{
-      width:isCross?440:480,position:"relative",overflow:"hidden",
+      width:480,height:480,position:"relative",overflow:"hidden",
       background:"radial-gradient(ellipse 120% 160% at 50% 105%, rgba(238,255,0,0.22) 0%, rgba(238,255,0,0.08) 40%, transparent 75%), #0e0e0e",
       border:"1px solid rgba(255,255,255,0.06)",
       borderRadius:14,fontFamily:"'Bai Jamjuree',sans-serif",
@@ -394,20 +394,25 @@ function LtvStepper({value,max,onChange}){
 
 function ModeToggle({value,onChange}){
   const opts=[{k:"cross",l:"Cross"},{k:"isolated",l:"Isolated"}];
+  const crossRef=useRef(null);const isoRef=useRef(null);
+  const refs={cross:crossRef,isolated:isoRef};
+  const[pill,setPill]=useState({left:0,width:0});
+  useEffect(()=>{
+    const el=refs[value]?.current;
+    if(el){setPill({left:el.offsetLeft,width:el.offsetWidth})}
+  },[value]);
   return(
-    <div style={{display:"inline-flex",background:"rgba(255,255,255,0.04)",borderRadius:6,padding:2}}>
-      {opts.map(m=>{
-        const active=value===m.k;
-        return(
-          <button key={m.k} onClick={()=>onChange(m.k)} style={{
-            padding:"4px 14px",border:"none",cursor:"pointer",fontSize:11,fontWeight:500,
-            fontFamily:"'Bai Jamjuree',sans-serif",borderRadius:5,
-            background:active?"rgba(255,255,255,0.08)":"transparent",
-            color:active?"#e8e8e8":"#555",
-            transition:"all 0.2s",
-          }}>{m.l}</button>
-        );
-      })}
+    <div style={{display:"inline-flex",position:"relative",background:"rgba(255,255,255,0.04)",borderRadius:20,padding:2}}>
+      <div style={{position:"absolute",top:2,left:pill.left,width:pill.width,height:"calc(100% - 4px)",borderRadius:20,background:"rgba(255,255,255,0.08)",transition:"left 0.25s ease, width 0.25s ease"}}/>
+      {opts.map(m=>(
+        <button ref={refs[m.k]} key={m.k} onClick={()=>onChange(m.k)} style={{
+          padding:"4px 14px",border:"none",cursor:"pointer",fontSize:11,fontWeight:500,
+          fontFamily:"'Bai Jamjuree',sans-serif",borderRadius:20,
+          background:"transparent",position:"relative",zIndex:1,
+          color:value===m.k?"#e8e8e8":"#555",
+          transition:"color 0.25s",
+        }}>{m.l}</button>
+      ))}
     </div>
   );
 }
