@@ -36,7 +36,7 @@ const HOLDINGS = [
   { id:"pump", sym:"PUMP",      price:0.0087,  qty:2800000,  maxLtv:45, logo:PUMP_LOGO },
   { id:"hype", sym:"HYPE",      price:24.80,   qty:520,      maxLtv:75, logo:HYPE_LOGO },
   { id:"fart", sym:"FARTCOIN",  price:1.42,    qty:8500,     maxLtv:40, logo:FART_LOGO },
-  { id:"pm1",  sym:"BTC $100K '26", price:0.62, qty:4200,   maxLtv:55, logo:BTC100K_LOGO, pm:true, side:"Yes" },
+  { id:"pm1",  sym:"BTC >$100K'26", price:0.62, qty:4200,   maxLtv:55, logo:BTC100K_LOGO, pm:true, side:"Yes" },
 ];
 
 const RATE=0.0008;
@@ -70,6 +70,7 @@ function Popup(){
   const[durIdx,setDurIdx]=useState(1);
   const[liqExpanded,setLiqExpanded]=useState(false);
   const[justToggled,setJustToggled]=useState(null);
+  const[hoveredSym,setHoveredSym]=useState(null);
   const durs=[{l:"1D",d:1},{l:"7D",d:7},{l:"14D",d:14},{l:"30D",d:30}];
   const isCross=mode==="cross";
 
@@ -159,7 +160,7 @@ function Popup(){
           <span style={{fontSize:10,color:"#777",fontWeight:500,whiteSpace:"nowrap"}}>Your tokens</span>
         </div>
         <div style={{flex:1,minWidth:40,margin:"0 "+C.sMx+"px",display:"flex",justifyContent:"center"}}>
-          <span style={{fontSize:10,color:"#777",fontWeight:500,whiteSpace:"nowrap"}}>{"\u2190"} balance used as collateral {"\u2192"}</span>
+          <span style={{fontSize:10,color:"#777",fontWeight:500,whiteSpace:"nowrap"}}>{"\u2190"} Balance used as collateral {"\u2192"}</span>
         </div>
         <div style={{width:C.coll}}/>
         <div style={{...ltvStyle,textAlign:"center",paddingRight:16}}><span style={{fontSize:10,color:"#777",fontWeight:500}}>LTV</span></div>
@@ -191,8 +192,11 @@ function Popup(){
               </button>
               <img src={h.logo} style={{width:C.logo,height:C.logo,borderRadius:"50%",marginRight:C.logoMr}} alt={h.sym}/>
               <div style={{width:C.name,display:"flex",alignItems:"center",gap:3,flexShrink:0}}>
-                <span style={{fontSize:13,fontWeight:on?600:300,color:"#e8e8e8",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",transition:"font-weight 0.2s"}}>{h.sym}</span>
-                {h.pm&&<span style={{fontSize:9,fontWeight:600,color:"#fff",background:BLUE,borderRadius:2,padding:"1px 4px",lineHeight:"11px",flexShrink:0}}>{h.side}</span>}
+                <div style={{position:"relative",overflow:"visible",minWidth:0,flex:1}} onMouseEnter={()=>setHoveredSym(h.id)} onMouseLeave={()=>setHoveredSym(null)}>
+                  <span style={{fontSize:13,fontWeight:on?600:300,color:"#e8e8e8",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",transition:"font-weight 0.2s",display:"block"}}>{h.sym}</span>
+                  {hoveredSym===h.id&&h.sym.length>8&&<div style={{position:"absolute",left:0,bottom:"100%",marginBottom:4,background:"#222",border:"1px solid rgba(255,255,255,0.1)",borderRadius:4,padding:"3px 8px",pointerEvents:"none",whiteSpace:"nowrap",zIndex:10,display:"flex",alignItems:"center",justifyContent:"center"}}><span style={{fontSize:11,fontWeight:600,color:"#e8e8e8",lineHeight:1,display:"block"}}>{h.sym}</span></div>}
+                </div>
+                {h.pm&&<span style={{fontSize:9,fontWeight:600,color:"#44FF97",background:"rgba(68,255,151,0.1)",border:"1px solid rgba(68,255,151,0.3)",borderRadius:3,padding:"1px 5px",lineHeight:"12px",flexShrink:0}}>{h.side}</span>}
               </div>
               <SliderWithTooltip value={alloc[h.id]} onChange={v=>setAlloc(p=>({...p,[h.id]:v}))} enabled={on} style={{flex:1,minWidth:40,margin:"0 "+C.sMx+"px"}}/>
               <div style={{width:C.coll,textAlign:"right"}}>
@@ -288,7 +292,7 @@ function Popup(){
                       <div style={{padding:"2px 0"}}>
                         <div style={{display:"flex",padding:"2px 0 4px"}}>
                           <span style={{fontSize:10,color:"#777",flex:1}}>Token</span>
-                          <span style={{fontSize:10,color:"#777",width:44,textAlign:"right"}}>Price</span>
+                          <span style={{fontSize:10,color:"#777",width:44,textAlign:"right"}}>Current</span>
                           <span style={{fontSize:10,color:"#777",width:44,textAlign:"right"}}>Liq.</span>
                           <span style={{fontSize:10,color:"#777",width:44,textAlign:"right"}}>Buffer</span>
                         </div>
