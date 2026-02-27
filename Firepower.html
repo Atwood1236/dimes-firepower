@@ -156,15 +156,15 @@ function Popup(){
       <div style={{padding:"8px 18px 5px",display:"flex",alignItems:"baseline"}}>
         <div style={{width:C.chk,marginRight:C.chkMr}}/>
         <div style={{width:C.logo+C.logoMr+C.name,flexShrink:0}}>
-          <span style={{fontSize:10,color:"#444",fontWeight:500,whiteSpace:"nowrap"}}>Your tokens</span>
+          <span style={{fontSize:10,color:"#777",fontWeight:500,whiteSpace:"nowrap"}}>Your tokens</span>
         </div>
         <div style={{flex:1,minWidth:40,margin:"0 "+C.sMx+"px",display:"flex",justifyContent:"center"}}>
-          <span style={{fontSize:10,color:"#444",fontWeight:500,whiteSpace:"nowrap"}}>{"\u2190"} balance used as collateral {"\u2192"}</span>
+          <span style={{fontSize:10,color:"#777",fontWeight:500,whiteSpace:"nowrap"}}>{"\u2190"} balance used as collateral {"\u2192"}</span>
         </div>
         <div style={{width:C.coll}}/>
-        <div style={{...ltvStyle,textAlign:"center",paddingRight:16}}><span style={{fontSize:10,color:"#444",fontWeight:500}}>LTV</span></div>
+        <div style={{...ltvStyle,textAlign:"center",paddingRight:16}}><span style={{fontSize:10,color:"#777",fontWeight:500}}>LTV</span></div>
         <div style={{width:C.borr,marginLeft:C.borrMl,textAlign:"right"}}>
-          <span style={{fontSize:10,color:"#444",fontWeight:500}}>Borrowed</span>
+          <span style={{fontSize:10,color:"#777",fontWeight:500}}>Borrowed</span>
         </div>
       </div>
 
@@ -196,7 +196,7 @@ function Popup(){
               </div>
               <SliderWithTooltip value={alloc[h.id]} onChange={v=>setAlloc(p=>({...p,[h.id]:v}))} enabled={on} style={{flex:1,minWidth:40,margin:"0 "+C.sMx+"px"}}/>
               <div style={{width:C.coll,textAlign:"right"}}>
-                <span style={{fontSize:12,fontWeight:500,color:"#666"}}>{on?fmt(pledged):"\u2014"}</span>
+                <span style={{fontSize:12,fontWeight:500,color:"#999"}}>{on?fmt(pledged):"\u2014"}</span>
               </div>
               <div style={{...ltvStyle,display:"flex",justifyContent:"flex-end",alignItems:"center"}}>
                 {on?<LtvStepper value={tokenLtv[h.id]!==null?tokenLtv[h.id]:h.maxLtv} max={h.maxLtv} onChange={v=>setTokenLtv(p=>({...p,[h.id]:v}))}/>:<span style={{fontSize:12,color:"#333"}}>{"\u2014"}</span>}
@@ -229,7 +229,7 @@ function Popup(){
         {calc.borrow>0&&(
           <div style={{display:"grid",gridTemplateRows:isCross?"1fr":"0fr",opacity:isCross?1:0,transition:"grid-template-rows 0.3s ease, opacity 0.25s ease"}}>
             <div style={{overflow:"hidden"}}>
-              <div style={{display:"flex",alignItems:"center",padding:"4px 0"}}>
+              <div style={{display:"flex",alignItems:"center",padding:"6px 0"}}>
                 <span style={{fontSize:13,color:"#888",flexShrink:0}}>LTV</span>
                 <div style={{flex:1,borderBottom:"1px dotted rgba(255,255,255,0.08)",margin:"0 8px",alignSelf:"center"}}/>
             <div style={{display:"flex",alignItems:"center",gap:0,flexShrink:0}}>
@@ -243,7 +243,7 @@ function Popup(){
             </div>
           </div>
         )}
-        <div style={{display:"flex",alignItems:"center",padding:"4px 0"}}>
+        <div style={{display:"flex",alignItems:"center",padding:"6px 0"}}>
           <span style={{fontSize:13,color:"#888",flexShrink:0}}>Duration</span>
           <div style={{flex:1,borderBottom:"1px dotted rgba(255,255,255,0.08)",margin:"0 8px",alignSelf:"center"}}/>
           <div style={{display:"flex",gap:2}}>
@@ -254,49 +254,49 @@ function Popup(){
                 cursor:"pointer",fontSize:12,fontWeight:durIdx===i?600:400,
                 fontFamily:"'Bai Jamjuree',sans-serif",
                 background:durIdx===i?"rgba(255,255,255,0.04)":"transparent",
-                color:durIdx===i?"#e8e8e8":"#555",transition:"all 0.1s",
+                color:durIdx===i?"#e8e8e8":"#999",transition:"all 0.1s",
               }}>{d.l}</button>
             ))}
           </div>
         </div>
         {calc.borrow>0&&(
           <>
-            <div style={{display:"flex",alignItems:"center",padding:"4px 0"}}>
-              <span style={{fontSize:13,color:"#666",flexShrink:0,fontWeight:300}}>Cost</span>
+            <div style={{display:"flex",alignItems:"center",padding:"6px 0"}}>
+              <span style={{fontSize:13,color:"#999",flexShrink:0,fontWeight:300}}>Cost</span>
               <div style={{flex:1,borderBottom:"1px dotted rgba(255,255,255,0.08)",margin:"0 8px",alignSelf:"center"}}/>
-              <span style={{fontSize:13,color:"#666",flexShrink:0,fontWeight:300}}>{fmtCost(calc.cost)} ({calc.costPct.toFixed(1)}%)</span>
+              <span style={{fontSize:13,color:"#999",flexShrink:0,fontWeight:300}}>{fmtCost(calc.cost)} ({calc.costPct.toFixed(1)}%)</span>
             </div>
             {isCross?(
-              <div style={{display:"flex",alignItems:"center",padding:"4px 0"}}>
-                <span style={{fontSize:13,color:"#666",flexShrink:0,fontWeight:300}}>Liquidation</span>
+              <div style={{display:"flex",alignItems:"center",padding:"6px 0"}}>
+                <span style={{fontSize:13,color:"#999",flexShrink:0,fontWeight:300}}>Liquidation</span>
                 <div style={{flex:1,borderBottom:"1px dotted rgba(255,255,255,0.08)",margin:"0 8px",alignSelf:"center"}}/>
                 <div style={{display:"flex",alignItems:"center",gap:5,flexShrink:0}}>
-                  <span style={{fontSize:13,color:"#666",fontWeight:300}}>{fmt(calc.liqValue)}</span>
+                  <span style={{fontSize:13,color:"#999",fontWeight:300}}>{fmt(calc.liqValue)}</span>
                   <span style={{fontSize:12,fontWeight:500,color:"#e8e8e8"}}>{calc.bufferPct.toFixed(0)}%</span>
                 </div>
               </div>
             ):(
               <>
-                <div style={{display:"flex",alignItems:"center",padding:"4px 0",cursor:"pointer",userSelect:"none"}} onClick={()=>setLiqExpanded(p=>!p)}>
-                  <span style={{fontSize:13,color:"#666",flexShrink:0,fontWeight:300}}>Liquidation</span>
+                <div style={{display:"flex",alignItems:"center",padding:"6px 0",cursor:"pointer",userSelect:"none"}} onClick={()=>setLiqExpanded(p=>!p)}>
+                  <span style={{fontSize:13,color:"#999",flexShrink:0,fontWeight:300}}>Liquidation</span>
                   <div style={{flex:1,borderBottom:"1px dotted rgba(255,255,255,0.08)",margin:"0 8px",alignSelf:"center"}}/>
-                  <span style={{fontSize:10,color:"#555",transform:liqExpanded?"rotate(180deg)":"none",transition:"transform 0.15s",display:"inline-block",flexShrink:0}}>{"\u25BC"}</span>
+                  <span style={{fontSize:10,color:"#888",transform:liqExpanded?"rotate(180deg)":"none",transition:"transform 0.15s",display:"inline-block",flexShrink:0}}>{"\u25BC"}</span>
                 </div>
                 {calc.perToken.length>0&&(
                   <div style={{display:"grid",gridTemplateRows:liqExpanded?"1fr":"0fr",opacity:liqExpanded?1:0,transition:"grid-template-rows 0.3s ease, opacity 0.25s ease"}}>
                     <div style={{overflow:"hidden"}}>
                       <div style={{padding:"2px 0"}}>
                         <div style={{display:"flex",padding:"2px 0 4px"}}>
-                          <span style={{fontSize:10,color:"#444",flex:1}}>Token</span>
-                          <span style={{fontSize:10,color:"#444",width:44,textAlign:"right"}}>Price</span>
-                          <span style={{fontSize:10,color:"#444",width:44,textAlign:"right"}}>Liq.</span>
-                          <span style={{fontSize:10,color:"#444",width:44,textAlign:"right"}}>Buffer</span>
+                          <span style={{fontSize:10,color:"#777",flex:1}}>Token</span>
+                          <span style={{fontSize:10,color:"#777",width:44,textAlign:"right"}}>Price</span>
+                          <span style={{fontSize:10,color:"#777",width:44,textAlign:"right"}}>Liq.</span>
+                          <span style={{fontSize:10,color:"#777",width:44,textAlign:"right"}}>Buffer</span>
                         </div>
                         {calc.perToken.map(t=>(
                           <div key={t.sym} style={{display:"flex",alignItems:"center",padding:"2px 0"}}>
-                            <span style={{fontSize:12,color:"#666",flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{t.sym}</span>
-                            <span style={{fontSize:12,color:"#666",width:44,textAlign:"right"}}>{t.pm?"\u00A2"+(t.price*100).toFixed(0):"$"+t.price.toFixed(2)}</span>
-                            <span style={{fontSize:12,color:"#666",width:44,textAlign:"right"}}>{t.pm?"\u00A2"+(t.liqPrice*100).toFixed(0):"$"+t.liqPrice.toFixed(2)}</span>
+                            <span style={{fontSize:12,color:"#999",flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{t.sym}</span>
+                            <span style={{fontSize:12,color:"#999",width:44,textAlign:"right"}}>{t.pm?"\u00A2"+(t.price*100).toFixed(0):"$"+t.price.toFixed(2)}</span>
+                            <span style={{fontSize:12,color:"#999",width:44,textAlign:"right"}}>{t.pm?"\u00A2"+(t.liqPrice*100).toFixed(0):"$"+t.liqPrice.toFixed(2)}</span>
                             <span style={{fontSize:12,fontWeight:500,color:"#e8e8e8",width:44,textAlign:"right"}}>{t.bufferPct.toFixed(0)}%</span>
                           </div>
                         ))}
@@ -408,7 +408,7 @@ function ModeToggle({value,onChange}){
       <div style={{position:"absolute",top:2,left:pill.left,width:pill.width,height:"calc(100% - 4px)",borderRadius:20,background:"rgba(255,255,255,0.08)",transition:"left 0.25s ease, width 0.25s ease"}}/>
       {opts.map(m=>(
         <button ref={refs[m.k]} key={m.k} onClick={()=>onChange(m.k)} style={{
-          padding:"4px 14px",border:"none",cursor:"pointer",fontSize:11,fontWeight:500,
+          padding:"4px 14px",border:"none",cursor:"pointer",fontSize:11,fontWeight:value===m.k?500:300,
           fontFamily:"'Bai Jamjuree',sans-serif",borderRadius:20,
           background:"transparent",position:"relative",zIndex:1,
           color:value===m.k?"#e8e8e8":"#555",
