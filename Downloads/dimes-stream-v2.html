@@ -98,20 +98,21 @@ function FlowDots({color=T.accent,size=3}){
 function Divider({m=0}){return <div style={{height:1,background:T.surface,margin:`${m}px 0`}}/>}
 
 /* ── Slider ── */
-function Slider({value,onChange,min,max,accent=false,style,formatLabel}){
+function Slider({value,onChange,min,max,accent=false,style,formatLabel,onDragChange}){
   const[drag,setDrag]=useState(false);const ref=useRef(null);
   const pct=((value-min)/(max-min))*100;
   const update=useCallback(e=>{const r=ref.current?.getBoundingClientRect();if(!r)return;onChange(Math.round(clamp(((e.clientX-r.left)/r.width)*(max-min)+min,min,max)))},[onChange,min,max]);
   const label=formatLabel?formatLabel(value):value;
+  const startDrag=()=>{setDrag(true);onDragChange&&onDragChange(true)};
+  const endDrag=()=>{setDrag(false);onDragChange&&onDragChange(false)};
   return(
-    <div style={{...style,position:"relative",height:16,display:"flex",alignItems:"center",cursor:"pointer"}} ref={ref}
-      onPointerDown={e=>{setDrag(true);e.currentTarget.setPointerCapture(e.pointerId);update(e)}}
-      onPointerMove={e=>{if(drag)update(e)}} onPointerUp={()=>setDrag(false)} onPointerCancel={()=>setDrag(false)}>
+    <div style={{...style,position:"relative",height:36,display:"flex",alignItems:"center",cursor:"pointer"}} ref={ref}
+      onPointerDown={e=>{startDrag();e.currentTarget.setPointerCapture(e.pointerId);update(e)}}
+      onPointerMove={e=>{if(drag)update(e)}} onPointerUp={endDrag} onPointerCancel={endDrag}>
       <div style={{position:"absolute",left:0,right:0,height:2,borderRadius:1,background:"rgba(255,255,255,0.06)"}}>
         <div style={{height:"100%",width:pct+"%",borderRadius:1,background:accent?"linear-gradient(to right, transparent, rgba(238,255,0,0.4))":"linear-gradient(to right, transparent, rgba(255,255,255,0.35))",transition:drag?"none":"width 0.05s"}}/>
       </div>
       <div style={{position:"absolute",left:`calc(${pct}% - 5px)`,width:10,height:10,borderRadius:"50%",background:accent?T.accent:"#e8e8e8",boxShadow:"0 0 6px "+(accent?"rgba(238,255,0,0.2)":"rgba(255,255,255,0.08)"),pointerEvents:"none",transition:drag?"none":"left 0.05s"}}/>
-      {drag&&<div style={{position:"absolute",left:`calc(${pct}% - 18px)`,bottom:18,background:"#222",border:"1px solid rgba(255,255,255,0.1)",borderRadius:4,padding:"2px 6px",pointerEvents:"none",whiteSpace:"nowrap"}}><span style={{fontSize:11,fontWeight:600,color:"#e8e8e8"}}>{label}</span></div>}
     </div>
   );
 }
@@ -171,7 +172,7 @@ function WalletView({onSelect,streams}){
       {/* ── holdings — with inline streaming overlay ── */}
       <div style={{padding:"12px 20px 16px",opacity:0.45}}>
         <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}>
-          <span style={{fontSize:11,color:T.faint,textTransform:"uppercase",letterSpacing:"0.5px"}}>Holdings</span>
+          <span style={{fontSize:13,color:T.faint}}>Holdings</span>
           <div style={{flex:1,height:1,background:T.border}}/>
         </div>
         {TOKENS.map((t,idx)=>{
@@ -214,7 +215,7 @@ function StreamCard({onSelect,streams}){
     <div style={{position:"relative",zIndex:1,background:"radial-gradient(ellipse 120% 160% at 50% 105%, rgba(238,255,0,0.22) 0%, rgba(238,255,0,0.08) 40%, transparent 75%), "+T.card,border:"1px solid "+T.border,borderRadius:T.r,boxShadow:"0 24px 60px rgba(0,0,0,0.6), 0 4px 20px rgba(0,0,0,0.4), inset 0 -20px 60px rgba(238,255,0,0.04)",overflow:"hidden"}}>
       <div style={{padding:"14px 20px 18px"}}>
         <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:3}}>
-          <span style={{fontSize:11,color:"#fff",textTransform:"uppercase",letterSpacing:"0.5px"}}>Stream</span>
+          <span style={{fontSize:13,color:"#fff"}}>Stream</span>
           {hasActive&&<FlowDots/>}
         </div>
         <div style={{fontSize:11,color:"#888",fontWeight:100,opacity:0.6,marginBottom:10}}>Want more of an asset? Stream it on top of what you hold.</div>
@@ -271,6 +272,7 @@ function SetupView({assetId,existing,onBack,onActivate}){
 
   /* details expanded */
   const[showDetails,setShowDetails]=useState(false);
+  const[sliding,setSliding]=useState(false);
 
   return(
     <div style={{animation:"slideRight 0.2s ease"}}>
@@ -287,20 +289,20 @@ function SetupView({assetId,existing,onBack,onActivate}){
 
         {/* ── THE HOOK ── */}
         <div style={{textAlign:"center",marginBottom:20}}>
-          <div style={{fontSize:13,color:T.sub,marginBottom:12}}>Amplify your {asset.sym} exposure</div>
+          <div style={{fontSize:13,color:"#fff",marginBottom:16}}>Amplify your {asset.sym} exposure</div>
           <div style={{fontSize:28,fontWeight:600,color:T.text,letterSpacing:"-0.3px"}}>
             +{fmtQty(expQty,assetId)} <span style={{fontSize:16,fontWeight:400,color:T.sub}}>{asset.sym}</span>
           </div>
-          <div style={{fontSize:13,color:T.dim,marginTop:3}}>{fmt(expUSD)} layered on your portfolio</div>
+          <div style={{fontSize:11,color:T.dim,fontWeight:300,marginTop:3}}><span style={{color:sliding?"#fff":T.dim,transition:sliding?"color 0.1s ease-out":"color 0.6s ease-in"}}>{fmt(expUSD)}</span> layered on your portfolio</div>
         </div>
 
         {/* ── slider denominated in USD ── */}
         <div style={{marginBottom:22}}>
-          <Slider value={expUSD} onChange={v=>setExpUSD(snap(v))} min={minExposure} max={maxExposure} accent
+          <Slider value={expUSD} onChange={v=>setExpUSD(snap(v))} min={minExposure} max={maxExposure} accent onDragChange={setSliding}
             formatLabel={v=>fmt(v)+" · "+fmtQty(v/price,assetId)+" "+asset.sym}/>
-          <div style={{display:"flex",justifyContent:"space-between",marginTop:3}}>
-            <span style={{fontSize:11,color:T.dim}}>Conservative</span>
-            <span style={{fontSize:11,color:T.dim}}>Aggressive</span>
+          <div style={{display:"flex",justifyContent:"space-between",marginTop:-7}}>
+            <span style={{fontSize:11,color:T.faint}}>Conservative</span>
+            <span style={{fontSize:11,color:T.faint}}>Aggressive</span>
           </div>
         </div>
 
