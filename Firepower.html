@@ -272,11 +272,11 @@ function Popup(){
             </div>
             {isCross?(
               <div style={{display:"flex",alignItems:"center",padding:"6px 0"}}>
-                <span style={{fontSize:13,color:"#999",flexShrink:0,fontWeight:300}}>Liquidation Value</span>
+                <span style={{fontSize:13,color:"#999",flexShrink:0,fontWeight:300}}>Liquidation Threshold</span>
                 <div style={{flex:1,borderBottom:"1px dotted rgba(255,255,255,0.08)",margin:"0 8px",alignSelf:"center"}}/>
                 <div style={{display:"flex",alignItems:"center",gap:5,flexShrink:0}}>
                   <span style={{fontSize:13,color:"#999",fontWeight:300}}>{fmt(calc.liqValue)}</span>
-                  <span style={{fontSize:12,fontWeight:500,color:"#e8e8e8"}}>{calc.bufferPct.toFixed(0)}%</span>
+                  <span style={{fontSize:12,fontWeight:300,color:"#999"}}>({calc.bufferPct.toFixed(0)}% buffer)</span>
                 </div>
               </div>
             ):(
@@ -399,7 +399,7 @@ function LtvStepper({value,max,onChange}){
 }
 
 function ModeToggle({value,onChange}){
-  const opts=[{k:"cross",l:"Portfolio"},{k:"isolated",l:"Positions"}];
+  const opts=[{k:"cross",l:"Cross"},{k:"isolated",l:"Isolated"}];
   const crossRef=useRef(null);const isoRef=useRef(null);
   const refs={cross:crossRef,isolated:isoRef};
   const[pill,setPill]=useState({left:0,width:0});
