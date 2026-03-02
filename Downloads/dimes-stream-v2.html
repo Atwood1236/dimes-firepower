@@ -142,7 +142,7 @@ function WalletView({onSelect,streams}){
   return(
     <div style={{animation:"fadeIn 0.25s ease"}}>
       {/* ── top bar ── */}
-      <div style={{padding:"18px 20px 0",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+      <div style={{padding:"18px 20px 0",display:"flex",alignItems:"center",justifyContent:"space-between",opacity:0.45}}>
         <div style={{display:"flex",alignItems:"center",gap:8}}>
           <div style={{width:22,height:22,borderRadius:5,background:"rgba(255,255,255,0.06)",display:"flex",alignItems:"center",justifyContent:"center"}}><span style={{fontSize:11,fontWeight:700,color:T.accent}}>D</span></div>
           <span style={{fontSize:11,color:T.muted,fontFamily:"monospace",letterSpacing:"0.3px"}}>7f2a...3d4e</span>
@@ -151,7 +151,7 @@ function WalletView({onSelect,streams}){
       </div>
 
       {/* ── portfolio value ── */}
-      <div style={{padding:"22px 20px 6px",textAlign:"center"}}>
+      <div style={{padding:"22px 20px 6px",textAlign:"center",opacity:0.45}}>
         <div style={{fontSize:36,fontWeight:600,color:T.text,letterSpacing:"-0.5px"}}>{fmt(TOTAL_PORT)}</div>
         <div style={{fontSize:11,color:T.dim,fontWeight:100,opacity:0.6,marginTop:-2}}>Portfolio Value</div>
         {streamingTotal>0&&<div style={{fontSize:11,color:T.accent,marginTop:5,display:"flex",alignItems:"center",justifyContent:"center",gap:4}}>+{fmt(streamingTotal)} streaming<FlowDots size={2}/></div>}
@@ -169,7 +169,7 @@ function WalletView({onSelect,streams}){
       </div>
 
       {/* ── holdings — with inline streaming overlay ── */}
-      <div style={{padding:"12px 20px 16px"}}>
+      <div style={{padding:"12px 20px 16px",opacity:0.45}}>
         <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}>
           <span style={{fontSize:11,color:T.faint,textTransform:"uppercase",letterSpacing:"0.5px"}}>Holdings</span>
           <div style={{flex:1,height:1,background:T.border}}/>
@@ -187,7 +187,7 @@ function WalletView({onSelect,streams}){
                 </div>
                 <div style={{textAlign:"right"}}>
                   <div style={{fontSize:15,fontWeight:500,color:T.text}}>{fmt(val)}</div>
-                  <div style={{fontSize:12,color:T.dim}}>{fmtQty(t.qty,t.id)}</div>
+                  <div style={{fontSize:12,color:T.dim,fontWeight:300}}>{fmtQty(t.qty,t.id)}</div>
                 </div>
               </div>
               {/* inline streaming overlay */}
@@ -214,7 +214,7 @@ function StreamCard({onSelect,streams}){
     <div style={{position:"relative",zIndex:1,background:"radial-gradient(ellipse 120% 160% at 50% 105%, rgba(238,255,0,0.22) 0%, rgba(238,255,0,0.08) 40%, transparent 75%), "+T.card,border:"1px solid "+T.border,borderRadius:T.r,boxShadow:"0 24px 60px rgba(0,0,0,0.6), 0 4px 20px rgba(0,0,0,0.4), inset 0 -20px 60px rgba(238,255,0,0.04)",overflow:"hidden"}}>
       <div style={{padding:"14px 20px 18px"}}>
         <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:3}}>
-          <span style={{fontSize:11,color:T.faint,textTransform:"uppercase",letterSpacing:"0.5px"}}>Stream</span>
+          <span style={{fontSize:11,color:"#fff",textTransform:"uppercase",letterSpacing:"0.5px"}}>Stream</span>
           {hasActive&&<FlowDots/>}
         </div>
         <div style={{fontSize:11,color:"#888",fontWeight:100,opacity:0.6,marginBottom:10}}>Want more of an asset? Stream it on top of what you hold.</div>
