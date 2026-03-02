@@ -128,7 +128,7 @@ function Popup(){
   const canUp=crossLtvVal<blendedMaxRound;
   const canDown=crossLtvVal>1;
 
-  const C={chk:10,chkMr:7,logo:18,logoMr:6,name:80,sMx:10,coll:50,ltv:50,ltvMl:8,borr:50,borrMl:3};
+  const C={chk:10,chkMr:7,logo:18,logoMr:6,name:80,sMl:10,sMr:12,coll:38,ltv:50,ltvMl:8,borr:50,borrMl:3};
   const ltvStyle={width:isCross?0:C.ltv,marginLeft:isCross?0:C.ltvMl,opacity:isCross?0:1,overflow:"hidden",transition:"width 0.3s ease, margin-left 0.3s ease, opacity 0.3s ease"};
 
   return(
@@ -159,10 +159,9 @@ function Popup(){
         <div style={{width:C.logo+C.logoMr+C.name,flexShrink:0}}>
           <span style={{fontSize:10,color:"#777",fontWeight:500,whiteSpace:"nowrap"}}>Your tokens</span>
         </div>
-        <div style={{flex:1,minWidth:40,margin:"0 "+C.sMx+"px",display:"flex",justifyContent:"center"}}>
+        <div style={{flex:1,minWidth:40,marginLeft:C.sMl,display:"flex",justifyContent:"center"}}>
           <span style={{fontSize:10,color:"#777",fontWeight:500,whiteSpace:"nowrap"}}>{"\u2190"} Balance used as collateral {"\u2192"}</span>
         </div>
-        <div style={{width:C.coll}}/>
         <div style={{...ltvStyle,textAlign:"right",paddingRight:16}}><span style={{fontSize:10,color:"#777",fontWeight:500}}>LTV</span></div>
         <div style={{width:C.borr,marginLeft:C.borrMl,textAlign:"right"}}>
           <span style={{fontSize:10,color:"#777",fontWeight:500}}>Borrowed</span>
@@ -198,14 +197,16 @@ function Popup(){
                 </div>
                 {h.pm&&<span style={{fontSize:9,fontWeight:600,color:"#44FF97",background:"rgba(68,255,151,0.1)",border:"1px solid rgba(68,255,151,0.3)",borderRadius:3,padding:"1px 5px",lineHeight:"12px",flexShrink:0}}>{h.side}</span>}
               </div>
-              <SliderWithTooltip value={alloc[h.id]} onChange={v=>setAlloc(p=>({...p,[h.id]:v}))} enabled={on} style={{flex:1,minWidth:40,margin:"0 "+C.sMx+"px"}}/>
-              <div style={{width:C.coll,textAlign:"right"}}>
-                <span style={{fontSize:12,fontWeight:500,color:"#999"}}>{on?fmt(pledged):"\u2014"}</span>
+              <div style={{flex:1,minWidth:40,marginLeft:C.sMl,display:"flex",alignItems:"center",background:on?"rgba(255,255,255,0.03)":"transparent",borderRadius:20,padding:"2px 14px 2px 10px"}}>
+                <SliderWithTooltip value={alloc[h.id]} onChange={v=>setAlloc(p=>({...p,[h.id]:v}))} enabled={on} style={{flex:1,minWidth:40}}/>
+                <div style={{textAlign:"right",flexShrink:0,marginLeft:15}}>
+                  <span style={{fontSize:12,fontWeight:500,color:"#999",position:"relative",top:-2}}>{on?fmt(pledged):"\u2014"}</span>
+                </div>
               </div>
-              <div style={{...ltvStyle,display:"flex",justifyContent:"flex-end",alignItems:"center",position:"relative",top:2}}>
+              <div style={{...ltvStyle,display:"flex",justifyContent:"flex-end",alignItems:"center"}}>
                 {on?<LtvStepper value={tokenLtv[h.id]!==null?tokenLtv[h.id]:h.maxLtv} max={h.maxLtv} onChange={v=>setTokenLtv(p=>({...p,[h.id]:v}))}/>:<span style={{fontSize:12,color:"#999"}}>{"\u2014"}</span>}
               </div>
-              <div style={{width:C.borr,marginLeft:C.borrMl,textAlign:"right"}}>
+              <div style={{width:C.borr,marginLeft:C.borrMl,textAlign:"right",position:"relative",top:-2}}>
                 <span style={{fontSize:12,fontWeight:500,color:on?"#e8e8e8":"#999"}}>{on?fmt(borrowed):"\u2014"}</span>
               </div>
             </div>
@@ -220,8 +221,9 @@ function Popup(){
             <div style={{width:C.chk,marginRight:C.chkMr}}/>
             <div style={{width:C.logo,marginRight:C.logoMr}}/>
             <div style={{width:C.name,flexShrink:0}}/>
-            <div style={{flex:1,minWidth:40,margin:"0 "+C.sMx+"px"}}/>
-            <div style={{width:C.coll,textAlign:"right"}}><span style={{fontSize:12,fontWeight:600,color:"#e8e8e8"}}>{fmt(calc.coll)}</span></div>
+            <div style={{flex:1,minWidth:40,marginLeft:C.sMl,display:"flex",justifyContent:"flex-end",paddingRight:14}}>
+              <span style={{fontSize:12,fontWeight:600,color:"#e8e8e8"}}>{fmt(calc.coll)}</span>
+            </div>
             <div style={ltvStyle}/>
             <div style={{width:C.borr,marginLeft:C.borrMl,textAlign:"right"}}><span style={{fontSize:12,fontWeight:600,color:"#e8e8e8"}}>{fmt(calc.borrow)}</span></div>
           </div>
@@ -345,7 +347,7 @@ function SliderWithTooltip({value,onChange,enabled,style}){
     onChange(pct);
   },[onChange]);
   return(
-    <div style={{...style,position:"relative",height:12,display:"flex",alignItems:"center"}}
+    <div style={{...style,position:"relative",height:24,display:"flex",alignItems:"center",cursor:"pointer"}}
       ref={trackRef}
       onPointerDown={e=>{if(!enabled)return;setDragging(true);e.currentTarget.setPointerCapture(e.pointerId);updateValue(e)}}
       onPointerMove={e=>{if(dragging&&enabled)updateValue(e)}}
