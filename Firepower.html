@@ -106,7 +106,7 @@ function Popup(){
         maxBorrow+=pledged*(h.maxLtv/100);
         const liqPrice=b/(h.qty*(alloc[h.id]/100));
         const bufferPct=h.price>0?((h.price-liqPrice)/h.price)*100:0;
-        perToken.push({sym:h.sym,price:h.price,liqPrice,bufferPct,pm:h.pm});
+        perToken.push({sym:h.sym,price:h.price,liqPrice,bufferPct,pm:h.pm,side:h.side});
       });
       const days=durs[durIdx].d;
       const cost=totalBorrow*(RATE/100)*days*24+totalBorrow*ORIG;
@@ -297,7 +297,7 @@ function Popup(){
                         </div>
                         {calc.perToken.map(t=>(
                           <div key={t.sym} style={{display:"flex",alignItems:"center",padding:"2px 0"}}>
-                            <span style={{fontSize:12,color:"#999",flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{t.sym}</span>
+                            <span style={{fontSize:12,color:"#999",flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{t.sym}{t.side&&" ("+t.side.toUpperCase()+")"}</span>
                             <span style={{fontSize:12,color:"#999",width:44,textAlign:"right"}}>{t.pm?"\u00A2"+(t.price*100).toFixed(0):"$"+t.price.toFixed(2)}</span>
                             <span style={{fontSize:12,color:"#999",width:44,textAlign:"right",marginLeft:10}}>{t.pm?"\u00A2"+(t.liqPrice*100).toFixed(0):"$"+t.liqPrice.toFixed(2)}</span>
                             <span style={{fontSize:12,fontWeight:500,color:"#e8e8e8",width:44,textAlign:"right"}}>{t.bufferPct.toFixed(0)}%</span>
