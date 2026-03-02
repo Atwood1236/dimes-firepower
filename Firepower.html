@@ -182,7 +182,7 @@ function Popup(){
           return(
             <div key={h.id} style={{
               display:"flex",alignItems:"center",padding:"8px 4px",margin:"0 -4px",
-              borderBottom:i<HOLDINGS.length-1?("1px solid rgba(255,255,255,"+(on?0.06:0.21)+")"):"none",
+              borderBottom:i<HOLDINGS.length-1?"1px solid rgba(255,255,255,0.06)":"none",
               opacity:on?1:0.28,background:hl?"rgba(255,255,255,0.03)":"transparent",
               borderRadius:hl?4:0,transition:"opacity 0.2s, background 0.3s",
             }}>
