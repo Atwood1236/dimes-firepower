@@ -181,8 +181,11 @@ function Popup(){
           const hl=justToggled===h.id;
           return(
             <div key={h.id} style={{
-              display:"flex",alignItems:"center",padding:"8px 4px",margin:"0 -4px",
               borderBottom:i<HOLDINGS.length-1?"1px solid rgba(255,255,255,0.06)":"none",
+              margin:"0 -4px",
+            }}>
+            <div style={{
+              display:"flex",alignItems:"center",padding:"8px 4px",
               opacity:on?1:0.28,background:hl?"rgba(255,255,255,0.03)":"transparent",
               borderRadius:hl?4:0,transition:"opacity 0.2s, background 0.3s",
             }}>
@@ -190,11 +193,11 @@ function Popup(){
                 <div style={{width:7,height:7,borderRadius:1.5,background:on?"#e8e8e8":"transparent",border:on?"none":"0.5px solid #fff",transition:"all 0.15s"}}/>
               </button>
               <img src={h.logo} style={{width:C.logo,height:C.logo,borderRadius:"50%",marginRight:C.logoMr}} alt={h.sym}/>
-              <div style={{minWidth:C.name,maxWidth:hoveredSym===h.id&&h.sym.length>8?200:C.name,display:"flex",alignItems:"center",gap:3,flexShrink:0,transition:"max-width 0.4s ease"}} onMouseEnter={()=>setHoveredSym(h.id)} onMouseLeave={()=>setHoveredSym(null)}>
+              <div style={{minWidth:C.name,maxWidth:hoveredSym===h.id&&h.sym.length>8?200:C.name,display:"flex",alignItems:"center",gap:3,flexShrink:0,transition:"max-width 0.6s cubic-bezier(0.4,0,0.2,1)"}} onMouseEnter={()=>setHoveredSym(h.id)} onMouseLeave={()=>setHoveredSym(null)}>
                 <span style={{fontSize:13,fontWeight:on?600:300,color:"#e8e8e8",whiteSpace:"nowrap",overflow:"hidden",textOverflow:hoveredSym===h.id?"unset":"ellipsis",transition:"font-weight 0.2s",display:"block"}}>{h.sym}</span>
-                {h.pm&&<span style={{fontSize:9,fontWeight:600,color:"#44FF97",background:"rgba(68,255,151,0.1)",border:"1px solid rgba(68,255,151,0.3)",borderRadius:3,padding:"1px 5px",lineHeight:"12px",flexShrink:0,marginLeft:hoveredSym===h.id&&h.sym.length>8?6:3}}>{h.side}</span>}
+                {h.pm&&<span style={{fontSize:9,fontWeight:600,color:"#44FF97",background:"rgba(68,255,151,0.1)",border:"1px solid rgba(68,255,151,0.3)",borderRadius:3,padding:"1px 5px",lineHeight:"12px",flexShrink:0,marginLeft:hoveredSym===h.id&&h.sym.length>8?6:3,transition:"margin-left 0.6s cubic-bezier(0.4,0,0.2,1)"}}>{h.side}</span>}
               </div>
-              <div style={{flex:1,minWidth:40,marginLeft:C.sMl,display:"flex",alignItems:"center",background:on?"rgba(255,255,255,0.03)":"transparent",borderRadius:20,padding:"1px 14px 1px 10px"}}>
+              <div style={{flex:1,minWidth:40,marginLeft:C.sMl,display:"flex",alignItems:"center",background:on?"rgba(255,255,255,0.03)":"transparent",borderRadius:20,padding:"1px 14px 1px 10px",transition:"flex 0.6s cubic-bezier(0.4,0,0.2,1)"}}>
                 <SliderWithTooltip value={alloc[h.id]} onChange={v=>setAlloc(p=>({...p,[h.id]:v}))} enabled={on} style={{flex:1,minWidth:40}}/>
                 <div style={{textAlign:"right",flexShrink:0,marginLeft:15}}>
                   <span style={{fontSize:12,fontWeight:500,color:"#999",position:"relative",top:-2}}>{on?fmt(pledged):"\u2014"}</span>
@@ -207,25 +210,28 @@ function Popup(){
                 <span style={{fontSize:12,fontWeight:500,color:on?"#e8e8e8":"#999"}}>{on?fmt(borrowed):"\u2014"}</span>
               </div>
             </div>
+            </div>
           );
         })}
       </div>
 
       {/* Totals */}
-      {calc.borrow>0&&(
-        <div style={{padding:"0 18px"}}>
-          <div style={{borderTop:"1px solid rgba(255,255,255,0.08)",display:"flex",alignItems:"center",padding:"6px 4px 2px",margin:"0 -4px"}}>
-            <div style={{width:C.chk,marginRight:C.chkMr}}/>
-            <div style={{width:C.logo,marginRight:C.logoMr}}/>
-            <div style={{width:C.name,flexShrink:0}}/>
-            <div style={{flex:1,minWidth:40,marginLeft:C.sMl,display:"flex",justifyContent:"flex-end",paddingRight:14}}>
-              <span style={{fontSize:12,fontWeight:600,color:"#e8e8e8"}}>{fmt(calc.coll)}</span>
+      <div style={{display:"grid",gridTemplateRows:calc.borrow>0?"1fr":"0fr",opacity:calc.borrow>0?1:0,transition:"grid-template-rows 0.3s ease, opacity 0.25s ease"}}>
+        <div style={{overflow:"hidden"}}>
+          <div style={{padding:"0 18px"}}>
+            <div style={{borderTop:"1px solid rgba(255,255,255,0.08)",display:"flex",alignItems:"center",padding:"6px 4px 2px",margin:"0 -4px"}}>
+              <div style={{width:C.chk,marginRight:C.chkMr}}/>
+              <div style={{width:C.logo,marginRight:C.logoMr}}/>
+              <div style={{width:C.name,flexShrink:0}}/>
+              <div style={{flex:1,minWidth:40,marginLeft:C.sMl,display:"flex",justifyContent:"flex-end",paddingRight:14}}>
+                <span style={{fontSize:12,fontWeight:600,color:"#e8e8e8"}}>{fmt(calc.coll)}</span>
+              </div>
+              <div style={ltvStyle}/>
+              <div style={{width:C.borr,marginLeft:C.borrMl,textAlign:"right"}}><span style={{fontSize:12,fontWeight:600,color:"#e8e8e8"}}>{fmt(calc.borrow)}</span></div>
             </div>
-            <div style={ltvStyle}/>
-            <div style={{width:C.borr,marginLeft:C.borrMl,textAlign:"right"}}><span style={{fontSize:12,fontWeight:600,color:"#e8e8e8"}}>{fmt(calc.borrow)}</span></div>
           </div>
         </div>
-      )}
+      </div>
 
       {/* Bottom */}
       <div style={{padding:"8px 18px 16px",marginTop:2}}>
@@ -262,8 +268,8 @@ function Popup(){
             ))}
           </div>
         </div>
-        {calc.borrow>0&&(
-          <>
+        <div style={{display:"grid",gridTemplateRows:calc.borrow>0?"1fr":"0fr",opacity:calc.borrow>0?1:0,transition:"grid-template-rows 0.3s ease, opacity 0.25s ease"}}>
+          <div style={{overflow:"hidden"}}>
             <div style={{display:"flex",alignItems:"center",padding:"6px 0"}}>
               <span style={{fontSize:13,color:"#999",flexShrink:0,fontWeight:300}}>Cost</span>
               <div style={{flex:1,borderBottom:"1px dotted rgba(255,255,255,0.08)",margin:"0 8px",alignSelf:"center"}}/>
@@ -309,8 +315,8 @@ function Popup(){
                 )}
               </>
             )}
-          </>
-        )}
+          </div>
+        </div>
         <button disabled={calc.borrow<=0} style={{
           width:"100%",padding:"9px 0",borderRadius:7,marginTop:10,
           border:calc.borrow>0?"1px solid rgba(255,255,255,0.12)":"1px solid rgba(255,255,255,0.04)",
@@ -324,11 +330,13 @@ function Popup(){
         >
           {calc.borrow>0?"Borrow "+fmt(calc.borrow)+" \u00B7 "+calc.days:"Select collateral"}
         </button>
-        {calc.borrow>0&&(
-          <div style={{textAlign:"center",marginTop:6}}>
-            <span style={{fontSize:11,color:"#888",fontWeight:300}}>Borrowed amount will be reflected in USDC in your [partner] balance</span>
+        <div style={{display:"grid",gridTemplateRows:calc.borrow>0?"1fr":"0fr",opacity:calc.borrow>0?1:0,transition:"grid-template-rows 0.3s ease, opacity 0.25s ease"}}>
+          <div style={{overflow:"hidden"}}>
+            <div style={{textAlign:"center",marginTop:6}}>
+              <span style={{fontSize:11,color:"#888",fontWeight:300}}>Borrowed amount will be reflected in USDC in your [partner] balance</span>
+            </div>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
