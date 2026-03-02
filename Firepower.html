@@ -67,7 +67,7 @@ function Popup(){
   const[mode,setMode]=useState("cross");
   const[globalLtv,setGlobalLtv]=useState(null);
   const[tokenLtv,setTokenLtv]=useState({jup:null,pump:null,hype:null,fart:null,pm1:null});
-  const[durIdx,setDurIdx]=useState(1);
+  const[durIdx,setDurIdx]=useState(3);
   const[liqExpanded,setLiqExpanded]=useState(false);
   const[justToggled,setJustToggled]=useState(null);
   const[hoveredSym,setHoveredSym]=useState(null);
@@ -128,7 +128,7 @@ function Popup(){
   const canUp=crossLtvVal<blendedMaxRound;
   const canDown=crossLtvVal>1;
 
-  const C={chk:10,chkMr:7,logo:18,logoMr:6,name:80,sMx:6,coll:48,ltv:48,ltvMl:4,borr:50,borrMl:4};
+  const C={chk:10,chkMr:7,logo:18,logoMr:6,name:80,sMx:10,coll:50,ltv:50,ltvMl:8,borr:50,borrMl:3};
   const ltvStyle={width:isCross?0:C.ltv,marginLeft:isCross?0:C.ltvMl,opacity:isCross?0:1,overflow:"hidden",transition:"width 0.3s ease, margin-left 0.3s ease, opacity 0.3s ease"};
 
   return(
@@ -163,7 +163,7 @@ function Popup(){
           <span style={{fontSize:10,color:"#777",fontWeight:500,whiteSpace:"nowrap"}}>{"\u2190"} Balance used as collateral {"\u2192"}</span>
         </div>
         <div style={{width:C.coll}}/>
-        <div style={{...ltvStyle,textAlign:"center",paddingRight:16}}><span style={{fontSize:10,color:"#777",fontWeight:500}}>LTV</span></div>
+        <div style={{...ltvStyle,textAlign:"right",paddingRight:16}}><span style={{fontSize:10,color:"#777",fontWeight:500}}>LTV</span></div>
         <div style={{width:C.borr,marginLeft:C.borrMl,textAlign:"right"}}>
           <span style={{fontSize:10,color:"#777",fontWeight:500}}>Borrowed</span>
         </div>
@@ -202,11 +202,11 @@ function Popup(){
               <div style={{width:C.coll,textAlign:"right"}}>
                 <span style={{fontSize:12,fontWeight:500,color:"#999"}}>{on?fmt(pledged):"\u2014"}</span>
               </div>
-              <div style={{...ltvStyle,display:"flex",justifyContent:"flex-end",alignItems:"center"}}>
-                {on?<LtvStepper value={tokenLtv[h.id]!==null?tokenLtv[h.id]:h.maxLtv} max={h.maxLtv} onChange={v=>setTokenLtv(p=>({...p,[h.id]:v}))}/>:<span style={{fontSize:12,color:"#333"}}>{"\u2014"}</span>}
+              <div style={{...ltvStyle,display:"flex",justifyContent:"flex-end",alignItems:"center",position:"relative",top:2}}>
+                {on?<LtvStepper value={tokenLtv[h.id]!==null?tokenLtv[h.id]:h.maxLtv} max={h.maxLtv} onChange={v=>setTokenLtv(p=>({...p,[h.id]:v}))}/>:<span style={{fontSize:12,color:"#999"}}>{"\u2014"}</span>}
               </div>
               <div style={{width:C.borr,marginLeft:C.borrMl,textAlign:"right"}}>
-                <span style={{fontSize:12,fontWeight:500,color:on?"#e8e8e8":"#333"}}>{on?fmt(borrowed):"\u2014"}</span>
+                <span style={{fontSize:12,fontWeight:500,color:on?"#e8e8e8":"#999"}}>{on?fmt(borrowed):"\u2014"}</span>
               </div>
             </div>
           );
@@ -272,7 +272,7 @@ function Popup(){
             </div>
             {isCross?(
               <div style={{display:"flex",alignItems:"center",padding:"6px 0"}}>
-                <span style={{fontSize:13,color:"#999",flexShrink:0,fontWeight:300}}>Liquidation</span>
+                <span style={{fontSize:13,color:"#999",flexShrink:0,fontWeight:300}}>Liquidation Value</span>
                 <div style={{flex:1,borderBottom:"1px dotted rgba(255,255,255,0.08)",margin:"0 8px",alignSelf:"center"}}/>
                 <div style={{display:"flex",alignItems:"center",gap:5,flexShrink:0}}>
                   <span style={{fontSize:13,color:"#999",fontWeight:300}}>{fmt(calc.liqValue)}</span>
@@ -293,14 +293,14 @@ function Popup(){
                         <div style={{display:"flex",padding:"2px 0 4px"}}>
                           <span style={{fontSize:10,color:"#777",flex:1}}>Token</span>
                           <span style={{fontSize:10,color:"#777",width:44,textAlign:"right"}}>Current</span>
-                          <span style={{fontSize:10,color:"#777",width:44,textAlign:"right"}}>Liq.</span>
+                          <span style={{fontSize:10,color:"#777",width:44,textAlign:"right",marginLeft:10}}>Liq.</span>
                           <span style={{fontSize:10,color:"#777",width:44,textAlign:"right"}}>Buffer</span>
                         </div>
                         {calc.perToken.map(t=>(
                           <div key={t.sym} style={{display:"flex",alignItems:"center",padding:"2px 0"}}>
                             <span style={{fontSize:12,color:"#999",flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{t.sym}</span>
                             <span style={{fontSize:12,color:"#999",width:44,textAlign:"right"}}>{t.pm?"\u00A2"+(t.price*100).toFixed(0):"$"+t.price.toFixed(2)}</span>
-                            <span style={{fontSize:12,color:"#999",width:44,textAlign:"right"}}>{t.pm?"\u00A2"+(t.liqPrice*100).toFixed(0):"$"+t.liqPrice.toFixed(2)}</span>
+                            <span style={{fontSize:12,color:"#999",width:44,textAlign:"right",marginLeft:10}}>{t.pm?"\u00A2"+(t.liqPrice*100).toFixed(0):"$"+t.liqPrice.toFixed(2)}</span>
                             <span style={{fontSize:12,fontWeight:500,color:"#e8e8e8",width:44,textAlign:"right"}}>{t.bufferPct.toFixed(0)}%</span>
                           </div>
                         ))}
@@ -355,7 +355,7 @@ function SliderWithTooltip({value,onChange,enabled,style}){
       {enabled?(
         <>
           <div style={{position:"absolute",left:0,right:0,height:2,borderRadius:1,background:"rgba(255,255,255,0.06)"}}>
-            <div style={{height:"100%",width:value+"%",borderRadius:1,background:"rgba(255,255,255,0.4)",transition:dragging?"none":"width 0.05s"}}/>
+            <div style={{height:"100%",width:value+"%",borderRadius:1,background:"linear-gradient(to right, transparent, rgba(255,255,255,0.4))",transition:dragging?"none":"width 0.05s"}}/>
           </div>
           <div style={{position:"absolute",left:"calc("+value+"% - 4px)",width:8,height:8,borderRadius:"50%",background:"#e8e8e8",boxShadow:"0 0 4px rgba(255,255,255,0.08)",pointerEvents:"none",transition:dragging?"none":"left 0.05s"}}/>
           {dragging&&(
@@ -379,7 +379,7 @@ function HoldArrow({dir,disabled,onStep}){
   useEffect(()=>()=>stopHold(),[stopHold]);
   return(
     <button onMouseDown={startHold} onMouseUp={stopHold} onMouseLeave={e=>{stopHold();if(!disabled)e.currentTarget.style.color="#555"}} onTouchStart={startHold} onTouchEnd={stopHold} disabled={disabled}
-      style={{width:14,height:9,borderRadius:2,border:"none",padding:0,background:"transparent",color:disabled?"#2a2a2a":"#555",fontSize:8,cursor:disabled?"default":"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"color 0.1s",userSelect:"none"}}
+      style={{width:12,height:7,borderRadius:2,border:"none",padding:0,background:"transparent",color:disabled?"#2a2a2a":"#888",fontSize:6,cursor:disabled?"default":"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"color 0.1s",userSelect:"none"}}
       onMouseEnter={e=>{if(!disabled)e.currentTarget.style.color="#999"}}
     >{dir==="up"?"\u25B2":"\u25BC"}</button>
   );
@@ -399,7 +399,7 @@ function LtvStepper({value,max,onChange}){
 }
 
 function ModeToggle({value,onChange}){
-  const opts=[{k:"cross",l:"Cross"},{k:"isolated",l:"Isolated"}];
+  const opts=[{k:"cross",l:"Portfolio"},{k:"isolated",l:"Positions"}];
   const crossRef=useRef(null);const isoRef=useRef(null);
   const refs={cross:crossRef,isolated:isoRef};
   const[pill,setPill]=useState({left:0,width:0});
