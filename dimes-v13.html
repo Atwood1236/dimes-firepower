@@ -164,10 +164,10 @@
   @keyframes fp-bg-pulse{0%,100%{background:rgba(238,255,0,0)}50%{background:rgba(238,255,0,.04)}}
 
   /* Stream hover preview */
-  .stream-preview{position:absolute;width:380px;height:500px;top:0;left:0;transform:scale(.5) translateY(18px);transform-origin:top right;border:none;border-radius:0 0 24px 24px;z-index:52;opacity:0;pointer-events:none;transition:opacity .5s ease,transform 1.2s cubic-bezier(.4,0,.2,1),top 1.2s cubic-bezier(.4,0,.2,1),left 1.2s cubic-bezier(.4,0,.2,1);background:transparent;box-shadow:none;overflow:hidden}
+  .stream-preview{position:absolute;width:380px;height:500px;top:0;left:0;transform:scale(.5) translateY(-18px);transform-origin:top right;border:none;border-radius:0 0 24px 24px;z-index:52;opacity:0;pointer-events:none;transition:opacity .5s ease,transform 1.2s cubic-bezier(.4,0,.2,1),top 1.2s cubic-bezier(.4,0,.2,1),left 1.2s cubic-bezier(.4,0,.2,1);background:transparent;box-shadow:none;overflow:hidden}
   .stream-iframe{width:100%;height:100%;border:none;border-radius:0;background:transparent}
   .stream-preview.active{opacity:1;transform:scale(.5) translateY(0);transition:opacity .4s ease,transform .5s cubic-bezier(.16,1,.3,1)}
-  .stream-preview.selected{opacity:1;transform:scale(.9);pointer-events:auto}
+  .stream-preview.selected{opacity:1;transform:scale(.9);pointer-events:auto;border-radius:14px;background:#0a0a0a;box-shadow:0 40px 120px rgba(0,0,0,.8),0 12px 40px rgba(0,0,0,.5)}
 
   /* Scene layout — terminal + side tabs in a row */
   .terminal-scene{position:relative;z-index:1;overflow:visible;padding:80px 0 140px;margin:-80px 0 -140px;min-height:560px;display:flex;align-items:flex-start;justify-content:flex-end;gap:0;mask-image:linear-gradient(to right, transparent 0%, black 15%),linear-gradient(to bottom, transparent 0%, black 10%, black 85%, transparent 100%);-webkit-mask-image:linear-gradient(to right, transparent 0%, black 15%),linear-gradient(to bottom, transparent 0%, black 10%, black 85%, transparent 100%);mask-composite:intersect;-webkit-mask-composite:source-in}
@@ -178,6 +178,7 @@
   /* Terminal — liquid glass */
   .terminal-wrapper::before{content:'';position:absolute;inset:0;background:rgba(25,25,25,.45);opacity:0;transition:opacity .4s ease;z-index:50;pointer-events:none;border-radius:20px}
   .terminal-wrapper.dimmed::before{opacity:1}
+  .terminal-wrapper.dimmed .leverage-section:not(.hl-active){opacity:.15;transition:opacity .4s ease}
   .term-hl.hl-active{position:relative;z-index:51}
   .terminal-wrapper{position:relative;border-radius:20px;overflow:hidden;background:linear-gradient(180deg, rgba(255,255,255,.03) 0%, var(--t-bg) 4%, var(--t-bg) 100%);border:1px solid rgba(255,255,255,.1);box-shadow:0 80px 160px rgba(0,0,0,.6),0 30px 60px rgba(0,0,0,.3),0 0 0 1px rgba(255,255,255,.05),0 0 80px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(255,255,255,.02);width:135vw;max-width:none;flex-shrink:0;backdrop-filter:blur(40px) saturate(1.2);-webkit-backdrop-filter:blur(40px) saturate(1.2);transition:transform 1.2s cubic-bezier(.16,1,.3,1),opacity .5s ease,mask-image .6s ease,-webkit-mask-image .6s ease;transform-origin:top right;transform:scale(.85)}
   .terminal-wrapper.zoomed-stream{mask-image:linear-gradient(to right, transparent 60%, black 78%, black 100%),linear-gradient(to bottom, black 0%, black 80%, transparent 100%);-webkit-mask-image:linear-gradient(to right, transparent 60%, black 78%, black 100%),linear-gradient(to bottom, black 0%, black 80%, transparent 100%);mask-composite:intersect;-webkit-mask-composite:source-in}
@@ -279,6 +280,7 @@
   .track-dots{position:absolute;top:50%;left:0;right:0;display:flex;justify-content:space-between;transform:translateY(-50%)}
   .track-dot{width:1px;height:1px;border-radius:50%;background:var(--yellow)}
   .leverage-thumb{width:8px;height:8px;border-radius:50%;background:var(--yellow);border:none;position:absolute;top:50%;transform:translate(-50%,-50%);box-shadow:0 0 6px rgba(238,255,0,0.3);z-index:3;cursor:ew-resize}
+  .leverage-thumb::before{content:'';position:absolute;top:50%;left:50%;width:36px;height:36px;transform:translate(-50%,-50%);border-radius:50%}
 
   .leverage-stats{display:flex;flex-direction:column;gap:2px;padding-top:6px;overflow:hidden;transition:max-height .6s cubic-bezier(.16,1,.3,1),opacity .6s ease,padding .6s cubic-bezier(.16,1,.3,1)}
   .leverage-stat{display:flex;justify-content:space-between;align-items:center;font-size:12px;line-height:200%}
@@ -688,7 +690,7 @@ const hlEls = document.querySelectorAll('.term-hl');
 const zoomConfigs = {
   stream:    { scale: 2.0,  tx: '0px',    ty: '0px'   },  /* top-right corner locked */
   firepower: { scale: 2.0,  tx: '16.5vw', ty: '-7px'  },  /* equivalent of origin 78% 12% — centers icon on page */
-  multiply:  { scale: 1.5,  tx: '0px',    ty: '-310px'},  /* slide up so leverage box aligns with multiply description */
+  multiply:  { scale: 1.5,  tx: '0px',    ty: '-230px'},  /* slide up so leverage box aligns with multiply description */
 };
 
 function zoomToTarget(key) {
@@ -706,6 +708,10 @@ function selectProduct(key) {
   fpPreview.classList.remove('selected');
   streamPreview.classList.remove('active');
   streamPreview.classList.remove('selected');
+  terminalEl.classList.remove('dimmed');
+  terminalEl.classList.remove('zoomed-stream', 'zoomed-firepower', 'zoomed-multiply');
+  terminalEl.style.transform = 'scale(.85)';
+  terminalEl.style.opacity = '';
 
   activeProduct = key;
   hideIdleRings();
@@ -727,8 +733,13 @@ function selectProduct(key) {
   if (key === 'firepower') {
     terminalEl.style.opacity = '.25';
     fpPreview.classList.remove('active');
+    /* Force terminal to final resting position so getBoundingClientRect is accurate */
+    const savedTrans = terminalEl.style.transition;
+    terminalEl.style.transition = 'none';
+    terminalEl.getBoundingClientRect(); /* force reflow */
     const pRect = productsSection.getBoundingClientRect();
     const tRect = terminalEl.getBoundingClientRect();
+    terminalEl.style.transition = savedTrans;
     const h = fpPreview.offsetHeight || 548;
     const centeredLeft = pRect.width / 2 - 264;
     const centeredTop = pRect.height / 2 - h * 0.45;
@@ -740,8 +751,12 @@ function selectProduct(key) {
   } else if (key === 'stream') {
     terminalEl.style.opacity = '.25';
     streamPreview.classList.remove('active');
+    const savedTrans = terminalEl.style.transition;
+    terminalEl.style.transition = 'none';
+    terminalEl.getBoundingClientRect();
     const pRect = productsSection.getBoundingClientRect();
     const tRect = terminalEl.getBoundingClientRect();
+    terminalEl.style.transition = savedTrans;
     const h = streamPreview.offsetHeight || 500;
     const centeredLeft = pRect.width / 2 - 214;
     const centeredTop = pRect.height / 2 - h * 0.45;
@@ -750,6 +765,7 @@ function selectProduct(key) {
     streamPreview.style.top = Math.max(centeredTop, termTop) + 'px';
     streamPreview.style.left = Math.min(centeredLeft, termRight - 380) + 'px';
     streamPreview.classList.add('selected');
+    streamPreview.querySelector('iframe').contentWindow.postMessage({type:'stream-mode',mode:'selected'},'*');
   } else {
     zoomToTarget(key);
   }
@@ -769,6 +785,7 @@ function resetProduct() {
   positionFpPreview();
   streamPreview.classList.remove('selected');
   streamPreview.classList.remove('active');
+  streamPreview.querySelector('iframe').contentWindow.postMessage({type:'stream-mode',mode:'hover'},'*');
   positionStreamPreview();
   terminalEl.style.opacity = '';
   tabGroups.forEach(g => { g.style.opacity = ''; });
@@ -922,6 +939,8 @@ hlEls.forEach(el => {
   });
   el.addEventListener('click', e => {
     e.stopPropagation();
+    /* If already selected and click came from inside interactive controls, don't deselect */
+    if (activeProduct === el.dataset.hl && e.target.closest('.leverage-track-wrap, .leverage-inner')) return;
     selectProduct(el.dataset.hl);
     tabs.forEach(t => t.classList.remove('hovered'));
   });
@@ -973,7 +992,7 @@ document.querySelectorAll('.timeline-link').forEach(btn => {
 // Click blank space in products section to reset
 productsEl.addEventListener('click', e => {
   if (!activeProduct) return;
-  if (e.target.closest('.product-tab, .tab-desc, .docs-link, .timeline-link')) return;
+  if (e.target.closest('.product-tab, .tab-desc, .docs-link, .timeline-link, .terminal-wrapper, .firepower-preview, .stream-preview')) return;
   resetProduct();
 });
 

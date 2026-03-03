@@ -22,7 +22,11 @@
   @keyframes dotFlow{0%{opacity:0.12}30%{opacity:0.85}60%{opacity:0.12}100%{opacity:0.12}}
   @keyframes glowPulse{0%{box-shadow:0 0 0 0 rgba(34,197,94,0.3)}70%{box-shadow:0 0 20px 10px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
   @keyframes countUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  body.selected{background:#0a0a0a}
+  body.selected>#root>div{background:#0a0a0a !important}
+  body.selected .wallet-mode{background:#141414 !important;border-radius:14px 14px 24px 24px !important;border:1px solid rgba(255,255,255,.1) !important;box-shadow:0 32px 80px rgba(0,0,0,.7) !important}
 </style>
+<script>window.addEventListener('message',e=>{if(e.data&&e.data.type==='stream-mode')document.body.classList.toggle('selected',e.data.mode==='selected')});</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
@@ -562,9 +566,9 @@ function App(){
   const isWallet=view==="wallet";
 
   return(
-    <div style={{minHeight:"100vh",background:"#000000",display:"flex",alignItems:"center",justifyContent:"center"}}>
+    <div style={{background:"#000000",display:"flex",alignItems:"center",justifyContent:"center"}}>
       <div style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
-        <div style={{width:380,position:"relative",zIndex:0,display:"flex",flexDirection:"column",background:isWallet?"#000000":"var(--glow), "+T.card,border:"1px solid "+T.border,borderRadius:isWallet?"0 0 24px 24px":T.r,boxShadow:isWallet?"none":"0 32px 80px rgba(0,0,0,0.7), inset 0 -20px 60px rgba(238,255,0,0.04)",overflow:"hidden"}}>
+        <div className={isWallet?"wallet-mode":""} style={{width:380,position:"relative",zIndex:0,display:"flex",flexDirection:"column",background:isWallet?"#000000":"var(--glow), "+T.card,border:"1px solid "+T.border,borderRadius:isWallet?"0 0 24px 24px":T.r,boxShadow:isWallet?"none":"0 32px 80px rgba(0,0,0,0.7), inset 0 -20px 60px rgba(238,255,0,0.04)",overflow:"hidden"}}>
           {isWallet&&<WalletView onSelect={handleSelect} streams={streams}/>}
           {view==="setup"&&asset&&<SetupView assetId={sel} existing={streams[sel]} onBack={()=>{setSel(null);setView("wallet")}} onActivate={handleActivate}/>}
           {view==="active"&&asset&&streams[sel]&&<ActiveView stream={streams[sel]} onBack={()=>{setSel(null);setView("wallet")}} onDeactivate={handleClose} onAdjust={()=>setView("setup")}/>}
