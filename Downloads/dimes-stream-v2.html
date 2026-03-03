@@ -9,6 +9,11 @@
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:#0a0a0a;font-family:'Bai Jamjuree',sans-serif}
   ::-webkit-scrollbar{display:none}
+  .scrollable::-webkit-scrollbar{display:block;width:4px}
+  .scrollable::-webkit-scrollbar-track{background:transparent}
+  .scrollable::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:2px}
+  .scrollable::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.25)}
+  .scrollable{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.15) transparent}
   @keyframes fadeIn{from{opacity:0}to{opacity:1}}
   @keyframes slideRight{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:translateX(0)}}
   @keyframes pulse{0%,100%{opacity:0.85}50%{opacity:0.3}}
@@ -218,7 +223,7 @@ function StreamCard({onSelect,streams}){
           <span style={{fontSize:13,color:"#fff"}}>Stream</span>
           {hasActive&&<FlowDots/>}
         </div>
-        <div style={{fontSize:11,color:"#888",fontWeight:100,opacity:0.6,marginBottom:10}}>Want more of an asset? Stream it on top of what you hold.</div>
+        <div style={{fontSize:11,color:"#888",fontWeight:100,opacity:0.85,marginBottom:10}}>Want more of an asset? Stream it on top of what you hold.</div>
 
         <div style={{display:"flex",gap:6}}>
           {STREAM_ASSETS.map(a=>{
@@ -273,6 +278,15 @@ function SetupView({assetId,existing,onBack,onActivate}){
   /* details expanded */
   const[showDetails,setShowDetails]=useState(false);
   const[sliding,setSliding]=useState(false);
+  const scrollRef=useRef(null);
+  const[scrollH,setScrollH]=useState(null);
+  const toggleDetails=()=>{
+    const next=!showDetails;
+    if(next&&scrollRef.current)setScrollH(scrollRef.current.offsetHeight);
+    if(!next)setScrollH(null);
+    setShowDetails(next);
+    if(next)setTimeout(()=>{scrollRef.current?.scrollTo({top:scrollRef.current.scrollHeight,behavior:"smooth"})},50);
+  };
 
   return(
     <div style={{animation:"slideRight 0.2s ease"}}>
@@ -285,10 +299,10 @@ function SetupView({assetId,existing,onBack,onActivate}){
         <span style={{fontSize:13,fontWeight:500,color:T.text}}>{asset.sym}</span>
       </div>
 
-      <div style={{padding:"14px 20px 20px"}}>
+      <div ref={scrollRef} className={showDetails?"scrollable":""} style={{padding:"14px 20px 0",overflowY:showDetails?"auto":"visible",height:showDetails&&scrollH?scrollH:undefined}}>
 
         {/* ── THE HOOK ── */}
-        <div style={{textAlign:"center",marginBottom:20}}>
+        <div style={{textAlign:"center",marginBottom:10}}>
           <div style={{fontSize:13,color:"#fff",marginBottom:16}}>Amplify your {asset.sym} exposure</div>
           <div style={{fontSize:28,fontWeight:600,color:T.text,letterSpacing:"-0.3px"}}>
             +{fmtQty(expQty,assetId)} <span style={{fontSize:16,fontWeight:400,color:T.sub}}>{asset.sym}</span>
@@ -308,37 +322,37 @@ function SetupView({assetId,existing,onBack,onActivate}){
 
         {/* ── backtest callout ── */}
         <div style={{padding:"10px 12px",borderRadius:8,background:"rgba(238,255,0,0.02)",border:"1px solid rgba(238,255,0,0.07)",marginBottom:16}}>
-          <div style={{fontSize:11,color:T.dim,marginBottom:4}}>If you'd activated this 90 days ago</div>
+          <div style={{fontSize:11,fontWeight:300,color:T.dim,marginBottom:4}}>If you'd activated this 90 days ago</div>
           <div style={{display:"flex",alignItems:"baseline",gap:6}}>
             <span style={{fontSize:18,fontWeight:600,color:T.green}}>+{fmt(btGain)}</span>
-            <span style={{fontSize:11,color:T.green}}>+{bt}%</span>
+            <span style={{fontSize:11,fontWeight:300,color:T.green}}>+{bt}%</span>
           </div>
-          <div style={{fontSize:12,color:T.dim,marginTop:3}}>additional {asset.sym} exposure gain on top of your existing holdings</div>
+          <div style={{fontSize:11,fontWeight:300,color:T.dim,marginTop:3}}>additional {asset.sym} exposure gain on top of your existing holdings</div>
         </div>
 
         {/* ── cost — human-readable ── */}
         <div style={{padding:"10px 12px",borderRadius:8,background:T.surfHover,border:"1px solid "+T.surface,marginBottom:16}}>
           <div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}>
-            <span style={{fontSize:11,color:T.dim}}>Cost</span>
-            <span style={{fontSize:12,fontWeight:500,color:T.text}}>~{fmt(carryWk)}<span style={{fontSize:12,color:T.dim}}> / week</span></span>
+            <span style={{fontSize:11,fontWeight:300,color:T.dim}}>Cost</span>
+            <span style={{fontSize:11,fontWeight:300,color:T.dim}}>~{fmt(carryWk)} / week</span>
           </div>
           <div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}>
-            <span style={{fontSize:11,color:T.dim}}>Annualized</span>
-            <span style={{fontSize:11,color:T.sub}}>~{fmt(carryYr)}/yr · {CARRY_ANNUAL_PCT}%</span>
+            <span style={{fontSize:11,fontWeight:300,color:T.dim}}>Annualized</span>
+            <span style={{fontSize:11,fontWeight:300,color:T.dim}}>~{fmt(carryYr)}/yr · {CARRY_ANNUAL_PCT}%</span>
           </div>
           <div style={{display:"flex",justifyContent:"space-between"}}>
-            <span style={{fontSize:11,color:T.dim}}>Break-even</span>
-            <span style={{fontSize:11,color:T.sub}}>{asset.sym} needs +{CARRY_ANNUAL_PCT}% over a year</span>
+            <span style={{fontSize:11,fontWeight:300,color:T.dim}}>Break-even</span>
+            <span style={{fontSize:11,fontWeight:300,color:T.dim}}>{asset.sym} needs +{CARRY_ANNUAL_PCT}% over a year</span>
           </div>
         </div>
 
         {/* ── stress scenarios ── */}
-        <div style={{marginBottom:16}}>
+        <div style={{marginBottom:0}}>
           <div style={{fontSize:11,color:T.faint,textTransform:"uppercase",letterSpacing:"0.5px",marginBottom:6}}>If the market drops</div>
           <div style={{fontSize:11,color:T.dim,marginBottom:8}}>Stream automatically scales back to protect you — only the overlay shrinks, never your holdings.</div>
           {/* column headers */}
-          <div style={{display:"flex",alignItems:"center",padding:"0 12px 4px"}}>
-            <span style={{fontSize:11,color:T.faint,width:44}}>Drawdown</span>
+          <div style={{display:"flex",alignItems:"center",padding:"0 12px 4px",marginTop:12}}>
+            <span style={{fontSize:11,color:T.faint,width:44,textAlign:"center"}}>Drawdown</span>
             <span style={{fontSize:11,color:T.faint,flex:1,textAlign:"center"}}>Stream adjusts to</span>
             <span style={{fontSize:11,color:T.faint,width:66,textAlign:"right"}}>Your tokens</span>
           </div>
@@ -352,7 +366,7 @@ function SetupView({assetId,existing,onBack,onActivate}){
               const newQty=newExp/price;
               return(
                 <div key={s.drop} style={{display:"flex",alignItems:"center",padding:"7px 12px",background:i%2===0?"rgba(255,255,255,0.015)":"transparent",borderBottom:i<2?"1px solid "+T.surface:"none"}}>
-                  <span style={{fontSize:11,color:T.red,fontWeight:500,width:44}}>−{s.drop}%</span>
+                  <span style={{fontSize:11,color:T.red,fontWeight:500,width:44,textAlign:"center"}}>−{s.drop}%</span>
                   <div style={{flex:1,textAlign:"center"}}>
                     {s.factor===0
                       ?<span style={{fontSize:11,color:T.amber,fontWeight:500}}>Stream pauses</span>
@@ -364,15 +378,8 @@ function SetupView({assetId,existing,onBack,onActivate}){
               );
             })}
           </div>
-          <div style={{fontSize:11,color:T.dim,marginTop:5,textAlign:"center"}}>Worst case: the stream pauses. Your tokens never leave your wallet.</div>
+          <div style={{fontSize:11,color:T.dim,marginTop:12,textAlign:"center",letterSpacing:"-0.15px"}}>Worst case: the stream pauses. Your tokens never leave your wallet.</div>
         </div>
-
-        {/* ── expandable details (ECV, haircuts, band) ── */}
-        <button onClick={()=>setShowDetails(!showDetails)}
-          style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"center",gap:4,padding:"6px 0",background:"none",border:"none",cursor:"pointer",marginBottom:showDetails?8:14}}>
-          <span style={{fontSize:12,color:T.muted}}>{showDetails?"Hide":"Show"} details</span>
-          <svg width="8" height="8" viewBox="0 0 8 8" style={{transform:showDetails?"rotate(180deg)":"none",transition:"transform 0.15s"}}><path d="M1 3L4 6L7 3" stroke="#555" strokeWidth="1" fill="none" strokeLinecap="round"/></svg>
-        </button>
 
         {showDetails&&(
           <div style={{marginBottom:14,animation:"fadeIn 0.2s ease",transformOrigin:"top"}}>
@@ -403,15 +410,23 @@ function SetupView({assetId,existing,onBack,onActivate}){
           </div>
         )}
 
-        {/* ── CTA ── */}
+      </div>
+
+      {/* ── Show details + CTA (fixed bottom) ── */}
+      <div style={{padding:"0 20px 16px",flexShrink:0}}>
+        <button onClick={toggleDetails}
+          style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"center",gap:4,padding:"2px 0",background:"none",border:"none",cursor:"pointer",margin:"6px 0 9px"}}>
+          <span style={{fontSize:11,fontWeight:300,color:T.dim}}>{showDetails?"Hide":"Show"} details</span>
+          <svg width="8" height="8" viewBox="0 0 8 8" style={{transform:showDetails?"rotate(180deg)":"none",transition:"transform 0.15s"}}><path d="M1 3L4 6L7 3" stroke="#555" strokeWidth="1" fill="none" strokeLinecap="round"/></svg>
+        </button>
         <button onClick={()=>onActivate({assetId,target:Math.round(targetPct),bandLow,bandHigh,exposure:expUSD,ecv:ECV})}
           style={{width:"100%",padding:"11px 0",border:"1px solid rgba(238,255,0,0.2)",borderRadius:7,cursor:"pointer",fontSize:13,fontWeight:600,fontFamily:"'Bai Jamjuree',sans-serif",color:T.accent,background:"rgba(238,255,0,0.05)",transition:"all 0.15s"}}
           onMouseEnter={e=>{e.currentTarget.style.background="rgba(238,255,0,0.1)";e.currentTarget.style.borderColor="rgba(238,255,0,0.3)"}}
           onMouseLeave={e=>{e.currentTarget.style.background="rgba(238,255,0,0.05)";e.currentTarget.style.borderColor="rgba(238,255,0,0.2)"}}>
-          {existing?"Update Stream":"Stream "+fmtQty(expQty,assetId)+" "+asset.sym}
+          {existing?"Update Stream":"Open stream "+fmtQty(expQty,assetId)+" "+asset.sym}
         </button>
         <div style={{textAlign:"center",marginTop:6}}>
-          <span style={{fontSize:11,color:T.faint}}>Auto-adjusting · No margin calls · Cancel anytime</span>
+          <span style={{fontSize:11,fontWeight:300,color:T.dim}}>Auto-adjusting · No margin calls · Cancel anytime</span>
         </div>
       </div>
     </div>
@@ -556,7 +571,6 @@ function App(){
   const[view,setView]=useState("wallet");
   const[sel,setSel]=useState(null);
   const[streams,setStreams]=useState({});
-
   const handleSelect=id=>{setSel(id);setView(streams[id]?"active":"setup")};
   const handleActivate=cfg=>{setStreams(p=>({...p,[cfg.assetId]:cfg}));setView("active")};
   const handleDeactivate=()=>{setStreams(p=>{const n={...p};delete n[sel];return n});setSel(null);setView("wallet")};
@@ -568,7 +582,7 @@ function App(){
   return(
     <div style={{minHeight:"100vh",background:T.bg,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"'Bai Jamjuree',sans-serif"}}>
       <div style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
-        <div style={{width:380,position:"relative",zIndex:0,background:isWallet?T.card:"radial-gradient(ellipse 120% 160% at 50% 105%, rgba(238,255,0,0.22) 0%, rgba(238,255,0,0.08) 40%, transparent 75%), "+T.card,border:"1px solid "+T.border,borderRadius:isWallet?"14px 14px 24px 24px":T.r,boxShadow:isWallet?"0 32px 80px rgba(0,0,0,0.7)":"0 32px 80px rgba(0,0,0,0.7), inset 0 -20px 60px rgba(238,255,0,0.04)",overflow:"hidden"}}>
+        <div style={{width:380,position:"relative",zIndex:0,display:"flex",flexDirection:"column",background:isWallet?T.card:"radial-gradient(ellipse 120% 160% at 50% 105%, rgba(238,255,0,0.22) 0%, rgba(238,255,0,0.08) 40%, transparent 75%), "+T.card,border:"1px solid "+T.border,borderRadius:isWallet?"14px 14px 24px 24px":T.r,boxShadow:isWallet?"0 32px 80px rgba(0,0,0,0.7)":"0 32px 80px rgba(0,0,0,0.7), inset 0 -20px 60px rgba(238,255,0,0.04)",overflow:"hidden"}}>
           {isWallet&&<WalletView onSelect={handleSelect} streams={streams}/>}
           {view==="setup"&&asset&&<SetupView assetId={sel} existing={streams[sel]} onBack={()=>{setSel(null);setView("wallet")}} onActivate={handleActivate}/>}
           {view==="active"&&asset&&streams[sel]&&<ActiveView stream={streams[sel]} onBack={()=>{setSel(null);setView("wallet")}} onDeactivate={handleDeactivate} onAdjust={()=>setView("setup")}/>}
