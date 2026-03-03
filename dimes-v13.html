@@ -182,7 +182,7 @@
   .chrome-dot.red{background:rgba(255,255,255,.2)}.chrome-dot.yel{background:rgba(255,255,255,.13)}.chrome-dot.grn{background:rgba(255,255,255,.08)}
   .chrome-url{flex:1;margin:0 16px;padding:7px 450px 7px 16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.04);border-radius:100px;font-size:12px;color:rgba(255,255,255,.3);display:flex;align-items:center;justify-content:flex-end;gap:6px}
   .chrome-extensions{display:flex;align-items:center;gap:6px;border-radius:5px}
-  .ext-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.04);cursor:default;font-size:11px;color:var(--text-muted);transition:all .3s}
+  .ext-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.04);cursor:default;font-size:11px;color:var(--text-muted);transition:all .3s;box-shadow:0 4px 20px rgba(0,0,0,.6)}
   .ext-icon.dimes-ext{background:rgba(255,255,255,.03);color:var(--text-muted);border:1px solid rgba(255,255,255,.04)}
 
   /* Terminal body */
@@ -205,7 +205,7 @@
   .profile-skel{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;overflow:hidden}
   .profile-skel svg{width:16px;height:16px;opacity:.25}
 
-  .firepower-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;background:rgba(238,255,0,.06);color:var(--yellow);border:1px solid rgba(238,255,0,.12);position:relative;cursor:default}
+  .firepower-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;background:rgba(238,255,0,.06);color:var(--yellow);border:1px solid rgba(238,255,0,.12);position:relative;cursor:default;box-shadow:0 4px 20px rgba(0,0,0,.6)}
   .firepower-icon svg{width:14px;height:14px}
 
   /* Candidate row */
@@ -685,7 +685,6 @@ function zoomToTarget(key) {
   terminalEl.classList.remove('zoomed-stream', 'zoomed-firepower', 'zoomed-multiply');
   terminalEl.style.transform = `scale(${cfg.scale}) translate(${cfg.tx}, ${cfg.ty})`;
   terminalEl.classList.add(`zoomed-${key}`);
-  productsEl.classList.add('zoomed');
 }
 
 function selectProduct(key) {
@@ -707,14 +706,16 @@ function selectProduct(key) {
     desc.textContent = isActive ? p.desc : '';
   });
 
-  /* Firepower: show interactive popup, dim terminal, skip zoom */
+  /* Fade out unselected tabs */
+  tabGroups.forEach(g => { g.style.transition = 'opacity .5s ease'; g.style.opacity = g.dataset.for === key ? '1' : '.2'; });
+
+  /* Firepower: dim terminal, show interactive popup, skip zoom */
   if (key === 'firepower') {
+    terminalEl.style.opacity = '.25';
     fpPreview.classList.remove('active');
-    /* Center popup visually (origin stays top-right, scale .9) */
     const pRect = productsSection.getBoundingClientRect();
     const tRect = terminalEl.getBoundingClientRect();
     const h = fpPreview.offsetHeight || 548;
-    /* With origin top-right + scale(.9): rendered center-x = left+480 - 216, rendered center-y = top + h*.45 */
     const centeredLeft = pRect.width / 2 - 264;
     const centeredTop = pRect.height / 2 - h * 0.45;
     const termTop = tRect.top - pRect.top;
@@ -722,13 +723,11 @@ function selectProduct(key) {
     fpPreview.style.top = Math.max(centeredTop, termTop) + 'px';
     fpPreview.style.left = Math.min(centeredLeft, termRight - 480) + 'px';
     fpPreview.classList.add('selected');
-    terminalEl.style.opacity = '.25';
   } else {
     zoomToTarget(key);
   }
 
   highlightProduct(key);
-  pageOverlay.classList.add('active');
   processHands.forEach(h => h.classList.add('fade-out'));
 
   /* Animate leverage slider to 8x when selecting Multiply */
@@ -742,11 +741,10 @@ function resetProduct() {
   fpPreview.classList.remove('active');
   positionFpPreview();
   terminalEl.style.opacity = '';
+  tabGroups.forEach(g => { g.style.opacity = ''; });
   unhighlightProduct();
   terminalEl.style.transform = 'scale(.85)';
   terminalEl.classList.remove('zoomed-stream', 'zoomed-firepower', 'zoomed-multiply');
-  productsEl.classList.remove('zoomed');
-  pageOverlay.classList.remove('active');
   processHands.forEach(h => h.classList.remove('fade-out'));
   if (wasMultiply) animateLeverage(2, 600);
   tabs.forEach(t => t.classList.remove('active'));
