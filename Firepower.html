@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
-  body{background:radial-gradient(ellipse at 50% 100%,rgba(238,255,0,0.06) 0%,rgba(238,255,0,0.02) 25%,transparent 55%) no-repeat,#0a0a0a;min-height:100vh;font-family:'Bai Jamjuree',sans-serif}
+  body{background:transparent;min-height:100vh;font-family:'Bai Jamjuree',sans-serif}
   ::-webkit-scrollbar{display:none}
   @keyframes popIn{from{opacity:0;transform:translate(-50%,-48%) scale(0.97)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
   @keyframes fadeIn{from{opacity:0}to{opacity:1}}
@@ -55,7 +55,7 @@ function fmtCost(n){
 function App(){
   // Render popup directly centered on a dark bg
   return(
-    <div style={{minHeight:"100vh",background:"#0a0a0a",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"'Bai Jamjuree',sans-serif"}}>
+    <div style={{minHeight:"100vh",background:"transparent",display:"flex",alignItems:"flex-start",justifyContent:"center",fontFamily:"'Bai Jamjuree',sans-serif"}}>
       <Popup/>
     </div>
   );
@@ -73,6 +73,13 @@ function Popup(){
   const[hoveredSym,setHoveredSym]=useState(null);
   const durs=[{l:"1D",d:1},{l:"7D",d:7},{l:"14D",d:14},{l:"30D",d:30}];
   const isCross=mode==="cross";
+  const popupRef=useRef(null);
+  useEffect(()=>{
+    if(!popupRef.current)return;
+    const ro=new ResizeObserver(([e])=>{window.parent.postMessage({type:'fp-height',h:e.borderBoxSize[0].blockSize},'*')});
+    ro.observe(popupRef.current);
+    return()=>ro.disconnect();
+  },[]);
 
   const calc=useMemo(()=>{
     let coll=0,maxBorrow=0;
@@ -132,12 +139,12 @@ function Popup(){
   const ltvStyle={width:isCross?0:C.ltv,marginLeft:isCross?0:C.ltvMl,opacity:isCross?0:1,overflow:"hidden",transition:"width 0.3s ease, margin-left 0.3s ease, opacity 0.3s ease"};
 
   return(
-    <div style={{
+    <div ref={popupRef} style={{
       width:480,position:"relative",overflow:"hidden",
       background:"radial-gradient(ellipse 120% 160% at 50% 105%, rgba(238,255,0,0.22) 0%, rgba(238,255,0,0.08) 40%, transparent 75%), #0e0e0e",
       border:"1px solid rgba(255,255,255,0.06)",
       borderRadius:14,fontFamily:"'Bai Jamjuree',sans-serif",
-      boxShadow:"0 32px 80px rgba(0,0,0,0.7), inset 0 -20px 60px rgba(238,255,0,0.04)",
+      boxShadow:"inset 0 -20px 60px rgba(238,255,0,0.04)",
     }}>
       {/* Bottom edge glow line */}
       <div style={{position:"absolute",bottom:0,left:0,right:0,height:1,background:"linear-gradient(to right, transparent 2%, rgba(238,255,0,0.3) 15%, rgba(238,255,0,0.3) 85%, transparent 98%)",pointerEvents:"none"}}/>
