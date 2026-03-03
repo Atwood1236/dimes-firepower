@@ -382,31 +382,31 @@ function SetupView({assetId,existing,onBack,onActivate}){
         </div>
 
         {showDetails&&(
-          <div style={{marginBottom:14,animation:"fadeIn 0.2s ease",transformOrigin:"top"}}>
+          <div style={{marginTop:16,marginBottom:6,animation:"fadeIn 0.2s ease",transformOrigin:"top"}}>
             {/* band */}
-            <div style={{display:"flex",justifyContent:"space-between",padding:"4px 0",marginBottom:4}}>
-              <span style={{fontSize:12,color:T.dim}}>Target % of ECV</span>
-              <span style={{fontSize:12,color:T.sub}}>{Math.round(targetPct)}%</span>
-            </div>
-            <div style={{display:"flex",justifyContent:"space-between",padding:"4px 0",marginBottom:4}}>
-              <span style={{fontSize:12,color:T.dim}}>Adaptive band</span>
-              <span style={{fontSize:12,color:T.sub}}>{bandLow}% – {bandHigh}%</span>
-            </div>
-            <div style={{display:"flex",justifyContent:"space-between",padding:"4px 0",marginBottom:8}}>
-              <span style={{fontSize:12,color:T.dim}}>ECV</span>
-              <span style={{fontSize:12,color:T.sub}}>{fmt(ECV)}</span>
-            </div>
+            {[
+              ["Target % of ECV",Math.round(targetPct)+"%"],
+              ["Adaptive band",bandLow+"% – "+bandHigh+"%"],
+              ["ECV",fmt(ECV)],
+            ].map(([k,v])=>(
+              <div key={k} style={{display:"flex",alignItems:"baseline",padding:"2px 0"}}>
+                <span style={{fontSize:12,color:T.dim,flexShrink:0}}>{k}</span>
+                <div style={{flex:1,borderBottom:"1px dotted rgba(255,255,255,0.1)",margin:"0 8px",minWidth:12,alignSelf:"baseline",position:"relative",top:-3}}/>
+                <span style={{fontSize:12,color:T.sub,flexShrink:0}}>{v}</span>
+              </div>
+            ))}
+            <div style={{marginBottom:4}}/>
             {/* haircuts */}
-            <div style={{fontSize:12,color:T.faint,marginBottom:4}}>Collateral haircuts</div>
+            <div style={{fontSize:12,color:T.faint,marginTop:10,marginBottom:4}}>Collateral haircuts</div>
             {TOKENS.map(t=>(
               <div key={t.id} style={{display:"flex",alignItems:"center",padding:"3px 0"}}>
                 <TokenIcon color={t.color} sym={t.sym} size={11}/>
-                <span style={{fontSize:12,color:T.dim,marginLeft:4,flex:1}}>{t.sym}</span>
-                <span style={{fontSize:12,color:T.dim,width:24,textAlign:"right"}}>{Math.round(t.hc*100)}%</span>
-                <span style={{fontSize:12,color:T.sub,width:48,textAlign:"right"}}>{fmt(t.price*t.qty*t.hc)}</span>
+                <span style={{fontSize:12,color:T.dim,marginLeft:4,flexShrink:0}}>{t.sym}</span>
+                <div style={{flex:1,borderBottom:"1px dotted rgba(255,255,255,0.1)",margin:"0 8px",minWidth:12}}/>
+                <span style={{fontSize:12,color:T.dim,flexShrink:0,minWidth:30,textAlign:"right"}}>{Math.round(t.hc*100)}%</span>
+                <span style={{fontSize:12,color:T.sub,flexShrink:0,minWidth:52,textAlign:"right",marginLeft:8}}>{fmt(t.price*t.qty*t.hc)}</span>
               </div>
             ))}
-            <Divider m={8}/>
           </div>
         )}
 
