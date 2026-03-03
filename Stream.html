@@ -25,6 +25,10 @@
   body.selected{background:#0a0a0a}
   body.selected>#root>div{background:#0a0a0a !important}
   body.selected .wallet-mode{background:#141414 !important;border-radius:14px 14px 24px 24px !important;border:1px solid rgba(255,255,255,.1) !important;box-shadow:0 32px 80px rgba(0,0,0,.7) !important}
+  body.selected .stream-card .token-btn{animation:token-glow 2.5s ease-in-out infinite}
+  body.selected .stream-card .token-btn:nth-child(2){animation-delay:.3s}
+  body.selected .stream-card .token-btn:nth-child(3){animation-delay:.6s}
+  @keyframes token-glow{0%,100%{border-color:rgba(255,255,255,.06);box-shadow:none}50%{border-color:rgba(238,255,0,.2);box-shadow:0 0 12px rgba(238,255,0,.06)}}
 </style>
 <script>window.addEventListener('message',e=>{if(e.data&&e.data.type==='stream-mode')document.body.classList.toggle('selected',e.data.mode==='selected')});</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
@@ -250,7 +254,7 @@ function WalletView({onSelect,streams}){
 function StreamCard({onSelect,streams}){
   const hasActive=Object.keys(streams).length>0;
   return(
-    <div style={{position:"relative",zIndex:1,background:"var(--glow), "+T.card,border:"1px solid "+T.border,borderRadius:T.r,boxShadow:"0 24px 60px rgba(0,0,0,0.6), 0 4px 20px rgba(0,0,0,0.4), inset 0 -20px 60px rgba(238,255,0,0.04)",overflow:"hidden"}}>
+    <div className="stream-card" style={{position:"relative",zIndex:1,background:"var(--glow), "+T.card,border:"1px solid "+T.border,borderRadius:T.r,boxShadow:"0 24px 60px rgba(0,0,0,0.6), 0 4px 20px rgba(0,0,0,0.4), inset 0 -20px 60px rgba(238,255,0,0.04)",overflow:"hidden"}}>
       <div style={{padding:"14px 20px 18px"}}>
         <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:3}}>
           <span style={{fontSize:15,fontWeight:600,color:T.text}}>Stream</span>
@@ -261,7 +265,7 @@ function StreamCard({onSelect,streams}){
           {STREAM_ASSETS.map(a=>{
             const active=streams[a.id];
             return(
-              <button key={a.id} onClick={()=>onSelect(a.id)}
+              <button key={a.id} className="token-btn" onClick={()=>onSelect(a.id)}
                 style={{flex:1,padding:"10px 0 9px",background:active?"rgba(238,255,0,0.03)":T.surfHover,border:"1px solid "+(active?"rgba(238,255,0,0.12)":T.borderLight),borderRadius:8,cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:5,transition:"all 0.12s"}}
                 onMouseEnter={e=>{e.currentTarget.style.background=active?"rgba(238,255,0,0.07)":"rgba(255,255,255,0.09)";e.currentTarget.style.borderColor=active?"rgba(238,255,0,0.22)":"rgba(255,255,255,0.2)"}}
                 onMouseLeave={e=>{e.currentTarget.style.background=active?"rgba(238,255,0,0.03)":T.surfHover;e.currentTarget.style.borderColor=active?"rgba(238,255,0,0.12)":T.borderLight}}>
