@@ -163,6 +163,12 @@
   .firepower-preview.selected::after{animation:none;background:transparent}
   @keyframes fp-bg-pulse{0%,100%{background:rgba(238,255,0,0)}50%{background:rgba(238,255,0,.04)}}
 
+  /* Stream hover preview */
+  .stream-preview{position:absolute;width:380px;height:500px;top:0;left:0;transform:scale(.5) translateY(18px);transform-origin:top right;border:none;border-radius:0 0 24px 24px;z-index:52;opacity:0;pointer-events:none;transition:opacity .5s ease,transform 1.2s cubic-bezier(.4,0,.2,1),top 1.2s cubic-bezier(.4,0,.2,1),left 1.2s cubic-bezier(.4,0,.2,1);background:transparent;box-shadow:none;overflow:hidden}
+  .stream-iframe{width:100%;height:100%;border:none;border-radius:0;background:transparent}
+  .stream-preview.active{opacity:1;transform:scale(.5) translateY(0);transition:opacity .4s ease,transform .5s cubic-bezier(.16,1,.3,1)}
+  .stream-preview.selected{opacity:1;transform:scale(.9);pointer-events:auto}
+
   /* Scene layout — terminal + side tabs in a row */
   .terminal-scene{position:relative;z-index:1;overflow:visible;padding:80px 0 140px;margin:-80px 0 -140px;min-height:560px;display:flex;align-items:flex-start;justify-content:flex-end;gap:0;mask-image:linear-gradient(to right, transparent 0%, black 15%),linear-gradient(to bottom, transparent 0%, black 10%, black 85%, transparent 100%);-webkit-mask-image:linear-gradient(to right, transparent 0%, black 15%),linear-gradient(to bottom, transparent 0%, black 10%, black 85%, transparent 100%);mask-composite:intersect;-webkit-mask-composite:source-in}
 
@@ -605,6 +611,7 @@
 
   </div>
   <div class="firepower-preview" id="firepowerPreview"><iframe class="fp-iframe" src="Firepower.html" loading="lazy"></iframe></div>
+  <div class="stream-preview" id="streamPreview"><iframe class="stream-iframe" src="Stream.html" loading="lazy"></iframe></div>
 </section>
 
 <section class="why">
@@ -697,6 +704,8 @@ function selectProduct(key) {
 
   fpPreview.classList.remove('active');
   fpPreview.classList.remove('selected');
+  streamPreview.classList.remove('active');
+  streamPreview.classList.remove('selected');
 
   activeProduct = key;
   hideIdleRings();
@@ -728,6 +737,19 @@ function selectProduct(key) {
     fpPreview.style.top = Math.max(centeredTop, termTop) + 'px';
     fpPreview.style.left = Math.min(centeredLeft, termRight - 480) + 'px';
     fpPreview.classList.add('selected');
+  } else if (key === 'stream') {
+    terminalEl.style.opacity = '.25';
+    streamPreview.classList.remove('active');
+    const pRect = productsSection.getBoundingClientRect();
+    const tRect = terminalEl.getBoundingClientRect();
+    const h = streamPreview.offsetHeight || 500;
+    const centeredLeft = pRect.width / 2 - 214;
+    const centeredTop = pRect.height / 2 - h * 0.45;
+    const termTop = tRect.top - pRect.top;
+    const termRight = tRect.right - pRect.left;
+    streamPreview.style.top = Math.max(centeredTop, termTop) + 'px';
+    streamPreview.style.left = Math.min(centeredLeft, termRight - 380) + 'px';
+    streamPreview.classList.add('selected');
   } else {
     zoomToTarget(key);
   }
@@ -745,6 +767,9 @@ function resetProduct() {
   fpPreview.classList.remove('selected');
   fpPreview.classList.remove('active');
   positionFpPreview();
+  streamPreview.classList.remove('selected');
+  streamPreview.classList.remove('active');
+  positionStreamPreview();
   terminalEl.style.opacity = '';
   tabGroups.forEach(g => { g.style.opacity = ''; });
   unhighlightProduct();
@@ -773,6 +798,8 @@ function unhighlightProduct() {
 
 const fpPreview = document.getElementById('firepowerPreview');
 const fpIcon = document.getElementById('firepowerIcon');
+const streamPreview = document.getElementById('streamPreview');
+const streamIcon = document.getElementById('extStream');
 const productsSection = document.querySelector('.products');
 
 function positionFpPreview() {
@@ -785,10 +812,24 @@ function positionFpPreview() {
   fpPreview.style.left = (anchorX - 480 - gap) + 'px';
 }
 positionFpPreview();
-window.addEventListener('resize', () => positionFpPreview());
+
+function positionStreamPreview() {
+  const chromeBar = document.querySelector('.terminal-chrome');
+  const chromeRect = chromeBar.getBoundingClientRect();
+  const iconRect = streamIcon.getBoundingClientRect();
+  const parentRect = productsSection.getBoundingClientRect();
+  const anchorRight = iconRect.right - parentRect.left;
+  const anchorY = chromeRect.bottom - parentRect.top;
+  streamPreview.style.top = anchorY + 'px';
+  streamPreview.style.left = (anchorRight - 380) + 'px';
+}
+positionStreamPreview();
+
+window.addEventListener('resize', () => { positionFpPreview(); positionStreamPreview(); });
 
 window.addEventListener('message', e => {
   if (e.data && e.data.type === 'fp-height') fpPreview.style.height = e.data.h + 'px';
+  if (e.data && e.data.type === 'stream-height') streamPreview.style.height = e.data.h + 'px';
 });
 
 function hoverProduct(key) {
@@ -801,8 +842,14 @@ function hoverProduct(key) {
     if (key === 'firepower') {
       positionFpPreview();
       fpPreview.classList.add('active');
+      streamPreview.classList.remove('active');
+    } else if (key === 'stream') {
+      positionStreamPreview();
+      streamPreview.classList.add('active');
+      fpPreview.classList.remove('active');
     } else {
       fpPreview.classList.remove('active');
+      streamPreview.classList.remove('active');
     }
   }
 }
@@ -811,6 +858,7 @@ function unhoverProduct() {
   if (!activeProduct) {
     unhighlightProduct();
     fpPreview.classList.remove('active');
+    streamPreview.classList.remove('active');
     showIdleRings();
     terminalEl.classList.remove('dimmed');
     hlEls.forEach(el => el.classList.remove('hl-active'));

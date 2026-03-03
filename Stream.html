@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dimes Stream v3</title>
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--a:238,255,0;--w:255,255,255;--glow:radial-gradient(ellipse 120% 160% at 50% 105%,rgba(var(--a),0.22) 0%,rgba(var(--a),0.08) 40%,transparent 75%);--bottomLine:linear-gradient(to right,transparent 2%,rgba(var(--a),0.3) 15%,rgba(var(--a),0.3) 85%,transparent 98%)}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#000000;font-family:'Bai Jamjuree',sans-serif}
+  button{font-family:inherit}
+  ::-webkit-scrollbar{display:none}
+  .scrollable::-webkit-scrollbar{display:block;width:4px}
+  .scrollable::-webkit-scrollbar-track{background:transparent}
+  .scrollable::-webkit-scrollbar-thumb{background:rgba(var(--w),0.15);border-radius:2px}
+  .scrollable::-webkit-scrollbar-thumb:hover{background:rgba(var(--w),0.25)}
+  .scrollable{scrollbar-width:thin;scrollbar-color:rgba(var(--w),0.15) transparent}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  @keyframes slideRight{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:translateX(0)}}
+  @keyframes pulse{0%,100%{opacity:0.85}50%{opacity:0.3}}
+  @keyframes dotFlow{0%{opacity:0.12}30%{opacity:0.85}60%{opacity:0.12}100%{opacity:0.12}}
+  @keyframes glowPulse{0%{box-shadow:0 0 0 0 rgba(34,197,94,0.3)}70%{box-shadow:0 0 20px 10px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+  @keyframes countUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const{useState,useRef,useCallback,useEffect,useMemo}=React;
+const T={
+  bg:"#000000",card:"#141414",
+  border:"rgba(255,255,255,0.06)",borderMed:"rgba(255,255,255,0.08)",borderLight:"rgba(255,255,255,0.12)",
+  surface:"rgba(255,255,255,0.03)",surfHover:"rgba(255,255,255,0.05)",
+  text:"#e8e8e8",sub:"#888",dim:"#999",muted:"#888",faint:"#777",
+  accent:"#EEFF00",green:"#22c55e",red:"#ef4444",amber:"#f59e0b",
+  r:14,
+};
+const TOKENS=[
+  {id:"sol", sym:"SOL",  color:"#9945FF", price:132.10, qty:312.4,  hc:0.85},
+  {id:"btc", sym:"BTC",  color:"#F7931A", price:82000,  qty:0.082,  hc:0.92},
+  {id:"eth", sym:"ETH",  color:"#627EEA", price:3400,   qty:1.24,   hc:0.88},
+  {id:"jto", sym:"JTO",  color:"#58c4c5", price:3.20,   qty:1850,   hc:0.72},
+  {id:"jlp", sym:"JLP",  color:"#14F195", price:2.868,  qty:4200,   hc:0.65},
+  {id:"pump",sym:"PUMP", color:"#ff6b9d", price:0.0087, qty:280000, hc:0.35},
+];
+const STREAM_ASSETS=[
+  {id:"btc",sym:"BTC",color:"#F7931A",price:82000},
+  {id:"eth",sym:"ETH",color:"#627EEA",price:3400},
+  {id:"sol",sym:"SOL",color:"#9945FF",price:132.10},
+];
+const ECV=TOKENS.reduce((s,t)=>s+t.price*t.qty*t.hc,0);
+const TOTAL_PORT=TOKENS.reduce((s,t)=>s+t.price*t.qty,0);
+const COST_ANNUAL_PCT=1.66;
+const COST_BPS_WK=3.2;
+const BACKTEST={btc:18.4,eth:12.1,sol:24.7};
+function genSparkline(target){
+  const pts=[];let v=target;
+  for(let i=0;i<28;i++){v=v+(Math.random()-0.48)*1.8;v=Math.max(target-6,Math.min(target+6,v));pts.push(v);}
+  return pts;
+}
+function fmt(n){if(n>=1e6)return"$"+(n/1e6).toFixed(2)+"M";if(n>=1e3)return"$"+(n/1e3).toFixed(1)+"k";return"$"+n.toFixed(2)}
+function fmtQty(n,id){if(id==="btc")return n.toFixed(4);if(id==="eth")return n.toFixed(3);if(n>=1e5)return(n/1e3).toFixed(1)+"k";if(n>=100)return n.toFixed(1);return n.toFixed(2)}
+function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v))}
+const SOL_ICON="sol-icon.png";
+const BTC_ICON="btc-icon.png";
+const ETH_ICON="eth-icon.png";
+const PUMP_ICON="pump-icon.png";
+const JLP_ICON="jlp-icon.png";
+const JTO_ICON="jto-icon.png";
+
+const TOKEN_ICONS={SOL:SOL_ICON,BTC:BTC_ICON,ETH:ETH_ICON,JTO:JTO_ICON,JLP:JLP_ICON,PUMP:PUMP_ICON};
+
+function TokenIcon({color,sym,size=20}){
+  const icon=TOKEN_ICONS[sym];
+  if(icon) return <div style={{width:size,height:size,borderRadius:"50%",overflow:"hidden",flexShrink:0}}><img src={icon} style={{width:"100%",height:"100%",display:"block",objectFit:"cover"}} alt={sym}/></div>;
+  return <div style={{width:size,height:size,borderRadius:"50%",background:color,display:"flex",alignItems:"center",justifyContent:"center",fontSize:size*0.36,fontWeight:700,color:"#fff",flexShrink:0,lineHeight:1}}>{sym.charAt(0)}</div>;
+}
+
+function BackBtn({onClick}){
+  return <button onClick={onClick} style={{width:26,height:26,borderRadius:6,border:"1px solid "+T.borderLight,background:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}><svg width="10" height="10" viewBox="0 0 10 10"><path d="M6 2L3 5L6 8" stroke="#888" strokeWidth="1.2" fill="none" strokeLinecap="round"/></svg></button>;
+}
+
+function FlowDots({color=T.accent,size=3}){
+  return <div style={{display:"flex",gap:2,alignItems:"center"}}>{[0,1,2].map(i=><div key={i} style={{width:size,height:size,borderRadius:"50%",background:color,animation:`dotFlow 1.4s ease-in-out ${i*0.25}s infinite`}}/>)}</div>;
+}
+
+function Slider({value,onChange,min,max,accent=false,style,onDragChange}){
+  const ref=useRef(null);
+  const[drag,setDrag]=useState(false);
+  const pct=((value-min)/(max-min))*100;
+  const update=useCallback(e=>{const r=ref.current?.getBoundingClientRect();if(!r)return;onChange(Math.round(clamp(((e.clientX-r.left)/r.width)*(max-min)+min,min,max)))},[onChange,min,max]);
+  const onMove=useCallback(e=>{if(drag)update(e)},[drag,update]);
+  const startDrag=()=>{setDrag(true);onDragChange&&onDragChange(true)};
+  const endDrag=()=>{setDrag(false);onDragChange&&onDragChange(false)};
+  return(
+    <div style={{...style,position:"relative",height:36,display:"flex",alignItems:"center",cursor:"pointer"}} ref={ref}
+      onMouseDown={e=>{startDrag();update(e)}} onMouseMove={onMove} onMouseUp={endDrag} onMouseLeave={endDrag}>
+      <div style={{position:"absolute",left:0,right:0,height:2,borderRadius:1,background:T.border}}>
+        <div style={{height:"100%",width:pct+"%",borderRadius:1,background:accent?"linear-gradient(to right, transparent, rgba(238,255,0,0.4))":"linear-gradient(to right, transparent, rgba(255,255,255,0.35))",transition:drag?"none":"width 0.05s"}}/>
+      </div>
+      <div style={{position:"absolute",left:`calc(${pct}% - 5px)`,width:10,height:10,borderRadius:"50%",background:accent?T.accent:"#e8e8e8",boxShadow:"0 0 6px "+(accent?"rgba(238,255,0,0.2)":"rgba(255,255,255,0.08)"),pointerEvents:"none",transition:drag?"none":"left 0.05s"}}/>
+    </div>
+  );
+}
+
+/* Sparkline with draw-on animation & hover tooltip */
+function Sparkline({data,width=310,height=64,color=T.accent,animate=false,onHover}){
+  const mn=Math.min(...data),mx=Math.max(...data);
+  const range=mx-mn||1;
+  const[hoverIdx,setHoverIdx]=useState(null);
+  const[drawn,setDrawn]=useState(!animate);
+  const svgRef=useRef(null);
+
+  useEffect(()=>{
+    if(animate){
+      const t=setTimeout(()=>setDrawn(true),50);
+      return()=>clearTimeout(t);
+    }
+  },[animate]);
+
+  const pts=data.map((v,i)=>{
+    const x=(i/(data.length-1))*width;
+    const y=height-((v-mn)/range)*height;
+    return{x,y,val:v};
+  });
+  const polyPts=pts.map(p=>`${p.x},${p.y}`).join(" ");
+  const areaPath=`M0,${height} ${pts.map(p=>`L${p.x},${p.y}`).join(" ")} L${width},${height} Z`;
+
+  const handleMove=e=>{
+    const r=svgRef.current?.getBoundingClientRect();
+    if(!r)return;
+    const rx=e.clientX-r.left;
+    const frac=rx/r.width;
+    const idx=Math.round(frac*(data.length-1));
+    if(idx>=0&&idx<data.length){setHoverIdx(idx);onHover&&onHover(idx);}
+  };
+  const handleLeave=()=>{setHoverIdx(null);onHover&&onHover(null);};
+
+  const hp=hoverIdx!==null?pts[hoverIdx]:null;
+
+  /* approximate path length for dash animation */
+  const pathLen=1200;
+
+  return(
+    <svg ref={svgRef} width={width} height={height} style={{display:"block",width:"100%",cursor:"crosshair"}} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none"
+      onMouseMove={handleMove} onMouseLeave={handleLeave}>
+      <defs>
+        <linearGradient id="spkFill" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={color} stopOpacity="0.12"/>
+          <stop offset="100%" stopColor={color} stopOpacity="0.01"/>
+        </linearGradient>
+      </defs>
+      <path d={areaPath} fill="url(#spkFill)" style={{opacity:drawn?1:0,transition:"opacity 0.8s ease 0.6s"}}/>
+      <polyline points={polyPts} fill="none" stroke={color} strokeWidth="1.5" strokeLinejoin="round" strokeLinecap="round" vectorEffect="non-scaling-stroke"
+        style={animate?{strokeDasharray:pathLen,strokeDashoffset:drawn?0:pathLen,transition:"stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1)"}:{}}/>
+      {hp&&<>
+        <line x1={hp.x} y1={0} x2={hp.x} y2={height} stroke="rgba(255,255,255,0.1)" strokeWidth="1" vectorEffect="non-scaling-stroke"/>
+        <circle cx={hp.x} cy={hp.y} r="3" fill={color} style={{filter:"drop-shadow(0 0 4px rgba(238,255,0,0.4))"}}/>
+      </>}
+    </svg>
+  );
+}
+
+/* Hover tooltip overlay for sparkline */
+function SparkTooltip({data,hoverIdx,width}){
+  if(hoverIdx===null)return null;
+  const val=data[hoverIdx];
+  const dayAgo=data.length-1-hoverIdx;
+  const x=(hoverIdx/(data.length-1))*100;
+  return(
+    <div style={{position:"absolute",left:x+"%",top:-24,transform:"translateX(-50%)",background:"rgba(20,20,20,0.95)",border:"1px solid "+T.borderLight,borderRadius:5,padding:"3px 7px",pointerEvents:"none",whiteSpace:"nowrap",zIndex:10}}>
+      <span style={{fontSize:10,color:T.accent,fontWeight:500}}>{Math.round(val)}%</span>
+      <span style={{fontSize:10,color:T.dim,marginLeft:4}}>{dayAgo===0?"now":dayAgo+"d ago"}</span>
+    </div>
+  );
+}
+
+/* ======= VIEW 1 - WALLET ======= */
+function WalletView({onSelect,streams}){
+  const streamingTotal=Object.values(streams).reduce((s,st)=>s+(st?.exposure||0),0);
+  const hasStreams=streamingTotal>0;
+  return(
+    <div style={{animation:"fadeIn 0.25s ease"}}>
+      <div style={{padding:"18px 20px 0",display:"flex",alignItems:"center",justifyContent:"space-between",opacity:0.3}}>
+        <div style={{display:"flex",alignItems:"center",gap:8}}>
+          <div style={{width:22,height:22,borderRadius:5,background:T.border,display:"flex",alignItems:"center",justifyContent:"center"}}><span style={{fontSize:11,fontWeight:700,color:T.accent}}>D</span></div>
+          <span style={{fontSize:13,fontWeight:500,color:T.text}}>dimes</span>
+        </div>
+        <div style={{display:"flex",gap:3}}>{[0,1,2].map(i=><div key={i} style={{width:3,height:3,borderRadius:"50%",background:T.muted}}/>)}</div>
+      </div>
+      <div style={{padding:"22px 20px 6px",textAlign:"center",opacity:0.3}}>
+        <div style={{fontSize:36,fontWeight:600,color:T.text,letterSpacing:"-0.5px"}}>{fmt(TOTAL_PORT)}</div>
+        <div style={{fontSize:11,color:T.dim,fontWeight:100,opacity:0.6,marginTop:-2}}>Portfolio Value</div>
+        {hasStreams&&<div style={{fontSize:11,color:T.accent,marginTop:5,display:"flex",alignItems:"center",justifyContent:"center",gap:4}}>+{fmt(streamingTotal)} streaming<FlowDots size={2}/></div>}
+      </div>
+      <div style={{display:"flex",justifyContent:"center",gap:6,padding:"14px 20px 14px"}}>
+        {["Send","Receive","Swap","Bridge"].map(a=>(
+          <div key={a} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4,cursor:"default"}}>
+            <div style={{padding:"10px 14px",borderRadius:8,background:T.surfHover}}>
+              <span style={{fontSize:11,color:T.dim,fontWeight:300}}>{a==="Send"?"\u2191":a==="Receive"?"\u2193":a==="Swap"?"\u21c4":"\u22c8"}</span>
+            </div>
+            <span style={{fontSize:11,color:T.dim,fontWeight:300,opacity:0.5}}>{a}</span>
+          </div>
+        ))}
+      </div>
+      <div style={{padding:"12px 20px 16px",opacity:0.3}}>
+        <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}>
+          <span style={{fontSize:13,color:T.faint}}>Tokens</span>
+          <div style={{flex:1,height:1,background:T.border}}/>
+        </div>
+        {TOKENS.map((t,idx)=>{
+          const val=t.price*t.qty;
+          const active=streams[t.id];
+          return(
+            <div key={t.id} style={{padding:"7px 0",borderBottom:idx<TOKENS.length-1?"1px solid "+T.border:"none"}}>
+              <div style={{display:"flex",alignItems:"center"}}>
+                <TokenIcon color={t.color} sym={t.sym} size={24}/>
+                <div style={{marginLeft:8,flex:1}}>
+                  <div style={{fontSize:14,fontWeight:500,color:T.text}}>{t.sym}</div>
+                </div>
+                <div style={{textAlign:"right"}}>
+                  <div style={{fontSize:15,fontWeight:500,color:T.text}}>{fmt(val)}</div>
+                  <div style={{fontSize:12,color:T.dim,fontWeight:300}}>{fmtQty(t.qty,t.id)}</div>
+                </div>
+              </div>
+              {active&&(
+                <div style={{display:"flex",alignItems:"center",justifyContent:"flex-end",marginTop:3,gap:4}}>
+                  <div style={{width:4,height:4,borderRadius:"50%",background:T.green,animation:"pulse 2s infinite"}}/>
+                  <span style={{fontSize:11,color:T.accent}}>+{fmt(active.exposure)} streaming</span>
+                  <FlowDots size={2}/>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ======= STREAM CARD ======= */
+function StreamCard({onSelect,streams}){
+  const hasActive=Object.keys(streams).length>0;
+  return(
+    <div style={{position:"relative",zIndex:1,background:"var(--glow), "+T.card,border:"1px solid "+T.border,borderRadius:T.r,boxShadow:"0 24px 60px rgba(0,0,0,0.6), 0 4px 20px rgba(0,0,0,0.4), inset 0 -20px 60px rgba(238,255,0,0.04)",overflow:"hidden"}}>
+      <div style={{padding:"14px 20px 18px"}}>
+        <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:3}}>
+          <span style={{fontSize:15,fontWeight:600,color:T.text}}>Stream</span>
+          {hasActive&&<FlowDots/>}
+        </div>
+        <div style={{fontSize:11,color:T.muted,fontWeight:100,opacity:0.85,marginBottom:10}}>Want more of an asset? Stream it on top of what you hold.</div>
+        <div style={{display:"flex",gap:6}}>
+          {STREAM_ASSETS.map(a=>{
+            const active=streams[a.id];
+            return(
+              <button key={a.id} onClick={()=>onSelect(a.id)}
+                style={{flex:1,padding:"10px 0 9px",background:active?"rgba(238,255,0,0.03)":T.surfHover,border:"1px solid "+(active?"rgba(238,255,0,0.12)":T.borderLight),borderRadius:8,cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:5,transition:"all 0.12s"}}
+                onMouseEnter={e=>{e.currentTarget.style.background=active?"rgba(238,255,0,0.07)":"rgba(255,255,255,0.09)";e.currentTarget.style.borderColor=active?"rgba(238,255,0,0.22)":"rgba(255,255,255,0.2)"}}
+                onMouseLeave={e=>{e.currentTarget.style.background=active?"rgba(238,255,0,0.03)":T.surfHover;e.currentTarget.style.borderColor=active?"rgba(238,255,0,0.12)":T.borderLight}}>
+                <TokenIcon color={a.color} sym={a.sym} size={22}/>
+                <div style={{textAlign:"center"}}>
+                  <div style={{fontSize:12,fontWeight:500,color:T.text}}>{a.sym}</div>
+                  {active
+                    ?<div style={{fontSize:11,color:T.accent,marginTop:1,display:"flex",alignItems:"center",justifyContent:"center",gap:3}}><div style={{width:4,height:4,borderRadius:"50%",background:T.green,animation:"pulse 2s infinite"}}/>{fmt(active.exposure)}</div>
+                    :<div style={{fontSize:11,color:T.muted,fontWeight:300,marginTop:1}}>Stream it</div>}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+      <div style={{position:"absolute",bottom:0,left:0,right:0,height:1,background:"var(--bottomLine)",pointerEvents:"none"}}/>
+    </div>
+  );
+}
+
+/* ======= VIEW 2 - STREAM SETUP ======= */
+function SetupView({assetId,existing,onBack,onActivate}){
+  const asset=STREAM_ASSETS.find(a=>a.id===assetId);
+  const price=asset.price;
+
+  const maxExposure=Math.round(ECV*0.5);
+  const minExposure=0;
+  const step=assetId==="btc"?500:assetId==="eth"?200:100;
+  const snap=v=>Math.max(0,Math.round(v/step)*step);
+
+  const[expUSD,setExpUSD]=useState(existing?existing.exposure:snap(ECV*0.3));
+  const expQty=expUSD/price;
+  const targetPct=ECV>0?((expUSD/ECV)*100):0;
+  const portPct=TOTAL_PORT>0?((expUSD/TOTAL_PORT)*100):0;
+  const bandLow=Math.max(0,Math.round(targetPct-5));
+  const bandHigh=Math.min(60,Math.round(targetPct+5));
+  const costWk=expUSD*(COST_BPS_WK/10000);
+  const costYr=expUSD*(COST_ANNUAL_PCT/100);
+
+  const bt=BACKTEST[assetId];
+  const btGain=expUSD*(bt/100);
+
+  const[showDetails,setShowDetails]=useState(false);
+  const[sliding,setSliding]=useState(false);
+  const scrollRef=useRef(null);
+  const[scrollH,setScrollH]=useState(null);
+  const[hoveredStep,setHoveredStep]=useState(null);
+
+  const toggleDetails=()=>{
+    const next=!showDetails;
+    if(next&&scrollRef.current){
+      setScrollH(scrollRef.current.offsetHeight);
+      setShowDetails(true);
+      setTimeout(()=>{scrollRef.current?.scrollTo({top:scrollRef.current.scrollHeight,behavior:"smooth"})},80);
+    }else{
+      scrollRef.current?.scrollTo({top:0,behavior:"smooth"});
+      setTimeout(()=>{setShowDetails(false);setScrollH(null);},350);
+    }
+  };
+
+  return(
+    <div style={{animation:"slideRight 0.2s ease"}}>
+      {/* header */}
+      <div style={{padding:"14px 20px",display:"flex",alignItems:"center",gap:8,borderBottom:"1px solid "+T.surface}}>
+        <BackBtn onClick={onBack}/>
+        <span style={{fontSize:13,fontWeight:500,color:T.text}}>Stream</span>
+        <span style={{fontSize:11,color:T.dim}}>{"\u00b7"}</span>
+        <TokenIcon color={asset.color} sym={asset.sym} size={15}/>
+        <span style={{fontSize:13,fontWeight:500,color:T.text}}>{asset.sym}</span>
+      </div>
+
+      <div ref={scrollRef} className={showDetails?"scrollable":""} style={{padding:"14px 20px 0",overflowY:showDetails?"auto":"visible",height:showDetails&&scrollH?scrollH:undefined}}>
+
+        {/* hero: USD big, token amount + % small */}
+        <div style={{textAlign:"center",marginBottom:6}}>
+          <div style={{fontSize:12,color:T.faint,fontWeight:300,marginBottom:8,letterSpacing:"0.5px"}}>Unlock {asset.sym} exposure</div>
+          <div style={{fontSize:32,fontWeight:600,color:T.text,letterSpacing:"-0.5px"}}>{fmt(expUSD)}</div>
+          <div style={{fontSize:13,color:T.dim,fontWeight:300,marginTop:4}}>
+            +{fmtQty(expQty,assetId)} {asset.sym} {"\u00b7"} <span style={{color:T.accent}}>{portPct.toFixed(1)}%</span> of your portfolio
+          </div>
+        </div>
+
+        {/* clean slider */}
+        <div style={{marginBottom:22}}>
+          <Slider value={expUSD} onChange={v=>setExpUSD(snap(v))} min={minExposure} max={maxExposure} accent onDragChange={setSliding}/>
+        </div>
+
+        {/* backtest callout */}
+        <div style={{padding:"10px 12px",borderRadius:8,background:"rgba(238,255,0,0.02)",border:"1px solid rgba(238,255,0,0.07)",marginBottom:16}}>
+          <div style={{fontSize:11,fontWeight:300,color:T.dim,marginBottom:4}}>If you had activated this 90 days ago</div>
+          <div style={{display:"flex",alignItems:"baseline",gap:6}}>
+            <span style={{fontSize:18,fontWeight:600,color:T.green}}>+{fmt(btGain)}</span>
+            <span style={{fontSize:11,fontWeight:300,color:T.green}}>+{bt}%</span>
+          </div>
+          <div style={{fontSize:11,fontWeight:300,color:T.dim,marginTop:3}}>additional {asset.sym} exposure gain on top of your existing holdings</div>
+        </div>
+
+        {/* cost */}
+        <div style={{padding:"10px 12px",borderRadius:8,background:T.surfHover,border:"1px solid "+T.surface,marginBottom:16}}>
+          <div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}>
+            <span style={{fontSize:11,fontWeight:300,color:T.dim}}>Weekly cost</span>
+            <span style={{fontSize:11,fontWeight:300,color:T.dim}}>~{fmt(costWk)}</span>
+          </div>
+          <div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}>
+            <span style={{fontSize:11,fontWeight:300,color:T.dim}}>Annual cost</span>
+            <span style={{fontSize:11,fontWeight:300,color:T.dim}}>~{fmt(costYr)} {"\u00b7"} {COST_ANNUAL_PCT}%</span>
+          </div>
+          <div style={{display:"flex",justifyContent:"space-between"}}>
+            <span style={{fontSize:11,fontWeight:300,color:T.dim}}>Break-even</span>
+            <span style={{fontSize:11,fontWeight:300,color:T.dim}}>{asset.sym} needs +{COST_ANNUAL_PCT}% over a year</span>
+          </div>
+        </div>
+
+        {/* How it works: 1-2-3 with hover highlight */}
+        <div style={{marginBottom:0}}>
+          <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12}}>
+            <span style={{fontSize:13,color:T.faint}}>How it works</span>
+            <div style={{flex:1,height:1,background:T.border}}/>
+          </div>
+
+          {[
+            {n:"1",title:"Extra exposure, same portfolio",desc:"Stream layers synthetic "+asset.sym+" on top of your existing holdings. You never sell or move your tokens."},
+            {n:"2",title:"Self-adjusting",desc:"As your portfolio value grows, exposure scales up. If you sell tokens or the market dips, it throttles back automatically."},
+            {n:"3",title:"Your tokens are always safe",desc:"Worst case, the stream pauses. Your underlying assets are never liquidated or force-sold."},
+          ].map((s,i)=>(
+            <div key={i}
+              onMouseEnter={()=>setHoveredStep(i)} onMouseLeave={()=>setHoveredStep(null)}
+              style={{display:"flex",gap:10,padding:"10px 10px",marginBottom:2,alignItems:"flex-start",borderRadius:8,
+                background:hoveredStep===i?"rgba(238,255,0,0.03)":"transparent",
+                border:"1px solid "+(hoveredStep===i?"rgba(238,255,0,0.08)":"transparent"),
+                transition:"all 0.15s ease",cursor:"default"}}>
+              <div style={{width:24,height:24,borderRadius:12,background:hoveredStep===i?"rgba(238,255,0,0.1)":"rgba(255,255,255,0.04)",
+                border:"1px solid "+(hoveredStep===i?"rgba(238,255,0,0.15)":T.border),
+                display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,marginTop:1,transition:"all 0.15s ease"}}>
+                <span style={{fontSize:11,fontWeight:600,color:hoveredStep===i?T.accent:T.faint,transition:"color 0.15s"}}>{s.n}</span>
+              </div>
+              <div>
+                <div style={{fontSize:12,fontWeight:500,color:hoveredStep===i?T.text:"#ccc",marginBottom:2,transition:"color 0.15s"}}>{s.title}</div>
+                <div style={{fontSize:11,fontWeight:300,color:T.dim,lineHeight:"15px"}}>{s.desc}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* details: ECV defined, no haircuts */}
+        {showDetails&&(
+          <div style={{marginTop:12,marginBottom:6,animation:"fadeIn 0.2s ease"}}>
+            <div style={{fontSize:12,color:T.faint,marginBottom:6}}>Stream parameters</div>
+            {[
+              ["Target exposure",Math.round(targetPct)+"% of eligible collateral"],
+              ["Adaptive band",bandLow+"% \u2013 "+bandHigh+"%"],
+              ["Eligible collateral (ECV)",fmt(ECV)],
+            ].map(([k,v])=>(
+              <div key={k} style={{display:"flex",alignItems:"baseline",padding:"2px 0"}}>
+                <span style={{fontSize:12,color:T.dim,flexShrink:0}}>{k}</span>
+                <div style={{flex:1,borderBottom:"1px dotted rgba(255,255,255,0.1)",margin:"0 8px",minWidth:12,alignSelf:"baseline",position:"relative",top:-3}}/>
+                <span style={{fontSize:12,color:T.sub,flexShrink:0}}>{v}</span>
+              </div>
+            ))}
+            <div style={{fontSize:11,color:T.dim,marginTop:8,lineHeight:"15px",padding:"8px 10px",borderRadius:6,background:"rgba(255,255,255,0.02)",border:"1px solid "+T.surface}}>
+              <span style={{color:T.faint,fontWeight:500}}>Eligible Collateral Value (ECV)</span> is the risk-adjusted value of your portfolio. Each asset is weighted by its liquidity and quality {"\u2014"} blue-chip assets count for more, volatile tokens for less.
+            </div>
+          </div>
+        )}
+
+      </div>
+
+      {/* bottom CTA */}
+      <div style={{padding:"0 20px 16px",flexShrink:0}}>
+        <button onClick={toggleDetails}
+          style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"center",gap:4,padding:"2px 0",background:"none",border:"none",cursor:"pointer",margin:"6px 0 9px"}}>
+          <span style={{fontSize:11,fontWeight:300,color:T.dim}}>{showDetails?"Hide":"Show"} details</span>
+          <svg width="8" height="8" viewBox="0 0 8 8" style={{transform:showDetails?"rotate(180deg)":"none",transition:"transform 0.15s"}}><path d="M1 3L4 6L7 3" stroke="#555" strokeWidth="1" fill="none" strokeLinecap="round"/></svg>
+        </button>
+        <button onClick={()=>onActivate({assetId,target:Math.round(targetPct),bandLow,bandHigh,exposure:expUSD,ecv:ECV})}
+          style={{width:"100%",padding:"11px 0",border:"1px solid rgba(238,255,0,0.2)",borderRadius:7,cursor:"pointer",fontSize:13,fontWeight:600,color:T.accent,background:"rgba(238,255,0,0.05)",transition:"all 0.15s"}}
+          onMouseEnter={e=>{e.currentTarget.style.background="rgba(238,255,0,0.1)";e.currentTarget.style.borderColor="rgba(238,255,0,0.3)"}}
+          onMouseLeave={e=>{e.currentTarget.style.background="rgba(238,255,0,0.05)";e.currentTarget.style.borderColor="rgba(238,255,0,0.2)"}}>
+          {existing?"Update Stream":"Open stream "+fmtQty(expQty,assetId)+" "+asset.sym}
+        </button>
+        <div style={{textAlign:"center",marginTop:6}}>
+          <span style={{fontSize:11,fontWeight:300,color:T.dim}}>Self-adjusting {"\u00b7"} No liquidation risk {"\u00b7"} Close anytime</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ======= VIEW 3 - ACTIVE STREAM ======= */
+function ActiveView({stream,onBack,onDeactivate,onAdjust}){
+  const asset=STREAM_ASSETS.find(a=>a.id===stream.assetId);
+  const price=asset.price;
+  const expQty=stream.exposure/price;
+
+  const bandW=stream.bandHigh-stream.bandLow;
+  const costWk=stream.exposure*(COST_BPS_WK/10000);
+  const accrued=costWk*0.36;
+  const gainPct=4.2;
+  const gainUSD=stream.exposure*(gainPct/100);
+  const isPositive=gainPct>0;
+
+  const sparkData=useMemo(()=>genSparkline(stream.target),[stream.target]);
+  const lastVal=sparkData[sparkData.length-1];
+  const[hoverIdx,setHoverIdx]=useState(null);
+  const[entered,setEntered]=useState(false);
+  useEffect(()=>{const t=setTimeout(()=>setEntered(true),100);return()=>clearTimeout(t);},[]);
+
+  return(
+    <div style={{animation:"slideRight 0.2s ease"}}>
+      {/* header */}
+      <div style={{padding:"14px 20px",display:"flex",alignItems:"center",justifyContent:"space-between",borderBottom:"1px solid "+T.surface}}>
+        <div style={{display:"flex",alignItems:"center",gap:8}}>
+          <BackBtn onClick={onBack}/>
+          <span style={{fontSize:13,fontWeight:500,color:T.text}}>Stream</span>
+          <span style={{fontSize:11,color:T.dim}}>{"\u00b7"}</span>
+          <TokenIcon color={asset.color} sym={asset.sym} size={15}/>
+          <span style={{fontSize:13,fontWeight:500,color:T.text}}>{asset.sym}</span>
+        </div>
+        <div style={{display:"flex",alignItems:"center",gap:6}}>
+          <div style={{width:5,height:5,borderRadius:"50%",background:T.green,animation:"pulse 2s ease-in-out infinite"}}/>
+          <span style={{fontSize:12,fontWeight:600,color:T.green,letterSpacing:"0.3px"}}>LIVE</span>
+        </div>
+      </div>
+
+      <div style={{padding:"14px 20px 20px"}}>
+        {/* clean hero: just $ amount, clean and minimal */}
+        <div style={{textAlign:"center",marginBottom:16,position:"relative"}}>
+          {/* positive glow ring */}
+          {isPositive&&<div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:100,height:100,borderRadius:"50%",animation:entered?"glowPulse 2s ease-out":"none",pointerEvents:"none"}}/>}
+          <div style={{fontSize:12,color:T.faint,fontWeight:300,marginBottom:6}}>Current Exposure</div>
+          <div style={{fontSize:30,fontWeight:600,color:T.text,letterSpacing:"-0.5px",animation:entered?"countUp 0.6s ease-out":"none"}}>{fmt(stream.exposure)}</div>
+          <div style={{fontSize:13,color:T.dim,fontWeight:300,marginTop:3}}>
+            {fmtQty(expQty,stream.assetId)} {asset.sym}
+          </div>
+        </div>
+
+        {/* sparkline with draw-on animation */}
+        <div style={{marginBottom:16}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:6}}>
+            <span style={{fontSize:13,color:T.faint}}>Exposure over time</span>
+            <span style={{fontSize:11,color:T.dim}}>14 days</span>
+          </div>
+          <div style={{background:"rgba(255,255,255,0.02)",borderRadius:6,padding:"10px 8px 6px",border:"1px solid "+T.surface,position:"relative"}}>
+            <SparkTooltip data={sparkData} hoverIdx={hoverIdx} width={310}/>
+            <Sparkline data={sparkData} width={310} height={64} animate={true} onHover={setHoverIdx}/>
+            <div style={{display:"flex",justifyContent:"space-between",marginTop:6}}>
+              <span style={{fontSize:10,color:T.faint}}>14d ago</span>
+              <span style={{fontSize:10,color:T.faint}}>Now</span>
+            </div>
+          </div>
+        </div>
+
+        {/* unified detail table: everything in one clean card */}
+        <div style={{padding:"8px 10px",borderRadius:8,background:T.surfHover,border:"1px solid "+T.surface,marginBottom:16}}>
+          {[
+            ["Exposure gain",{val:"+"+fmt(gainUSD)+" ("+gainPct+"%)",color:T.green}],
+            ["Current band",{val:stream.bandLow+"% \u2013 "+stream.bandHigh+"%",color:T.text}],
+            ["Target",{val:stream.target+"%",color:"rgba(238,255,0,0.6)"}],
+            ["Weekly cost",{val:"~"+fmt(costWk),color:T.text}],
+            ["Accrued cost",{val:fmt(accrued),color:T.text}],
+            ["Active since",{val:"2d 14h",color:T.text}],
+            ["Adjustments",{val:"47",color:T.text}],
+          ].map(([k,v])=>(
+            <div key={k} style={{display:"flex",alignItems:"baseline",padding:"4px 0"}}>
+              <span style={{fontSize:11,color:T.dim,whiteSpace:"nowrap"}}>{k}</span>
+              <span style={{flex:1,borderBottom:"1px dotted rgba(255,255,255,0.08)",margin:"0 6px",alignSelf:"baseline",position:"relative",top:-2}}/>
+              <span style={{fontSize:11,fontWeight:500,color:v.color||T.text,whiteSpace:"nowrap"}}>{v.val||v}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* actions */}
+        <div style={{display:"flex",gap:8}}>
+          <button onClick={onAdjust}
+            style={{flex:1,padding:"9px 0",border:"1px solid "+T.borderLight,borderRadius:7,cursor:"pointer",fontSize:12,fontWeight:500,color:T.text,background:T.surfHover,transition:"all 0.15s"}}
+            onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,0.08)"}}
+            onMouseLeave={e=>{e.currentTarget.style.background=T.surfHover}}>
+            Adjust
+          </button>
+          <button onClick={onDeactivate}
+            style={{flex:1,padding:"9px 0",border:"1px solid rgba(239,68,68,0.12)",borderRadius:7,cursor:"pointer",fontSize:12,fontWeight:500,color:T.red,background:"rgba(239,68,68,0.03)",transition:"all 0.15s"}}
+            onMouseEnter={e=>{e.currentTarget.style.background="rgba(239,68,68,0.07)"}}
+            onMouseLeave={e=>{e.currentTarget.style.background="rgba(239,68,68,0.03)"}}>
+            Close stream
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ======= APP ======= */
+function App(){
+  const[view,setView]=useState("wallet");
+  const[sel,setSel]=useState(null);
+  const[streams,setStreams]=useState({});
+  const handleSelect=id=>{setSel(id);setView(streams[id]?"active":"setup")};
+  const handleActivate=cfg=>{setStreams(p=>({...p,[cfg.assetId]:cfg}));setView("active")};
+  const handleClose=()=>{setStreams(p=>{const n={...p};delete n[sel];return n});setSel(null);setView("wallet")};
+
+  const asset=sel?STREAM_ASSETS.find(a=>a.id===sel):null;
+  const isWallet=view==="wallet";
+
+  return(
+    <div style={{minHeight:"100vh",background:"#000000",display:"flex",alignItems:"center",justifyContent:"center"}}>
+      <div style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
+        <div style={{width:380,position:"relative",zIndex:0,display:"flex",flexDirection:"column",background:isWallet?"#000000":"var(--glow), "+T.card,border:"1px solid "+T.border,borderRadius:isWallet?"0 0 24px 24px":T.r,boxShadow:isWallet?"none":"0 32px 80px rgba(0,0,0,0.7), inset 0 -20px 60px rgba(238,255,0,0.04)",overflow:"hidden"}}>
+          {isWallet&&<WalletView onSelect={handleSelect} streams={streams}/>}
+          {view==="setup"&&asset&&<SetupView assetId={sel} existing={streams[sel]} onBack={()=>{setSel(null);setView("wallet")}} onActivate={handleActivate}/>}
+          {view==="active"&&asset&&streams[sel]&&<ActiveView stream={streams[sel]} onBack={()=>{setSel(null);setView("wallet")}} onDeactivate={handleClose} onAdjust={()=>setView("setup")}/>}
+          {isWallet&&<div style={{padding:"0 10px 10px"}}><StreamCard onSelect={handleSelect} streams={streams}/></div>}
+          {!isWallet&&<div style={{position:"absolute",bottom:0,left:0,right:0,height:1,background:"var(--bottomLine)",pointerEvents:"none"}}/>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const root=ReactDOM.createRoot(document.getElementById('root'));
+root.render(React.createElement(App));
+const ro=new ResizeObserver(([e])=>{window.parent.postMessage({type:'stream-height',h:e.borderBoxSize[0].blockSize},'*')});
+ro.observe(document.getElementById('root'));
+</script>
+</body>
+</html>
