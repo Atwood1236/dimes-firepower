@@ -134,6 +134,8 @@
   .tab-for{font-size:15px;font-weight:300;color:#fff;margin-top:-2px;line-height:1.4;opacity:.3;transition:opacity .4s ease}
   .tab-group:hover .tab-for,.tab-group.active .tab-for{opacity:1}
   .product-tabs-side{display:flex;flex-direction:column;gap:36px;align-items:stretch;width:320px;z-index:10;position:absolute;right:60px}
+  .product-tabs-side::before{content:'';position:absolute;top:-200px;bottom:-200px;left:-80px;right:0;background:linear-gradient(to right,transparent,var(--black) 80px);pointer-events:none;z-index:0}
+  .tab-group{position:relative;z-index:1}
   .tab-group{display:flex;flex-direction:column;align-items:stretch;transition:opacity .4s ease}
   .product-tabs-side:hover .tab-group:not(:hover){opacity:.3}
   .tab-desc{max-height:0;overflow:hidden;opacity:0;transition:max-height .4s cubic-bezier(.16,1,.3,1),opacity .4s ease,margin .4s ease;font-size:13px;color:var(--text-dim);line-height:1.5;margin:0;padding:0 2px;width:300px}
@@ -159,7 +161,7 @@
   .firepower-preview::after{content:'';position:absolute;inset:0;border-radius:14px;background:rgba(238,255,0,0);pointer-events:none;z-index:1}
   .firepower-preview.active{opacity:1;transform:scale(.65) translateY(0);transition:opacity .4s ease,transform .5s cubic-bezier(.16,1,.3,1)}
   .firepower-preview.active::after{animation:fp-bg-pulse 3s ease-in-out infinite}
-  .firepower-preview.selected{opacity:1;transform:scale(.9);pointer-events:auto}
+  .firepower-preview.selected{opacity:1;transform:scale(.9);pointer-events:auto;transition:opacity .5s ease,transform .6s cubic-bezier(.16,1,.3,1),top .6s cubic-bezier(.16,1,.3,1),left .6s cubic-bezier(.16,1,.3,1)}
   .firepower-preview.selected::after{animation:none;background:transparent}
   @keyframes fp-bg-pulse{0%,100%{background:rgba(238,255,0,0)}50%{background:rgba(238,255,0,.04)}}
 
@@ -713,6 +715,7 @@ function selectProduct(key) {
   terminalEl.style.transform = 'scale(.85)';
   terminalEl.style.opacity = '';
 
+  const previousProduct = activeProduct;
   activeProduct = key;
   hideIdleRings();
   const p = products[key];
@@ -729,43 +732,42 @@ function selectProduct(key) {
   /* Fade out unselected tabs */
   tabGroups.forEach(g => { g.style.transition = 'opacity .5s ease'; g.style.opacity = g.dataset.for === key ? '1' : '.2'; });
 
-  /* Firepower: dim terminal, show interactive popup, skip zoom */
+  /* Firepower: shift terminal right, dim (except firepower area), show popup */
   if (key === 'firepower') {
-    terminalEl.style.opacity = '.25';
+    terminalEl.style.transform = 'scale(.85) translateX(18%)';
+    terminalEl.classList.add('dimmed');
+    hlEls.forEach(el => el.classList.toggle('hl-active', el.dataset.hl === 'firepower'));
     fpPreview.classList.remove('active');
-    /* Force terminal to final resting position so getBoundingClientRect is accurate */
-    const savedTrans = terminalEl.style.transition;
-    terminalEl.style.transition = 'none';
-    terminalEl.getBoundingClientRect(); /* force reflow */
-    const pRect = productsSection.getBoundingClientRect();
-    const tRect = terminalEl.getBoundingClientRect();
-    terminalEl.style.transition = savedTrans;
-    const h = fpPreview.offsetHeight || 548;
-    const centeredLeft = pRect.width / 2 - 264;
-    const centeredTop = pRect.height / 2 - h * 0.45;
-    const termTop = tRect.top - pRect.top;
-    const termRight = tRect.right - pRect.left;
-    fpPreview.style.top = Math.max(centeredTop, termTop) + 'px';
-    fpPreview.style.left = Math.min(centeredLeft, termRight - 480) + 'px';
     fpPreview.classList.add('selected');
+    /* Track popup to terminal as it slides right */
+    let fpTracking = true;
+    (function trackFp() {
+      if (!fpTracking) return;
+      positionFpPreview();
+      requestAnimationFrame(trackFp);
+    })();
+    terminalEl.addEventListener('transitionend', function stop(e) {
+      if (e.propertyName !== 'transform') return;
+      fpTracking = false;
+      terminalEl.removeEventListener('transitionend', stop);
+    });
   } else if (key === 'stream') {
-    terminalEl.style.opacity = '.25';
-    streamPreview.classList.remove('active');
-    const savedTrans = terminalEl.style.transition;
-    terminalEl.style.transition = 'none';
-    terminalEl.getBoundingClientRect();
-    const pRect = productsSection.getBoundingClientRect();
-    const tRect = terminalEl.getBoundingClientRect();
-    terminalEl.style.transition = savedTrans;
-    const h = streamPreview.offsetHeight || 500;
-    const centeredLeft = pRect.width / 2 - 214;
-    const centeredTop = pRect.height / 2 - h * 0.45;
-    const termTop = tRect.top - pRect.top;
-    const termRight = tRect.right - pRect.left;
-    streamPreview.style.top = Math.max(centeredTop, termTop) + 'px';
-    streamPreview.style.left = Math.min(centeredLeft, termRight - 380) + 'px';
-    streamPreview.classList.add('selected');
-    streamPreview.querySelector('iframe').contentWindow.postMessage({type:'stream-mode',mode:'selected'},'*');
+    function showStream() {
+      terminalEl.classList.add('dimmed');
+      hlEls.forEach(el => el.classList.toggle('hl-active', el.dataset.hl === 'stream'));
+      streamPreview.classList.remove('active');
+      if (!cachedStreamPos) positionStreamPreview();
+      streamPreview.style.top = cachedStreamPos.top + 'px';
+      streamPreview.style.left = cachedStreamPos.left + 'px';
+      streamPreview.classList.add('selected');
+      streamPreview.querySelector('iframe').contentWindow.postMessage({type:'stream-mode',mode:'selected'},'*');
+    }
+    if (previousProduct && previousProduct !== 'stream') {
+      setTimeout(showStream, 200);
+    } else {
+      positionStreamPreview();
+      showStream();
+    }
   } else {
     zoomToTarget(key);
   }
@@ -830,6 +832,7 @@ function positionFpPreview() {
 }
 positionFpPreview();
 
+let cachedStreamPos = null;
 function positionStreamPreview() {
   const chromeBar = document.querySelector('.terminal-chrome');
   const chromeRect = chromeBar.getBoundingClientRect();
@@ -837,8 +840,9 @@ function positionStreamPreview() {
   const parentRect = productsSection.getBoundingClientRect();
   const anchorRight = iconRect.right - parentRect.left;
   const anchorY = chromeRect.bottom - parentRect.top;
-  streamPreview.style.top = anchorY + 'px';
-  streamPreview.style.left = (anchorRight - 380) + 'px';
+  cachedStreamPos = { top: anchorY, left: anchorRight - 380 };
+  streamPreview.style.top = cachedStreamPos.top + 'px';
+  streamPreview.style.left = cachedStreamPos.left + 'px';
 }
 positionStreamPreview();
 
