@@ -128,11 +128,11 @@
   .products .section-header::before,.products .section-header::after{top:50%;width:calc(50% - 270px)}
 
   /* Tabs + subtitle (vertical side tabs) */
-  .product-tab{padding:0;border-radius:0;font-size:22px;font-weight:600;color:var(--text-dim);background:transparent;border:none;cursor:pointer;transition:all .4s;font-family:var(--font);position:relative;width:100%;text-align:left;white-space:nowrap;padding-left:0;padding-right:0}
-  .product-tab:hover,.product-tab.hovered{color:var(--text)}
-  .product-tab.active{color:var(--yellow);font-weight:700;font-size:28px;background:transparent;border:none;text-align:left;padding-left:0;padding-right:0}
-  .tab-for{font-size:11px;color:var(--text-muted);letter-spacing:.04em;margin-top:4px;line-height:1.4}
-  .product-tabs-side{display:flex;flex-direction:column;gap:10px;align-items:stretch;width:260px;z-index:10;position:absolute;top:100px;right:120px}
+  .product-tab{padding:0;border-radius:0;font-size:34px;font-weight:600;color:var(--yellow);background:transparent;border:none;cursor:pointer;transition:all .4s;font-family:var(--font);position:relative;width:100%;text-align:left;white-space:nowrap;padding-left:0;padding-right:0}
+  .product-tab:hover,.product-tab.hovered{color:var(--yellow)}
+  .product-tab.active{color:var(--yellow);font-weight:700;font-size:36px;background:transparent;border:none;text-align:left;padding-left:0;padding-right:0}
+  .tab-for{font-size:15px;font-weight:100;color:#fff;letter-spacing:.04em;margin-top:-2px;line-height:1.4}
+  .product-tabs-side{display:flex;flex-direction:column;gap:36px;align-items:stretch;width:320px;z-index:10;position:absolute;top:100px;right:60px}
   .tab-group{display:flex;flex-direction:column;align-items:stretch}
   .tab-desc{max-height:0;overflow:hidden;opacity:0;transition:max-height .4s cubic-bezier(.16,1,.3,1),opacity .4s ease,margin .4s ease;font-size:13px;color:var(--text-dim);line-height:1.5;margin:0;padding:0 2px;width:300px}
   .tab-group.active .tab-desc{max-height:120px;opacity:1;margin:26px 0 20px}
@@ -150,6 +150,10 @@
   .docs-link:hover .docs-arrow{animation:none}
   .docs-link:hover .docs-arrow{transform:translateX(2px)}
   .tab-group.active .docs-link{display:inline-block}
+
+  /* Firepower hover preview */
+  .firepower-preview{position:absolute;width:480px;height:520px;top:56%;left:calc(25% + 14px);transform:translate(-50%,-50%) scale(.65);transform-origin:center center;border:none;border-radius:14px;z-index:52;opacity:0;pointer-events:none;transition:opacity .4s ease;background:transparent;box-shadow:0 40px 120px rgba(0,0,0,.8),0 12px 40px rgba(0,0,0,.5);overflow:hidden}
+  .firepower-preview.active{opacity:1}
 
   /* Scene layout — terminal + side tabs in a row */
   .terminal-scene{position:relative;z-index:1;overflow:visible;padding:80px 0 140px;margin:-80px 0 -140px;min-height:560px;display:flex;align-items:flex-start;justify-content:flex-end;gap:0;mask-image:linear-gradient(to right, transparent 0%, black 15%),linear-gradient(to bottom, transparent 0%, black 10%, black 85%, transparent 100%);-webkit-mask-image:linear-gradient(to right, transparent 0%, black 15%),linear-gradient(to bottom, transparent 0%, black 10%, black 85%, transparent 100%);mask-composite:intersect;-webkit-mask-composite:source-in}
@@ -574,25 +578,26 @@
     <div class="product-tabs-side">
       <div class="tab-group" data-for="multiply">
         <button class="product-tab" data-product="multiply">Multiply</button>
-        <div class="tab-for">for prediction market terminals</div>
+        <div class="tab-for">For prediction market terminals</div>
         <div class="tab-desc" id="descMultiply"></div>
         <a href="#" class="docs-link">Learn more <span class="docs-arrow">&#8594;</span></a>
       </div>
       <div class="tab-group" data-for="firepower">
         <button class="product-tab" data-product="firepower">Firepower</button>
-        <div class="tab-for">for launchpads, wallets and terminals</div>
+        <div class="tab-for">For launchpads, wallets and terminals</div>
         <div class="tab-desc" id="descFirepower"></div>
         <button class="timeline-link" data-default="H2 2026"><span>H2 2026</span></button>
       </div>
       <div class="tab-group" data-for="stream">
         <button class="product-tab" data-product="stream">Stream</button>
-        <div class="tab-for">for wallets</div>
+        <div class="tab-for">For wallets</div>
         <div class="tab-desc" id="descStream"></div>
         <button class="timeline-link" data-default="Q4 2026"><span>Q4 2026</span></button>
       </div>
     </div>
 
   </div>
+  <iframe class="firepower-preview" id="firepowerPreview" src="Firepower.html" loading="lazy"></iframe>
 </section>
 
 <section class="why">
@@ -685,6 +690,8 @@ function zoomToTarget(key) {
 function selectProduct(key) {
   if (activeProduct === key) { resetProduct(); return; }
 
+  fpPreview.classList.remove('active');
+
   activeProduct = key;
   const p = products[key];
 
@@ -763,16 +770,27 @@ function unhighlightProduct() {
   ringEl.classList.remove('animate-position');
 }
 
+const fpPreview = document.getElementById('firepowerPreview');
+
 function hoverProduct(key) {
   if (activeProduct && activeProduct === key) return;
   if (!activeProduct) {
     highlightProduct(key);
+    if (key === 'firepower') {
+      fpPreview.classList.add('active');
+
+    } else {
+      fpPreview.classList.remove('active');
+    
+    }
   }
 }
 
 function unhoverProduct() {
   if (!activeProduct) {
     unhighlightProduct();
+    fpPreview.classList.remove('active');
+  
   }
   tabs.forEach(t => t.classList.remove('hovered'));
 }
