@@ -52,8 +52,6 @@ const TOKENS=[
   {id:"btc", sym:"BTC",  color:"#F7931A", price:82000,  qty:0.082,  hc:0.92},
   {id:"eth", sym:"ETH",  color:"#627EEA", price:3400,   qty:1.24,   hc:0.88},
   {id:"jto", sym:"JTO",  color:"#58c4c5", price:3.20,   qty:1850,   hc:0.72},
-  {id:"jlp", sym:"JLP",  color:"#14F195", price:2.868,  qty:4200,   hc:0.65},
-  {id:"pump",sym:"PUMP", color:"#ff6b9d", price:0.0087, qty:280000, hc:0.35},
 ];
 const STREAM_ASSETS=[
   {id:"btc",sym:"BTC",color:"#F7931A",price:82000},
@@ -204,16 +202,6 @@ function WalletView({onSelect,streams}){
         <div style={{fontSize:36,fontWeight:600,color:T.text,letterSpacing:"-0.5px"}}>{fmt(TOTAL_PORT)}</div>
         <div style={{fontSize:11,color:T.dim,fontWeight:100,opacity:0.6,marginTop:-2}}>Portfolio Value</div>
         {hasStreams&&<div style={{fontSize:11,color:T.accent,marginTop:5,display:"flex",alignItems:"center",justifyContent:"center",gap:4}}>+{fmt(streamingTotal)} streaming<FlowDots size={2}/></div>}
-      </div>
-      <div style={{display:"flex",justifyContent:"center",gap:6,padding:"14px 20px 14px"}}>
-        {["Send","Receive","Swap","Bridge"].map(a=>(
-          <div key={a} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4,cursor:"default"}}>
-            <div style={{padding:"10px 14px",borderRadius:8,background:T.surfHover}}>
-              <span style={{fontSize:11,color:T.dim,fontWeight:300}}>{a==="Send"?"\u2191":a==="Receive"?"\u2193":a==="Swap"?"\u21c4":"\u22c8"}</span>
-            </div>
-            <span style={{fontSize:11,color:T.dim,fontWeight:300,opacity:0.5}}>{a}</span>
-          </div>
-        ))}
       </div>
       <div style={{padding:"12px 20px 16px",opacity:0.3}}>
         <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}>
