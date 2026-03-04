@@ -217,7 +217,8 @@
   .ext-icon.dimes-ext{background:rgba(255,255,255,.03);color:var(--text-muted);border:1px solid rgba(255,255,255,.04)}
 
   /* CLI view (inline replacement for iframe) */
-  .cli-view{display:none;min-height:480px;align-items:center;justify-content:flex-end;padding:32px 340px 32px 0;background:#0a0a0a}
+  .terminal-body-wrap{position:relative}
+  .cli-view{display:none;min-height:480px;align-items:center;justify-content:flex-end;padding:32px 340px 32px 0;background:#0a0a0a;opacity:0;transition:opacity .35s ease;position:absolute;inset:0;z-index:2}
   .cli-terminal{width:560px;background:#111;border:1px solid rgba(255,255,255,.06);border-radius:12px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.03)}
   .cli-titlebar{padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.05);background:rgba(255,255,255,.015)}
   .cli-dots{display:flex;gap:6px}
@@ -521,6 +522,7 @@
         </div>
       </div>
 
+      <div class="terminal-body-wrap">
       <div class="cli-view" id="cliView">
         <div class="cli-content">
           <div class="cli-header">
@@ -665,6 +667,7 @@
           <div class="action-skel"><div class="action-skel-btn"></div><div class="action-skel-btn"></div></div>
         </div>
       </div>
+      </div><!-- end terminal-body-wrap -->
     </div>
     </div><!-- end terminal-center -->
 
@@ -709,7 +712,7 @@
     <div class="why-card reveal"><h3>Seamless credit,<br>embedded in your UI</h3><p>Retain complete control of the user relationship<br>and experience across the entire journey.</p></div>
     <div class="why-card reveal"><h3>Offer high-conviction<br>products to your users</h3><p>Give your users the tools to take bigger positions<br>on the outcomes they believe in.</p></div>
     <div class="why-card reveal"><h3>Outsource credit to trusted<br>experts, with deep liquidity</h3><p>Without managing credit risk or liquidity yourself.</p></div>
-    <div class="why-center"><svg viewBox="0 0 1260.91 1330.81" width="45" xmlns="http://www.w3.org/2000/svg"><style>.ol{fill:none;stroke:#ef0;opacity:.2;stroke-miterlimit:10;stroke-width:15px;transition:opacity .4s ease,fill .4s ease}</style><path class="ol q4" d="M1258.41,910.94c0-28.01-4.16-55.38-12.08-81.84-57.23,191.32-311.21,335.53-615.87,335.53v163.69c346.81,0,627.95-186.86,627.95-417.37Z"/><path class="ol q3" d="M630.45,1000.93c-.09,0-.17,0-.26,0-2.11,0-4.22-.01-6.33-.03-175.96-1.2-334.59-50.5-447.52-129.07-51.73-35.99-93.88-78.12-123.71-124.59-16.71-26.03-29.56-53.42-38.06-81.84-7.92,26.47-12.08,53.83-12.08,81.84s4.16,55.38,12.08,81.84c57.23,191.32,311.21,335.53,615.87,335.53v-163.69Z"/><path class="ol q2" d="M1246.33,501.72c-56.47-188.78-304.51-331.69-603.79-335.44-.21,0-.41,0-.62,0-1.57-.02-3.14-.04-4.72-.05-2.25-.02-4.49-.03-6.75-.03v163.03c32.3,0,63.82,1.84,94.25,5.34,156.71,18.01,284.19,80.04,338.08,161.62,17.94,27.16,27.73,56.48,27.73,87.06,0,13.51-1.92,26.77-5.6,39.71-4.21,14.8-10.73,29.17-19.36,43.01-18.8,30.15-47.58,57.73-84.17,81.54-80.69,52.5-199.34,86.66-332.54,89.55-2.52.05-5.04.11-7.57.13-3.6.05-7.21.07-10.83.07v163.69c.09,0,.17,0,.26,0,2.11,0,4.22-.01,6.33-.03,175.96-1.2,334.59-50.5,447.52-129.07,51.73-35.99,93.88-78.12,123.71-124.59,16.71-26.03,29.56-53.42,38.06-81.84,7.92-26.47,12.08-53.83,12.08-81.84s-4.16-55.38-12.08-81.84Z"/><path class="ol q3" d="M536.21,334.55c-156.71,18.01-284.19,80.04-338.09,161.62,17.62,26.13,43.24,50.21,75.29,71.38,5.25,3.47,10.67,6.86,16.26,10.17,84.09-51.19,205.62-83.34,340.78-83.34v-164.5c-32.03,0-63.5,1.6-94.25,4.68Z"/><path class="ol q4" d="M971.23,577.72c-84.09-51.19-205.62-83.34-340.78-83.34v163.36c9.99,0,19.9.18,29.73.52,128.65,4.53,242.9,38.23,321.22,89.23,36.59-23.81,65.37-51.39,84.17-81.54-20.39-33-52.79-62.94-94.33-88.23Z"/><path class="ol q1" d="M618.37,166.27c.21,0,.41,0,.62,0,1.57-.02,3.14-.04,4.72-.05,2.25-.02,4.49-.03,6.75-.03V2.5C283.64,2.5,2.5,189.36,2.5,419.87c0,28.01,4.16,55.38,12.08,81.84,8.5,28.43,21.35,55.81,38.06,81.84,18.71,29.13,42.24,56.56,69.96,81.84,16.51,15.06,34.5,29.36,53.83,42.8,26.59,18.49,55.72,35.36,87,50.36,98.62,47.29,218.73,76,348.72,78.48,2.48.05,4.97.1,7.47.13,3.61.04,7.21.07,10.83.07v-178.48c-9.99,0-19.9-.17-29.73-.51-123.19-4.22-233.17-34.44-311.05-80.54-5.59-3.31-11.01-6.7-16.26-10.17-32.06-21.17-57.67-45.25-75.29-71.38-8.4-12.47-15-25.4-19.58-38.71-5.03-14.59-7.66-29.62-7.66-44.99,0-133.85,199.26-242.77,447.49-246.2Z"/></svg></div>
+    <div class="why-center"><svg viewBox="0 0 1260.91 1330.81" width="45" xmlns="http://www.w3.org/2000/svg"><style>.ol{fill:none;stroke:#ef0;opacity:.2;stroke-miterlimit:10;stroke-width:15px;transition:opacity .2s ease,fill .4s ease}</style><path class="ol q4" d="M1258.41,910.94c0-28.01-4.16-55.38-12.08-81.84-57.23,191.32-311.21,335.53-615.87,335.53v163.69c346.81,0,627.95-186.86,627.95-417.37Z"/><path class="ol q3" d="M630.45,1000.93c-.09,0-.17,0-.26,0-2.11,0-4.22-.01-6.33-.03-175.96-1.2-334.59-50.5-447.52-129.07-51.73-35.99-93.88-78.12-123.71-124.59-16.71-26.03-29.56-53.42-38.06-81.84-7.92,26.47-12.08,53.83-12.08,81.84s4.16,55.38,12.08,81.84c57.23,191.32,311.21,335.53,615.87,335.53v-163.69Z"/><path class="ol q2" d="M1246.33,501.72c-56.47-188.78-304.51-331.69-603.79-335.44-.21,0-.41,0-.62,0-1.57-.02-3.14-.04-4.72-.05-2.25-.02-4.49-.03-6.75-.03v163.03c32.3,0,63.82,1.84,94.25,5.34,156.71,18.01,284.19,80.04,338.08,161.62,17.94,27.16,27.73,56.48,27.73,87.06,0,13.51-1.92,26.77-5.6,39.71-4.21,14.8-10.73,29.17-19.36,43.01-18.8,30.15-47.58,57.73-84.17,81.54-80.69,52.5-199.34,86.66-332.54,89.55-2.52.05-5.04.11-7.57.13-3.6.05-7.21.07-10.83.07v163.69c.09,0,.17,0,.26,0,2.11,0,4.22-.01,6.33-.03,175.96-1.2,334.59-50.5,447.52-129.07,51.73-35.99,93.88-78.12,123.71-124.59,16.71-26.03,29.56-53.42,38.06-81.84,7.92-26.47,12.08-53.83,12.08-81.84s-4.16-55.38-12.08-81.84Z"/><path class="ol q3" d="M536.21,334.55c-156.71,18.01-284.19,80.04-338.09,161.62,17.62,26.13,43.24,50.21,75.29,71.38,5.25,3.47,10.67,6.86,16.26,10.17,84.09-51.19,205.62-83.34,340.78-83.34v-164.5c-32.03,0-63.5,1.6-94.25,4.68Z"/><path class="ol q4" d="M971.23,577.72c-84.09-51.19-205.62-83.34-340.78-83.34v163.36c9.99,0,19.9.18,29.73.52,128.65,4.53,242.9,38.23,321.22,89.23,36.59-23.81,65.37-51.39,84.17-81.54-20.39-33-52.79-62.94-94.33-88.23Z"/><path class="ol q1" d="M618.37,166.27c.21,0,.41,0,.62,0,1.57-.02,3.14-.04,4.72-.05,2.25-.02,4.49-.03,6.75-.03V2.5C283.64,2.5,2.5,189.36,2.5,419.87c0,28.01,4.16,55.38,12.08,81.84,8.5,28.43,21.35,55.81,38.06,81.84,18.71,29.13,42.24,56.56,69.96,81.84,16.51,15.06,34.5,29.36,53.83,42.8,26.59,18.49,55.72,35.36,87,50.36,98.62,47.29,218.73,76,348.72,78.48,2.48.05,4.97.1,7.47.13,3.61.04,7.21.07,10.83.07v-178.48c-9.99,0-19.9-.17-29.73-.51-123.19-4.22-233.17-34.44-311.05-80.54-5.59-3.31-11.01-6.7-16.26-10.17-32.06-21.17-57.67-45.25-75.29-71.38-8.4-12.47-15-25.4-19.58-38.71-5.03-14.59-7.66-29.62-7.66-44.99,0-133.85,199.26-242.77,447.49-246.2Z"/></svg></div>
   </div>
 </section>
 
@@ -1072,9 +1075,8 @@ let cliViewActive = false;
 function showCliView() {
   if (cliViewActive) return;
   cliViewActive = true;
-  cliView.style.minHeight = termBody.offsetHeight + 'px';
-  termBody.style.display = 'none';
   cliView.style.display = 'flex';
+  requestAnimationFrame(() => { cliView.style.opacity = '1'; });
   // swap tab states
   inactiveTabEl.classList.remove('inactive');
   inactiveTabEl.classList.add('active');
@@ -1090,8 +1092,8 @@ function showCliView() {
 function hideCliView() {
   if (!cliViewActive) return;
   cliViewActive = false;
-  cliView.style.display = 'none';
-  termBody.style.display = '';
+  cliView.style.opacity = '0';
+  setTimeout(() => { cliView.style.display = 'none'; }, 350);
   // restore tab states
   inactiveTabEl.classList.add('inactive');
   inactiveTabEl.classList.remove('active');
