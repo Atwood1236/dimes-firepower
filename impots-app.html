@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atwood — Vos impôts en 15 minutes</title>
+<style>
+/* ===== RESET & BASE ===== */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --blue-900:#1a365d;--blue-800:#1e3a5f;--blue-700:#2a4a7f;--blue-600:#2b6cb0;
+  --blue-500:#3182ce;--blue-400:#4299e1;--blue-100:#ebf8ff;--blue-50:#f0f7ff;
+  --green-600:#38a169;--green-500:#48bb78;--green-100:#f0fff4;--green-50:#f0fff4;
+  --gray-900:#1a202c;--gray-700:#4a5568;--gray-600:#718096;--gray-400:#a0aec0;
+  --gray-300:#cbd5e0;--gray-200:#e2e8f0;--gray-100:#edf2f7;--gray-50:#f7fafc;
+  --white:#ffffff;--red-500:#e53e3e;--red-100:#fff5f5;
+  --orange-500:#ed8936;--orange-100:#fffaf0;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.08);--shadow-md:0 4px 12px rgba(0,0,0,.1);
+  --shadow-lg:0 10px 30px rgba(0,0,0,.12);--shadow-xl:0 20px 50px rgba(0,0,0,.15);
+  --radius:12px;--radius-lg:16px;--radius-xl:24px;
+  --transition:all .3s cubic-bezier(.4,0,.2,1);
+}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--gray-900);background:linear-gradient(165deg,var(--blue-50) 0%,var(--white) 40%,var(--green-50) 100%);min-height:100vh;line-height:1.6;overflow-x:hidden}
+a{color:var(--blue-600);text-decoration:none}
+button{cursor:pointer;font-family:inherit;border:none;outline:none}
+input,textarea,select{font-family:inherit;outline:none}
+
+/* ===== PROGRESS BAR ===== */
+.progress-bar{position:fixed;top:0;left:0;width:100%;height:4px;background:var(--gray-200);z-index:1000}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--blue-500),var(--green-500));transition:width .6s cubic-bezier(.4,0,.2,1);width:0%}
+
+/* ===== HEADER ===== */
+.header{position:fixed;top:4px;left:0;width:100%;z-index:999;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--gray-200)}
+.header-top{padding:0 24px;display:flex;align-items:stretch;justify-content:space-between;height:52px}
+.logo{display:flex;align-items:center;gap:10px;font-size:1.25rem;font-weight:800;color:var(--blue-900);cursor:pointer;flex-shrink:0}
+.logo svg{width:32px;height:32px}
+.header-badge{display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--green-600);font-weight:600;flex-shrink:0}
+.header-badge svg{width:16px;height:16px}
+.step-indicator{display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--gray-600)}
+.step-indicator span{font-weight:700;color:var(--blue-600)}
+.nav-tabs{display:flex;gap:0;margin:0;align-self:stretch}
+.nav-tab{padding:0 20px;font-size:.88rem;font-weight:600;color:var(--gray-500);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:var(--transition);display:flex;align-items:center;gap:6px}
+.nav-tab svg{width:16px;height:16px}
+.nav-tab:hover{color:var(--blue-600)}
+.nav-tab.active{color:var(--blue-600);border-bottom-color:var(--blue-600)}
+
+/* ===== STEPS CONTAINER ===== */
+.app{padding-top:64px}
+.step{display:none}
+.step.active{display:flex;flex-direction:column;animation:fadeSlideIn .5s ease forwards}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== STEP 1 — HERO ===== */
+.hero{display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 24px}
+.hero-fold{min-height:calc(100vh - 64px);display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:var(--blue-100);color:var(--blue-600);padding:8px 16px;border-radius:100px;font-size:.85rem;font-weight:600;margin-bottom:24px}
+.hero-tag svg{width:18px;height:18px}
+.hero h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:800;color:var(--blue-900);line-height:1.15;max-width:700px;margin-bottom:16px}
+.hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--blue-500),var(--green-500));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{font-size:1.15rem;color:var(--gray-600);max-width:520px;margin-bottom:36px}
+.cta-btn{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--blue-600),var(--blue-500));color:var(--white);font-size:1.1rem;font-weight:700;padding:16px 40px;border-radius:100px;box-shadow:0 4px 20px rgba(49,130,206,.35);transition:var(--transition)}
+.cta-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(49,130,206,.45)}
+.cta-btn svg{width:20px;height:20px}
+
+.trust-row{display:flex;flex-wrap:wrap;justify-content:center;gap:24px;margin-top:48px}
+.trust-badge{display:flex;align-items:center;gap:8px;padding:12px 20px;background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius);font-size:.85rem;color:var(--gray-700);font-weight:500;box-shadow:var(--shadow-sm)}
+.trust-badge svg{width:20px;height:20px;flex-shrink:0}
+
+.stats-row{display:flex;flex-wrap:wrap;justify-content:center;gap:40px;margin-top:40px}
+.stat{text-align:center}
+.stat-num{font-size:1.8rem;font-weight:800;color:var(--blue-900)}
+.stat-label{font-size:.85rem;color:var(--gray-600)}
+
+/* ===== CPA SECTION ===== */
+.cpa-section{width:100%;max-width:680px;margin-top:56px}
+.cpa-card{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:32px;text-align:left;box-shadow:var(--shadow-md);position:relative;overflow:hidden}
+.cpa-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--blue-600),var(--blue-400))}
+.cpa-badge{display:inline-block;background:var(--blue-900);color:var(--white);font-size:.75rem;font-weight:700;padding:4px 12px;border-radius:100px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:16px}
+.cpa-card h2{font-size:1.4rem;color:var(--blue-900);margin-bottom:8px}
+.cpa-card>p{color:var(--gray-600);font-size:.95rem;margin-bottom:24px}
+.cpa-features{display:flex;flex-direction:column;gap:16px;margin-bottom:24px}
+.cpa-feature{display:flex;align-items:flex-start;gap:14px}
+.cpa-feature svg{width:24px;height:24px;color:var(--blue-500);flex-shrink:0;margin-top:2px}
+.cpa-feature div{display:flex;flex-direction:column}
+.cpa-feature strong{font-size:.95rem;color:var(--gray-900)}
+.cpa-feature span{font-size:.8rem;color:var(--gray-500)}
+.cpa-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.cpa-btn{display:inline-flex;align-items:center;gap:8px;background:var(--blue-900);color:var(--white);font-weight:700;font-size:.95rem;padding:14px 28px;border-radius:100px;transition:var(--transition)}
+.cpa-btn:hover{background:var(--blue-800);transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.cpa-btn svg{width:18px;height:18px}
+.cpa-note{font-size:.8rem;color:var(--gray-400)}
+
+/* CPA Modal */
+.cpa-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);z-index:2000;align-items:center;justify-content:center;padding:24px}
+.cpa-modal-overlay.show{display:flex}
+.cpa-modal{background:var(--white);border-radius:var(--radius-lg);padding:32px;max-width:480px;width:100%;position:relative;box-shadow:var(--shadow-xl);animation:fadeSlideIn .3s ease}
+.cpa-modal-close{position:absolute;top:12px;right:16px;background:none;font-size:1.5rem;color:var(--gray-400);cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:var(--transition)}
+.cpa-modal-close:hover{background:var(--gray-100);color:var(--gray-700)}
+.cpa-modal h2{font-size:1.3rem;color:var(--blue-900);margin-bottom:4px}
+.cpa-modal>p{color:var(--gray-600);font-size:.9rem;margin-bottom:20px}
+.cpa-form{display:flex;flex-direction:column;gap:14px}
+.cpa-form .form-group{display:flex;flex-direction:column;gap:4px}
+.cpa-form .form-group label{font-size:.8rem;color:var(--gray-600);font-weight:600}
+.cpa-form .form-group input,.cpa-form .form-group select{padding:10px 14px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:.9rem;transition:var(--transition)}
+.cpa-form .form-group input:focus,.cpa-form .form-group select:focus{border-color:var(--blue-400)}
+.cpa-form-success{text-align:center;padding:20px 0}
+.cpa-form-success h3{font-size:1.1rem;color:var(--blue-900);margin-top:12px}
+.cpa-form-success p{color:var(--gray-600);font-size:.9rem;margin-top:4px}
+
+/* ===== STEP 2 — PROFIL ===== */
+.profil-step{min-height:calc(100vh - 64px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px}
+.question-container{max-width:600px;width:100%;text-align:center}
+.q-progress{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:28px}
+.q-dot{width:36px;height:36px;border-radius:50%;border:2px solid var(--gray-300);background:var(--white);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:var(--gray-400);cursor:pointer;transition:var(--transition)}
+.q-dot:hover{border-color:var(--blue-400);color:var(--blue-400)}
+.q-dot.active{border-color:var(--blue-500);background:var(--blue-500);color:var(--white)}
+.q-dot.done{border-color:var(--green-500);background:var(--green-500);color:var(--white)}
+.q-dot.disabled{opacity:.4;cursor:not-allowed}
+.q-line{width:24px;height:2px;background:var(--gray-300);transition:var(--transition)}
+.q-line.filled{background:var(--green-500)}
+.question-num{font-size:.85rem;color:var(--gray-400);font-weight:600;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.question-text{font-size:clamp(1.3rem,3vw,1.8rem);font-weight:700;color:var(--blue-900);margin-bottom:12px}
+.options-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;width:100%}
+.option-card{width:calc(33.333% - 8px);min-width:160px}
+.option-card{display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px 16px;background:var(--white);border:2px solid var(--gray-200);border-radius:var(--radius);cursor:pointer;transition:var(--transition);font-weight:600;color:var(--gray-700);font-size:.95rem}
+.option-card svg{width:28px;height:28px;color:var(--blue-500)}
+.option-card:hover{border-color:var(--blue-400);background:var(--blue-50);transform:translateY(-2px)}
+.option-card.selected{border-color:var(--blue-500);background:var(--blue-50);color:var(--blue-900);box-shadow:0 0 0 3px rgba(49,130,206,.15)}
+.option-tagline{font-size:.8rem;color:var(--gray-500);font-weight:400;line-height:1.3;margin-top:4px}
+.option-desc{font-size:.75rem;color:var(--gray-500);font-weight:400;line-height:1.3;margin-top:2px;opacity:.55}
+.multi-note{font-size:.9rem;color:var(--gray-400);margin-top:4px;margin-bottom:20px}
+.profil-nav{display:flex;gap:12px;margin-top:32px;justify-content:flex-end;width:100%}
+.nav-btn{padding:12px 28px;border-radius:100px;font-weight:600;font-size:.95rem;transition:var(--transition)}
+.nav-btn.primary{background:var(--blue-600);color:var(--white)}
+.nav-btn.primary:hover{background:var(--blue-700)}
+.nav-btn.primary:disabled{opacity:.4;cursor:not-allowed}
+.nav-btn.secondary{background:var(--gray-100);color:var(--gray-700)}
+.nav-btn.secondary:hover{background:var(--gray-200)}
+
+/* ===== STEP 3 — CHATBOT ===== */
+.chat-step{min-height:calc(100vh - 64px);display:flex;flex-direction:column;max-width:700px;margin:0 auto;width:100%;padding:0 16px}
+.chat-header{padding:20px 0;text-align:center;border-bottom:1px solid var(--gray-200)}
+.chat-header h2{font-size:1.3rem;color:var(--blue-900)}
+.chat-header p{font-size:.85rem;color:var(--gray-600)}
+.chat-messages{flex:1;overflow-y:auto;padding:20px 0;display:flex;flex-direction:column;gap:12px;min-height:300px;max-height:calc(100vh - 300px)}
+.msg{max-width:85%;padding:14px 18px;border-radius:18px;font-size:.95rem;line-height:1.5;animation:msgIn .3s ease}
+@keyframes msgIn{from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.msg.bot{align-self:flex-start;background:var(--white);border:1px solid var(--gray-200);border-bottom-left-radius:4px;color:var(--gray-900)}
+.msg.user{align-self:flex-end;background:var(--blue-600);color:var(--white);border-bottom-right-radius:4px}
+.msg.tip{align-self:flex-start;background:var(--green-100);border:1px solid var(--green-500);border-left:4px solid var(--green-500);border-radius:var(--radius);color:var(--gray-900);max-width:90%}
+.msg.tip::before{content:"💡 Astuce fiscale";display:block;font-weight:700;font-size:.8rem;color:var(--green-600);margin-bottom:4px}
+.typing-indicator{align-self:flex-start;display:flex;gap:4px;padding:14px 18px;background:var(--white);border:1px solid var(--gray-200);border-radius:18px;border-bottom-left-radius:4px}
+.typing-dot{width:8px;height:8px;background:var(--gray-400);border-radius:50%;animation:typingBounce 1.4s infinite}
+.typing-dot:nth-child(2){animation-delay:.2s}
+.typing-dot:nth-child(3){animation-delay:.4s}
+@keyframes typingBounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+.quick-replies{display:flex;flex-wrap:wrap;gap:8px;padding:8px 0}
+.quick-reply{padding:10px 18px;background:var(--white);border:2px solid var(--blue-400);border-radius:100px;color:var(--blue-600);font-weight:600;font-size:.85rem;transition:var(--transition);cursor:pointer}
+.quick-reply:hover{background:var(--blue-50);transform:translateY(-1px)}
+.chat-input-area{padding:16px 0;border-top:1px solid var(--gray-200);display:flex;gap:10px}
+.chat-input{flex:1;padding:12px 18px;border:2px solid var(--gray-200);border-radius:100px;font-size:.95rem;transition:var(--transition)}
+.chat-input:focus{border-color:var(--blue-400)}
+.chat-send{width:44px;height:44px;border-radius:50%;background:var(--blue-600);color:var(--white);display:flex;align-items:center;justify-content:center;transition:var(--transition)}
+.chat-send:hover{background:var(--blue-700)}
+.chat-send svg{width:20px;height:20px}
+.chat-skip{text-align:center;padding:8px 0}
+.chat-skip button{background:none;color:var(--gray-400);font-size:.85rem;text-decoration:underline;cursor:pointer}
+.chat-skip button:hover{color:var(--gray-600)}
+
+/* ===== STEP 4 — UPLOAD ===== */
+.upload-step{min-height:calc(100vh - 64px);padding:40px 24px;max-width:800px;margin:0 auto;width:100%}
+.upload-step h2{font-size:1.5rem;font-weight:700;color:var(--blue-900);text-align:center;margin-bottom:8px}
+.upload-step .subtitle{text-align:center;color:var(--gray-600);margin-bottom:32px}
+.dropzone{border:3px dashed var(--gray-300);border-radius:var(--radius-lg);padding:60px 24px;text-align:center;transition:var(--transition);cursor:pointer;background:var(--white)}
+.dropzone.drag-over{border-color:var(--blue-400);background:var(--blue-50)}
+.dropzone svg{width:48px;height:48px;color:var(--gray-400);margin-bottom:12px}
+.dropzone h3{font-size:1.1rem;color:var(--gray-700);margin-bottom:4px}
+.dropzone p{font-size:.85rem;color:var(--gray-400)}
+.dropzone .browse-link{color:var(--blue-500);font-weight:600;cursor:pointer}
+.file-categories{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:24px}
+.file-cat{padding:16px;background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius);display:flex;align-items:center;gap:12px}
+.file-cat-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.file-cat-icon.income{background:var(--blue-100);color:var(--blue-600)}
+.file-cat-icon.rrsp{background:var(--green-100);color:var(--green-600)}
+.file-cat-icon.medical{background:var(--red-100);color:var(--red-500)}
+.file-cat-icon.donation{background:var(--orange-100);color:var(--orange-500)}
+.file-cat-icon svg{width:20px;height:20px}
+.file-cat-info h4{font-size:.9rem;color:var(--gray-900);font-weight:600}
+.file-cat-info p{font-size:.75rem;color:var(--gray-400)}
+.file-cat-count{margin-left:auto;background:var(--gray-100);color:var(--gray-600);font-size:.8rem;font-weight:700;padding:4px 10px;border-radius:100px}
+.uploaded-files{margin-top:24px;display:flex;flex-direction:column;gap:8px}
+.uploaded-file{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius);animation:fadeSlideIn .3s ease}
+.uploaded-file .file-icon{width:36px;height:36px;background:var(--blue-100);color:var(--blue-600);border-radius:8px;display:flex;align-items:center;justify-content:center}
+.uploaded-file .file-icon svg{width:18px;height:18px}
+.uploaded-file .file-details{flex:1}
+.uploaded-file .file-details h4{font-size:.85rem;font-weight:600;color:var(--gray-900)}
+.uploaded-file .file-details p{font-size:.75rem;color:var(--gray-400)}
+.uploaded-file .file-remove{width:28px;height:28px;border-radius:50%;background:var(--gray-100);color:var(--gray-400);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition)}
+.uploaded-file .file-remove:hover{background:var(--red-100);color:var(--red-500)}
+.uploaded-file .file-remove svg{width:14px;height:14px}
+.upload-nav{display:flex;justify-content:center;gap:12px;margin-top:32px}
+
+/* ===== STEP 5 — RÉSUMÉ ===== */
+.summary-step{min-height:calc(100vh - 64px);padding:40px 24px;max-width:800px;margin:0 auto;width:100%}
+.summary-step h2{font-size:1.5rem;font-weight:700;color:var(--blue-900);text-align:center;margin-bottom:8px}
+.summary-step .subtitle{text-align:center;color:var(--gray-600);margin-bottom:32px}
+.summary-card{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:24px;margin-bottom:16px;box-shadow:var(--shadow-sm)}
+.summary-card h3{font-size:1rem;font-weight:700;color:var(--blue-900);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.summary-card h3 svg{width:20px;height:20px;color:var(--blue-500)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.form-group{display:flex;flex-direction:column;gap:4px}
+.form-group label{font-size:.8rem;color:var(--gray-600);font-weight:600}
+.form-group input,.form-group select{padding:10px 14px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:.9rem;transition:var(--transition)}
+.form-group input:focus,.form-group select:focus{border-color:var(--blue-400)}
+.form-group input[readonly]{background:var(--gray-50);color:var(--gray-600)}
+.savings-card{background:linear-gradient(135deg,var(--green-100),var(--green-50));border:2px solid var(--green-500);border-radius:var(--radius-lg);padding:24px;text-align:center;margin-bottom:16px}
+.savings-card h3{color:var(--green-600);font-size:1.1rem;margin-bottom:8px}
+.savings-card .amount{font-size:2.5rem;font-weight:800;color:var(--green-600)}
+.savings-card p{font-size:.85rem;color:var(--gray-600);margin-top:4px}
+.estimate-card{background:linear-gradient(135deg,var(--blue-900),var(--blue-700));border-radius:var(--radius-lg);padding:24px;text-align:center;color:var(--white);margin-bottom:16px}
+.estimate-card h3{font-size:1rem;font-weight:600;opacity:.85;margin-bottom:8px}
+.estimate-card .amount{font-size:2.5rem;font-weight:800}
+.estimate-card .amount.refund{color:var(--green-500)}
+.estimate-card .amount.owed{color:var(--orange-500)}
+.estimate-card p{font-size:.85rem;opacity:.7;margin-top:4px}
+.summary-nav{display:flex;justify-content:center;gap:12px;margin-top:32px}
+
+/* ===== STEP 6 — SOUMISSION ===== */
+.submit-step{min-height:calc(100vh - 64px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center}
+.submit-form{max-width:500px;width:100%}
+.submit-recap{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:24px;margin-bottom:24px;text-align:left}
+.submit-recap h3{font-size:1.1rem;color:var(--blue-900);margin-bottom:16px;text-align:center}
+.recap-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100)}
+.recap-row:last-child{border-bottom:none;font-weight:700;font-size:1.1rem;color:var(--blue-900);padding-top:12px}
+.recap-row .label{color:var(--gray-600)}
+.recap-row .value{font-weight:600;color:var(--gray-900)}
+.consent-box{display:flex;align-items:flex-start;gap:12px;padding:16px;background:var(--gray-50);border-radius:var(--radius);margin-bottom:16px;text-align:left}
+.consent-box input[type=checkbox]{width:20px;height:20px;margin-top:2px;accent-color:var(--blue-600)}
+.consent-box label{font-size:.85rem;color:var(--gray-700);line-height:1.5;cursor:pointer}
+.email-group{margin-bottom:24px}
+.email-group label{display:block;font-size:.85rem;color:var(--gray-600);margin-bottom:6px;text-align:left;font-weight:600}
+.email-group input{width:100%;padding:12px 16px;border:2px solid var(--gray-200);border-radius:var(--radius);font-size:.95rem}
+.email-group input:focus{border-color:var(--blue-400)}
+.submit-btn{width:100%;padding:16px;border-radius:100px;font-size:1.1rem;font-weight:700;background:linear-gradient(135deg,var(--green-600),var(--green-500));color:var(--white);box-shadow:0 4px 20px rgba(56,161,105,.35);transition:var(--transition)}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(56,161,105,.45)}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+
+/* Confirmation */
+.confirmation{display:none;text-align:center;max-width:500px}
+.confirmation.show{display:block;animation:fadeSlideIn .6s ease}
+.check-circle{width:80px;height:80px;background:var(--green-100);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px}
+.check-circle svg{width:40px;height:40px;color:var(--green-600);animation:checkPop .5s ease .2s both}
+@keyframes checkPop{from{transform:scale(0)}to{transform:scale(1)}}
+.confirmation h2{font-size:1.5rem;color:var(--blue-900);margin-bottom:8px}
+.confirmation p{color:var(--gray-600);margin-bottom:24px}
+.confirmation .timeline{text-align:left;background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:20px}
+.timeline-item{display:flex;gap:12px;padding:12px 0}
+.timeline-item:not(:last-child){border-bottom:1px solid var(--gray-100)}
+.timeline-dot{width:10px;height:10px;border-radius:50%;background:var(--blue-400);margin-top:5px;flex-shrink:0}
+.timeline-item:first-child .timeline-dot{background:var(--green-500)}
+.timeline-info h4{font-size:.9rem;color:var(--gray-900)}
+.timeline-info p{font-size:.8rem;color:var(--gray-400)}
+
+/* ===== FOOTER ===== */
+.footer{background:var(--blue-900);color:rgba(255,255,255,.6);text-align:center;padding:24px;font-size:.8rem}
+.footer a{color:rgba(255,255,255,.8)}
+.footer a:hover{color:var(--white)}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:640px){
+  .header-top{padding:10px 16px}
+  .nav-tab{padding:6px 12px;font-size:.78rem}
+  .hero{padding:30px 16px}
+  .trust-row{gap:12px}
+  .trust-badge{padding:8px 12px;font-size:.75rem}
+  .stats-row{gap:24px}
+  .options-grid{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+  .chat-messages{max-height:calc(100vh - 340px)}
+  .file-categories{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- PROGRESS BAR -->
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<!-- HEADER -->
+<header class="header" id="mainHeader">
+  <div class="header-top">
+    <div class="logo" onclick="goToStep(1)">
+      <svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#1a365d"/><path d="M8 22V10h4v12H8zm6-8v8h4v-8h-4zm6-4v12h4V10h-4z" fill="#48bb78"/></svg>
+      Atwood
+    </div>
+    <nav class="nav-tabs" id="navTabs">
+      <div class="nav-tab active" data-tab="particuliers" onclick="switchTab('particuliers')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Particuliers
+      </div>
+      <div class="nav-tab" data-tab="comptables" onclick="switchTab('comptables')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h4"/></svg>
+        Comptables & CPA
+      </div>
+    </nav>
+    <div class="step-indicator" id="stepIndicator" style="display:none">
+      <span>Étape 1</span> / 6
+    </div>
+    <div class="header-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      Sécurisé
+    </div>
+  </div>
+</header>
+
+<main class="app">
+
+  <!-- ===== STEP 1 — HERO ===== -->
+  <section class="step active hero" data-step="1">
+    <div class="hero-fold">
+      <div class="hero-tag">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        Saison des impôts 2025
+      </div>
+      <h1>Vos impôts complétés<br>en <em>15 minutes</em></h1>
+      <p style="max-width:720px">Notre assistant intelligent remplit votre déclaration à votre place.<br>Un comptable certifié vérifie et signe. Simple, sécuritaire, économique.</p>
+      <button class="cta-btn" onclick="goToStep(2)">
+        Commencer maintenant
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14m-6-6l6 6-6 6"/></svg>
+      </button>
+      <div class="trust-row">
+        <div class="trust-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#38a169" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Chiffrement 256-bit
+        </div>
+        <div class="trust-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#3182ce" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+          Comptables certifiés CPA
+        </div>
+        <div class="trust-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#1a365d" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M2 8h20M8 3v18"/></svg>
+          Conforme ARC & Revenu QC
+        </div>
+      </div>
+      <div class="stats-row">
+        <div class="stat"><div class="stat-num">2,340+</div><div class="stat-label">Déclarations complétées</div></div>
+        <div class="stat"><div class="stat-num">847$</div><div class="stat-label">Remboursement moyen</div></div>
+        <div class="stat"><div class="stat-num">4.9★</div><div class="stat-label">Satisfaction client</div></div>
+      </div>
+    </div>
+
+    <!-- SECTION COMPTABLES -->
+    <div class="cpa-section">
+      <div class="cpa-card">
+        <div class="cpa-badge">Pour les comptables</div>
+        <h2>Vous êtes comptable ou CPA?</h2>
+        <p>Automatisez la collecte de documents et l'intake de vos clients. Moins d'allers-retours, plus de dossiers complétés.</p>
+        <div class="cpa-features">
+          <div class="cpa-feature">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+            <div><strong>Portail client personnalisé</strong><span>Envoyez un lien, recevez tout pré-organisé</span></div>
+          </div>
+          <div class="cpa-feature">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            <div><strong>45 min → 10 min par dossier</strong><span>Le chatbot IA collecte et classe automatiquement</span></div>
+          </div>
+          <div class="cpa-feature">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <div><strong>White-label</strong><span>Votre logo, votre nom de cabinet, vos couleurs</span></div>
+          </div>
+        </div>
+        <div class="cpa-actions">
+          <button class="cpa-btn" onclick="document.getElementById('cpaModal').classList.add('show')">
+            Demander une démo
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14m-6-6l6 6-6 6"/></svg>
+          </button>
+          <span class="cpa-note">Essai gratuit · Aucune carte requise</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODAL COMPTABLE -->
+  <div class="cpa-modal-overlay" id="cpaModal" onclick="if(event.target===this)this.classList.remove('show')">
+    <div class="cpa-modal">
+      <button class="cpa-modal-close" onclick="document.getElementById('cpaModal').classList.remove('show')">&times;</button>
+      <h2>Demander une démo</h2>
+      <p>Laissez vos coordonnées et on vous contacte sous 24h.</p>
+      <form onsubmit="event.preventDefault();submitCpaForm()" class="cpa-form">
+        <div class="form-group"><label>Nom complet</label><input type="text" id="cpaName" placeholder="Jean Tremblay, CPA" required></div>
+        <div class="form-group"><label>Cabinet / Entreprise</label><input type="text" id="cpaFirm" placeholder="Tremblay & Associés"></div>
+        <div class="form-group"><label>Courriel</label><input type="email" id="cpaEmail" placeholder="jean@cabinet.ca" required></div>
+        <div class="form-group"><label>Nombre de clients par saison</label>
+          <select id="cpaClients">
+            <option value="">Sélectionnez...</option>
+            <option>Moins de 50</option>
+            <option>50 - 150</option>
+            <option>150 - 300</option>
+            <option>Plus de 300</option>
+          </select>
+        </div>
+        <button type="submit" class="cpa-btn" style="width:100%;justify-content:center">Envoyer ma demande</button>
+      </form>
+      <div class="cpa-form-success" id="cpaSuccess" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--green-600)" stroke-width="3" width="48" height="48"><path d="M20 6L9 17l-5-5"/></svg>
+        <h3>Demande envoyée!</h3>
+        <p>Notre équipe vous contactera sous 24h pour planifier votre démo.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== STEP 2 — PROFIL ===== -->
+  <section class="step profil-step" data-step="2">
+    <div class="question-container" id="questionContainer">
+      <!-- Questions injected by JS -->
+    </div>
+  </section>
+
+  <!-- ===== STEP 4 — UPLOAD ===== -->
+  <section class="step upload-step" data-step="4">
+    <h2>📎 Téléversez vos documents</h2>
+    <p class="subtitle">Glissez-déposez vos feuillets fiscaux ou cliquez pour parcourir</p>
+    <div class="dropzone" id="dropzone" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)" onclick="document.getElementById('fileInput').click()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+      <h3>Glissez vos fichiers ici</h3>
+      <p>ou <span class="browse-link">parcourez vos fichiers</span></p>
+      <p style="margin-top:8px;font-size:.75rem;color:var(--gray-400)">PDF, JPG, PNG — Max 10 Mo par fichier</p>
+      <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png" style="display:none" onchange="handleFiles(this.files)">
+    </div>
+    <div class="file-categories">
+      <div class="file-cat">
+        <div class="file-cat-icon income"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div>
+        <div class="file-cat-info"><h4>T4 / Relevé 1</h4><p>Revenus d'emploi</p></div>
+        <span class="file-cat-count" id="countIncome">0</span>
+      </div>
+      <div class="file-cat">
+        <div class="file-cat-icon rrsp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+        <div class="file-cat-info"><h4>Reçus REER</h4><p>Cotisations REER/CELI</p></div>
+        <span class="file-cat-count" id="countRRSP">0</span>
+      </div>
+      <div class="file-cat">
+        <div class="file-cat-icon medical"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 110 20 10 10 0 010-20zM12 8v8m-4-4h8"/></svg></div>
+        <div class="file-cat-info"><h4>Frais médicaux</h4><p>Reçus et ordonnances</p></div>
+        <span class="file-cat-count" id="countMedical">0</span>
+      </div>
+      <div class="file-cat">
+        <div class="file-cat-icon donation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+        <div class="file-cat-info"><h4>Dons de charité</h4><p>Reçus officiels</p></div>
+        <span class="file-cat-count" id="countDonation">0</span>
+      </div>
+    </div>
+    <div class="uploaded-files" id="uploadedFiles"></div>
+    <div class="upload-nav">
+      <button class="nav-btn secondary" onclick="goToStep(2)">← Retour</button>
+      <button class="nav-btn primary" onclick="goToStep(5)">Continuer →</button>
+    </div>
+  </section>
+
+  <!-- ===== STEP 5 — RÉSUMÉ ===== -->
+  <section class="step summary-step" data-step="5">
+    <h2>📋 Résumé de votre déclaration</h2>
+    <p class="subtitle">Vérifiez et modifiez les informations avant soumission</p>
+
+    <div class="estimate-card">
+      <h3>Remboursement estimé</h3>
+      <div class="amount refund" id="estimateAmount">1,247 $</div>
+      <p>Estimation basée sur vos informations</p>
+    </div>
+
+    <div class="savings-card">
+      <h3>💡 Économies trouvées par notre assistant</h3>
+      <div class="amount" id="savingsAmount">342 $</div>
+      <p>Grâce aux déductions et crédits optimisés</p>
+    </div>
+
+    <div class="summary-card">
+      <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4-4V3m16 0a3 3 0 110 6 3 3 0 010-6z"/><circle cx="9" cy="7" r="4"/></svg>
+        Informations personnelles
+      </h3>
+      <div class="form-row">
+        <div class="form-group"><label>Nom complet</label><input type="text" id="sumName" value="" readonly></div>
+        <div class="form-group"><label>NAS (masqué)</label><input type="text" value="***-***-***" readonly></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Situation</label><input type="text" id="sumSituation" readonly></div>
+        <div class="form-group"><label>Province</label><input type="text" id="sumProvince" readonly></div>
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        Revenus
+      </h3>
+      <div class="form-row">
+        <div class="form-group"><label>Revenus d'emploi</label><input type="text" id="sumEmployment" value="0 $"></div>
+        <div class="form-group"><label>Revenus de travail autonome</label><input type="text" id="sumSelfEmployment" value="0 $"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Revenus de placements</label><input type="text" id="sumInvestment" value="0 $"></div>
+        <div class="form-group"><label>Autres revenus</label><input type="text" id="sumOther" value="0 $"></div>
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+        Déductions & crédits
+      </h3>
+      <div class="form-row">
+        <div class="form-group"><label>Cotisations REER</label><input type="text" id="sumRRSP" value="0 $"></div>
+        <div class="form-group"><label>Frais médicaux</label><input type="text" id="sumMedical" value="0 $"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Dons de charité</label><input type="text" id="sumDonations" value="0 $"></div>
+        <div class="form-group"><label>Frais de garde</label><input type="text" id="sumChildcare" value="0 $"></div>
+      </div>
+    </div>
+
+    <div class="summary-nav">
+      <button class="nav-btn secondary" onclick="goToStep(4)">← Retour</button>
+      <button class="nav-btn primary" onclick="goToStep(6)">Soumettre →</button>
+    </div>
+  </section>
+
+  <!-- ===== STEP 6 — SOUMISSION ===== -->
+  <section class="step submit-step" data-step="6">
+    <div class="submit-form" id="submitForm">
+      <h2 style="font-size:1.5rem;color:var(--blue-900);margin-bottom:24px">Dernière étape!</h2>
+      <div class="submit-recap">
+        <h3>Récapitulatif</h3>
+        <div class="recap-row"><span class="label">Revenus totaux</span><span class="value" id="recapRevenue">0 $</span></div>
+        <div class="recap-row"><span class="label">Déductions totales</span><span class="value" id="recapDeductions">0 $</span></div>
+        <div class="recap-row"><span class="label">Documents téléversés</span><span class="value" id="recapDocs">0</span></div>
+        <div class="recap-row"><span class="label">Remboursement estimé</span><span class="value" style="color:var(--green-600)" id="recapRefund">1,247 $</span></div>
+      </div>
+      <div class="consent-box">
+        <input type="checkbox" id="consentCheck" onchange="toggleSubmit()">
+        <label for="consentCheck">J'atteste que les renseignements fournis sont exacts et complets. Je consens à ce qu'un comptable CPA vérifie et soumette ma déclaration de revenus en mon nom.</label>
+      </div>
+      <div class="email-group">
+        <label for="emailInput">Courriel pour le suivi</label>
+        <input type="email" id="emailInput" placeholder="votre@courriel.com">
+      </div>
+      <button class="submit-btn" id="submitBtn" disabled onclick="submitDeclaration()">
+        ✅ Soumettre à un comptable certifié
+      </button>
+    </div>
+    <div class="confirmation" id="confirmation">
+      <div class="check-circle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+      </div>
+      <h2>Déclaration soumise!</h2>
+      <p>Un comptable CPA vérifiera votre déclaration et vous contactera sous 24-48h.</p>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-info"><h4>Déclaration soumise</h4><p>Maintenant</p></div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-info"><h4>Vérification par un comptable CPA</h4><p>Sous 24-48 heures</p></div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-info"><h4>Signature et transmission</h4><p>ARC & Revenu Québec</p></div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-info"><h4>Remboursement déposé</h4><p>Environ 2 semaines</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p>© 2025 Atwood — Tous droits réservés · <a href="#">Politique de confidentialité</a> · <a href="#">Conditions d'utilisation</a></p>
+  <p style="margin-top:4px">Vos données sont protégées par un chiffrement de niveau bancaire (AES-256)</p>
+</footer>
+
+<script>
+// ===== STATE =====
+const state = {
+  step: 1,
+  profile: {},
+  chatData: {},
+  files: [],
+  qIndex: 0
+};
+
+// ===== QUESTIONS (Step 2) =====
+const questions = [
+  {
+    id: 'income_sources',
+    num: '1 / 3',
+    text: 'Quelles sont vos sources de revenus?',
+    multi: true,
+    options: [
+      { label: 'Emploi salarié', value: 'salarie', tagline: "Revenus provenant d'un employeur", desc: "Feuillet T4 / Relevé 1, Dépenses d'emploi (T2200)", icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>' },
+      { label: 'Travail autonome', value: 'autonome', tagline: 'Revenus générés par toi-même', desc: 'Pigiste, Contrats, Entreprise Individuelle (T2125)', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>' },
+      { label: 'Placements', value: 'placements', tagline: "Revenus d'investissement", desc: 'Intérêts (T5), Dividendes, Gains en Capital, Crypto/Trading', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>' },
+      { label: 'Revenus de location', value: 'location', tagline: 'Si tu loues une propriété', desc: 'Loyer Perçu d\'un Immeuble', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>' },
+      { label: 'Pensions / Retraite', value: 'pensions', tagline: 'Revenus liés à la retraite', desc: 'RRQ, PSV, FERR, Rente d\'Employeur', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>' },
+      { label: 'Bourses / Études', value: 'etudiant', tagline: 'Pour les étudiants ou anciens étudiants', desc: 'Bourses, Prêts Étudiants, T2202', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 3 3 6 3s6-1 6-3v-5"/></svg>' },
+      { label: 'Prestations gouvernementales', value: 'prestations', tagline: 'Revenus provenant de programmes publics', desc: 'Assurance Emploi (T4E), Prestations Parentales, Aide Sociale, Autres Programmes Provinciaux', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/></svg>' }
+    ]
+  },
+  {
+    id: 'family',
+    num: '2 / 3',
+    text: 'Quelle est votre situation familiale?',
+    options: [
+      { label: 'Célibataire', value: 'celibataire', desc: 'Jamais Marié(e), Sans Conjoint', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' },
+      { label: 'Conjoint de fait', value: 'conjoint_fait', desc: 'Vie Commune Depuis 12 Mois+', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-3-3.87M9 21v-2a4 4 0 00-4-4H5"/><circle cx="9" cy="7" r="4"/><circle cx="17" cy="7" r="3"/></svg>' },
+      { label: 'Marié(e)', value: 'marie', desc: 'Union Légale Reconnue', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>' },
+      { label: 'Séparé(e)', value: 'separe', desc: 'Séparé(e) Depuis 90 Jours+', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>' },
+      { label: 'Divorcé(e)', value: 'divorce', desc: 'Divorce Légalement Prononcé', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>' },
+      { label: 'Veuf/ve', value: 'veuf', desc: 'Décès du Conjoint', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>' }
+    ]
+  },
+  {
+    id: 'province',
+    num: '3 / 3',
+    text: 'Dans quelle province résidez-vous?',
+    options: [
+      { label: 'Québec', value: 'QC', desc: 'Déclaration Fédérale + Provinciale', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>' },
+      { label: 'Ontario', value: 'ON', desc: 'Déclaration Fédérale Uniquement', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>' },
+      { label: 'Colombie-Britannique', value: 'BC', desc: 'Déclaration Fédérale Uniquement', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>' },
+      { label: 'Autre province', value: 'other', desc: 'AB, MB, SK, NB, etc.', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>' }
+    ]
+  }
+];
+
+// ===== CHATBOT SCRIPTS BY PROFILE =====
+const chatScripts = {
+  salarie: [
+    { msg: "Parfait! En tant que salarié(e), j'ai quelques questions pour optimiser votre déclaration.", delay: 800 },
+    { msg: "Avez-vous cotisé à un REER cette année?", delay: 1200, replies: ["Oui", "Non", "Je ne sais pas"] },
+    { tip: "Les cotisations REER réduisent directement votre revenu imposable. Chaque dollar cotisé peut vous faire économiser entre 30¢ et 50¢ en impôt!", delay: 1000 },
+    { msg: "Avez-vous eu des frais médicaux importants (plus de 2,421$ ou 3% de votre revenu)?", delay: 1200, replies: ["Oui", "Non"] },
+    { msg: "Avez-vous fait des dons à des organismes de charité?", delay: 1000, replies: ["Oui", "Non"] },
+    { tip: "Les dons de plus de 200$ donnent un crédit fédéral de 29% + provincial. Pensez à regrouper vos dons avec votre conjoint(e) pour maximiser le crédit!", delay: 1000 },
+    { msg: "Avez-vous travaillé de la maison cette année? (même partiellement)", delay: 1200, replies: ["Oui", "Non"] },
+    { tip: "Si vous avez travaillé de la maison, vous pouvez déduire jusqu'à 2$/jour (max 500$/an) avec la méthode simplifiée. Aucun reçu nécessaire!", delay: 1200 },
+    { msg: "Avez-vous un compte CELI? Les revenus du CELI ne sont pas imposables.", delay: 1000, replies: ["Oui", "Non"] },
+    { msg: "Excellent! J'ai collecté assez d'informations pour préparer votre déclaration. Passons au téléversement de vos documents.", delay: 1000, action: 'complete' }
+  ],
+  autonome: [
+    { msg: "Super! En tant que travailleur autonome, il y a beaucoup d'optimisations possibles.", delay: 800 },
+    { msg: "Quel est approximativement votre revenu brut annuel?", delay: 1200, replies: ["Moins de 30,000$", "30,000$ - 60,000$", "60,000$ - 100,000$", "Plus de 100,000$"] },
+    { msg: "Utilisez-vous un espace de votre domicile comme bureau?", delay: 1000, replies: ["Oui", "Non"] },
+    { tip: "Bureau à domicile = déduction proportionnelle du loyer/hypothèque, électricité, internet, chauffage! Calculez le % de superficie de votre bureau vs votre logement.", delay: 1200 },
+    { msg: "Avez-vous un véhicule utilisé pour le travail?", delay: 1000, replies: ["Oui", "Non"] },
+    { tip: "Tenez un registre de kilométrage! Vous pouvez déduire l'essence, l'assurance, l'entretien et l'amortissement au prorata de l'utilisation professionnelle.", delay: 1200 },
+    { msg: "Êtes-vous inscrit(e) aux fichiers TPS/TVQ?", delay: 1000, replies: ["Oui", "Non", "Revenus sous 30,000$"] },
+    { tip: "Si votre revenu brut dépasse 30,000$, vous DEVEZ vous inscrire à la TPS/TVQ. En dessous, c'est optionnel mais souvent avantageux pour récupérer les taxes sur vos achats professionnels.", delay: 1400 },
+    { msg: "Avez-vous cotisé au RRQ (Régime de rentes du Québec)?", delay: 1000, replies: ["Oui", "Non"] },
+    { msg: "Parfait! J'ai une bonne vue d'ensemble. Passons aux documents.", delay: 800, action: 'complete' }
+  ],
+  etudiant: [
+    { msg: "Excellent! Les étudiants ont droit à plusieurs crédits intéressants.", delay: 800 },
+    { msg: "Avez-vous reçu un T2202 (frais de scolarité) de votre établissement?", delay: 1200, replies: ["Oui", "Non", "C'est quoi?"] },
+    { tip: "Vos frais de scolarité donnent un crédit d'impôt fédéral de 15% + provincial. Si vous n'avez pas assez de revenus pour les utiliser, vous pouvez les reporter aux années futures ou les transférer à un parent!", delay: 1400 },
+    { msg: "Avez-vous eu un emploi ou un stage rémunéré cette année?", delay: 1000, replies: ["Oui, à temps partiel", "Oui, stage/coop", "Non"] },
+    { msg: "Avez-vous reçu des bourses d'études?", delay: 1000, replies: ["Oui", "Non"] },
+    { tip: "Bonne nouvelle: la plupart des bourses d'études sont exonérées d'impôt si vous étiez inscrit(e) à un programme admissible!", delay: 1000 },
+    { msg: "Avez-vous payé des intérêts sur un prêt étudiant gouvernemental?", delay: 1200, replies: ["Oui", "Non"] },
+    { tip: "Les intérêts sur les prêts étudiants gouvernementaux donnent un crédit d'impôt non remboursable. Vous pouvez les reporter sur 5 ans!", delay: 1000 },
+    { msg: "Recevez-vous le crédit de solidarité du Québec?", delay: 1000, replies: ["Oui", "Non", "Je ne sais pas"] },
+    { tip: "Le crédit de solidarité peut vous donner jusqu'à ~1,000$/an si vous habitez au Québec. Il faut produire sa déclaration pour y avoir droit, même sans revenu!", delay: 1200 },
+    { msg: "Super! On a tout ce qu'il faut. Passons aux documents.", delay: 800, action: 'complete' }
+  ],
+  retraite: [
+    { msg: "Bonjour! Optimisons votre déclaration de retraité(e).", delay: 800 },
+    { msg: "Recevez-vous des pensions (RRQ, pension de la sécurité de la vieillesse, rente d'employeur)?", delay: 1200, replies: ["RRQ seulement", "RRQ + PSV", "RRQ + rente employeur", "Toutes les sources"] },
+    { tip: "Le fractionnement du revenu de pension permet de transférer jusqu'à 50% de vos revenus de pension admissibles à votre conjoint(e). Ça peut réduire l'impôt du couple significativement!", delay: 1400 },
+    { msg: "Avez-vous 65 ans ou plus?", delay: 1000, replies: ["Oui", "Non, moins de 65"] },
+    { tip: "À 65 ans+, vous avez droit au montant en raison de l'âge (fédéral: ~8,396$ et provincial). C'est automatique, mais vérifiez que c'est bien inscrit!", delay: 1200 },
+    { msg: "Avez-vous des frais médicaux importants?", delay: 1000, replies: ["Oui, beaucoup", "Quelques-uns", "Non"] },
+    { tip: "Les frais médicaux admissibles incluent: médicaments sur ordonnance, primes d'assurance maladie, soins dentaires, lunettes, prothèses auditives, et bien plus!", delay: 1200 },
+    { msg: "Avez-vous des revenus de placements (FERR, dividendes, intérêts)?", delay: 1200, replies: ["Oui", "Non"] },
+    { msg: "Parfait! J'ai tout ce qu'il me faut. Passons aux documents.", delay: 800, action: 'complete' }
+  ],
+  autre: [
+    { msg: "Merci! Je vais vous poser quelques questions générales pour bien préparer votre déclaration.", delay: 800 },
+    { msg: "Avez-vous reçu des revenus d'emploi (feuillets T4 ou Relevé 1) cette année?", delay: 1200, replies: ["Oui", "Non"] },
+    { msg: "Avez-vous d'autres sources de revenus? (travail autonome, placements, location, pensions)", delay: 1200, replies: ["Oui", "Non"] },
+    { msg: "Avez-vous cotisé à un REER cette année?", delay: 1000, replies: ["Oui", "Non", "Je ne sais pas"] },
+    { tip: "Les cotisations REER réduisent directement votre revenu imposable. Chaque dollar cotisé peut vous faire économiser entre 30¢ et 50¢ en impôt!", delay: 1000 },
+    { msg: "Avez-vous eu des frais médicaux, fait des dons de charité, ou payé des frais de garde?", delay: 1200, replies: ["Oui", "Non"] },
+    { tip: "Même de petits montants comptent! Les frais médicaux, dons et frais de garde peuvent tous donner droit à des crédits d'impôt.", delay: 1000 },
+    { msg: "Avez-vous travaillé de la maison cette année?", delay: 1000, replies: ["Oui", "Non"] },
+    { tip: "Si vous avez travaillé de la maison, vous pouvez déduire jusqu'à 2$/jour (max 500$/an) avec la méthode simplifiée. Aucun reçu nécessaire!", delay: 1200 },
+    { msg: "Parfait! J'ai assez d'informations. Passons au téléversement de vos documents.", delay: 800, action: 'complete' }
+  ]
+};
+
+// ===== NAVIGATION =====
+function goToStep(n) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  const target = document.querySelector(`[data-step="${n}"]`);
+  if (target) { target.classList.add('active'); }
+  state.step = n;
+  document.getElementById('progressFill').style.width = ((n / 6) * 100) + '%';
+  document.getElementById('stepIndicator').innerHTML = `<span>Étape ${n}</span> / 6`;
+  // Show nav tabs on landing, step indicator during flow
+  const tabs = document.getElementById('navTabs');
+  const indicator = document.getElementById('stepIndicator');
+  if (n === 1) {
+    tabs.style.display = 'flex';
+  } else {
+    tabs.style.display = 'none';
+  }
+  indicator.style.display = 'none';
+  if (n === 2 && state.qIndex === 0) renderQuestion();
+  if (n === 5) populateSummary();
+  if (n === 6) populateRecap();
+  // Smooth scroll to the active step
+  setTimeout(() => {
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 50);
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+  if (tab === 'comptables') {
+    document.querySelector('.cpa-section').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  } else {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+// ===== STEP 2 — PROFIL LOGIC =====
+function renderQuestion() {
+  const q = questions[state.qIndex];
+  if (!q) { goToStep(4); return; }
+  const container = document.getElementById('questionContainer');
+  const isMulti = q.multi || false;
+
+  // Build progress dots
+  let dotsHtml = '';
+  for (let i = 0; i < questions.length; i++) {
+    const isDone = state.profile[questions[i].id] !== undefined;
+    const isActive = i === state.qIndex;
+    const canClick = isDone || i <= state.qIndex;
+    const cls = isActive ? 'active' : isDone ? 'done' : (!canClick ? 'disabled' : '');
+    const check = isDone && !isActive ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" width="16" height="16"><path d="M20 6L9 17l-5-5"/></svg>' : (i + 1);
+    const onclick = canClick ? `onclick="jumpToQuestion(${i})"` : '';
+    dotsHtml += `<div class="q-dot ${cls}" ${onclick}>${check}</div>`;
+    if (i < questions.length - 1) {
+      dotsHtml += `<div class="q-line ${isDone ? 'filled' : ''}"></div>`;
+    }
+  }
+
+  container.innerHTML = `
+    <div class="q-progress">${dotsHtml}</div>
+    <div class="question-num">${q.num}</div>
+    <div class="question-text">${q.text}</div>
+    ${isMulti ? '<div class="multi-note">Vous pouvez sélectionner plusieurs options</div>' : ''}
+    <div class="options-grid">
+      ${q.options.map(o => {
+        const sel = isMulti ? (Array.isArray(state.profile[q.id]) && state.profile[q.id].includes(o.value)) : (o.value === 'autre' ? (state.profile[q.id] && state.profile[q.id].startsWith('autre:')) : state.profile[q.id] === o.value);
+        return `<div class="option-card${sel ? ' selected' : ''}" data-value="${o.value}" onclick="selectOption(this, '${q.id}', '${o.value}', ${isMulti}, ${!!o.hasInput})">
+          ${o.icon}
+          ${o.label}
+          ${o.tagline ? `<div class="option-tagline">${o.tagline}</div>` : ''}
+          ${o.desc ? `<div class="option-desc">${o.desc}</div>` : ''}
+        </div>`;
+      }).join('')}
+    </div>
+    <div id="customInputWrap" style="display:${(state.profile[q.id] && String(state.profile[q.id]).startsWith('autre:')) ? 'block' : 'none'};margin-top:16px">
+      <input type="text" id="customInput" class="chat-input" placeholder="Précisez votre situation..." style="width:100%;max-width:400px;margin:0 auto;display:block" value="${(state.profile[q.id] && String(state.profile[q.id]).startsWith('autre:')) ? state.profile[q.id].slice(6) : ''}" oninput="updateCustomValue('${q.id}')">
+      <button class="nav-btn primary" style="margin:12px auto 0;display:block" onclick="confirmCustom('${q.id}')">Continuer →</button>
+    </div>
+    <div class="profil-nav">
+      ${state.qIndex > 0 ? '<button class="nav-btn secondary" onclick="prevQuestion()">← Retour</button>' : ''}
+      ${isMulti ? `<button class="nav-btn primary" id="nextQBtn" onclick="nextQuestion()" ${(!state.profile[q.id] || state.profile[q.id].length === 0) ? 'disabled' : ''}>Continuer →</button>` : ''}
+    </div>
+  `;
+  container.style.animation = 'none';
+  container.offsetHeight;
+  container.style.animation = 'fadeSlideIn .4s ease forwards';
+}
+
+function selectOption(el, qId, value, isMulti, hasInput) {
+  if (isMulti) {
+    el.classList.toggle('selected');
+    if (!state.profile[qId]) state.profile[qId] = [];
+    const idx = state.profile[qId].indexOf(value);
+    if (idx > -1) state.profile[qId].splice(idx, 1);
+    else state.profile[qId].push(value);
+    const btn = document.getElementById('nextQBtn');
+    if (btn) btn.disabled = state.profile[qId].length === 0;
+  } else {
+    el.parentElement.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    const wrap = document.getElementById('customInputWrap');
+    if (hasInput) {
+      state.profile[qId] = 'autre:';
+      if (wrap) { wrap.style.display = 'block'; }
+      setTimeout(() => { const inp = document.getElementById('customInput'); if (inp) inp.focus(); }, 100);
+    } else {
+      if (wrap) { wrap.style.display = 'none'; }
+      state.profile[qId] = value;
+      setTimeout(() => nextQuestion(), 300);
+    }
+  }
+}
+
+function updateCustomValue(qId) {
+  const inp = document.getElementById('customInput');
+  if (inp) state.profile[qId] = 'autre:' + inp.value;
+}
+
+function confirmCustom(qId) {
+  const inp = document.getElementById('customInput');
+  if (inp && inp.value.trim()) {
+    state.profile[qId] = 'autre:' + inp.value.trim();
+    nextQuestion();
+  }
+}
+
+function nextQuestion() {
+  state.qIndex++;
+  if (state.qIndex >= questions.length) {
+    goToStep(4);
+  } else {
+    renderQuestion();
+  }
+}
+
+function prevQuestion() {
+  if (state.qIndex > 0) {
+    state.qIndex--;
+    renderQuestion();
+  }
+}
+
+function jumpToQuestion(index) {
+  if (index <= state.qIndex || state.profile[questions[index]?.id] !== undefined) {
+    state.qIndex = index;
+    renderQuestion();
+  }
+}
+
+// ===== STEP 3 — CHATBOT LOGIC =====
+let chatActive = false;
+let chatScriptIndex = 0;
+
+function startChat() {
+  if (chatActive) return;
+  chatActive = true;
+  chatScriptIndex = 0;
+  const msgs = document.getElementById('chatMessages');
+  msgs.innerHTML = '';
+  document.getElementById('quickReplies').innerHTML = '';
+
+  const rawProfile = state.profile.employment || 'salarie';
+  const profile = rawProfile.startsWith('autre:') ? 'autre' : rawProfile;
+  const script = chatScripts[profile] || chatScripts.salarie;
+  const customJob = rawProfile.startsWith('autre:') ? rawProfile.slice(6) : '';
+  const name = profile === 'salarie' ? 'salarié(e)' : profile === 'autonome' ? 'travailleur autonome' : profile === 'etudiant' ? 'étudiant(e)' : profile === 'retraite' ? 'retraité(e)' : customJob || 'contribuable';
+
+  addBotMsg(`Bonjour! Je suis votre assistant fiscal. Je vois que vous êtes ${name}. Commençons! 🎯`, () => {
+    advanceChat();
+  });
+}
+
+function advanceChat() {
+  const rawProf = state.profile.employment || 'salarie';
+  const profile = rawProf.startsWith('autre:') ? 'autre' : rawProf;
+  const script = chatScripts[profile] || chatScripts.salarie;
+  if (chatScriptIndex >= script.length) return;
+
+  const step = script[chatScriptIndex];
+  chatScriptIndex++;
+
+  if (step.tip) {
+    showTyping(() => {
+      addTipMsg(step.tip);
+      setTimeout(() => advanceChat(), step.delay || 800);
+    }, 1200);
+  } else if (step.msg) {
+    showTyping(() => {
+      addBotMsg(step.msg);
+      if (step.replies) {
+        showQuickReplies(step.replies);
+      } else if (step.action === 'complete') {
+        setTimeout(() => {
+          document.getElementById('quickReplies').innerHTML = `
+            <button class="quick-reply" onclick="goToStep(4)" style="background:var(--blue-600);color:white;border-color:var(--blue-600)">
+              📎 Téléverser mes documents →
+            </button>`;
+        }, 600);
+      } else {
+        setTimeout(() => advanceChat(), step.delay || 800);
+      }
+    }, 1000);
+  }
+}
+
+function showTyping(callback, duration) {
+  const msgs = document.getElementById('chatMessages');
+  const typing = document.createElement('div');
+  typing.className = 'typing-indicator';
+  typing.id = 'typingIndicator';
+  typing.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+  msgs.appendChild(typing);
+  msgs.scrollTop = msgs.scrollHeight;
+  setTimeout(() => {
+    typing.remove();
+    callback();
+  }, duration || 1000);
+}
+
+function addBotMsg(text, callback) {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'msg bot';
+  div.textContent = text;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  if (callback) setTimeout(callback, 400);
+}
+
+function addTipMsg(text) {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'msg tip';
+  div.textContent = text;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function addUserMsg(text) {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'msg user';
+  div.textContent = text;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function showQuickReplies(replies) {
+  const container = document.getElementById('quickReplies');
+  container.innerHTML = replies.map(r => `<button class="quick-reply" onclick="handleReply('${r}')">${r}</button>`).join('');
+}
+
+function handleReply(text) {
+  document.getElementById('quickReplies').innerHTML = '';
+  addUserMsg(text);
+  state.chatData[chatScriptIndex] = text;
+  setTimeout(() => advanceChat(), 600);
+}
+
+function sendChat() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  document.getElementById('quickReplies').innerHTML = '';
+  addUserMsg(text);
+  state.chatData[chatScriptIndex] = text;
+  setTimeout(() => advanceChat(), 600);
+}
+
+// ===== STEP 4 — UPLOAD LOGIC =====
+function handleDragOver(e) {
+  e.preventDefault();
+  e.currentTarget.classList.add('drag-over');
+}
+function handleDragLeave(e) {
+  e.currentTarget.classList.remove('drag-over');
+}
+function handleDrop(e) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  handleFiles(e.dataTransfer.files);
+}
+
+function handleFiles(fileList) {
+  const allowed = ['application/pdf', 'image/jpeg', 'image/png'];
+  const maxSize = 10 * 1024 * 1024;
+  Array.from(fileList).forEach(file => {
+    if (!allowed.includes(file.type)) {
+      alert(`Format non supporté: ${file.name}. Utilisez PDF, JPG ou PNG.`);
+      return;
+    }
+    if (file.size > maxSize) {
+      alert(`Fichier trop volumineux: ${file.name}. Maximum 10 Mo.`);
+      return;
+    }
+    state.files.push({ name: file.name, size: file.size, type: file.type });
+    renderUploadedFiles();
+  });
+}
+
+function renderUploadedFiles() {
+  const container = document.getElementById('uploadedFiles');
+  container.innerHTML = state.files.map((f, i) => `
+    <div class="uploaded-file">
+      <div class="file-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8m8 4H8m2-8H8"/></svg>
+      </div>
+      <div class="file-details">
+        <h4>${f.name}</h4>
+        <p>${(f.size / 1024).toFixed(0)} Ko · ${f.type.split('/')[1].toUpperCase()}</p>
+      </div>
+      <div class="file-remove" onclick="removeFile(${i})">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </div>
+    </div>
+  `).join('');
+
+  // Update category counts (simple heuristic by filename)
+  let counts = { income: 0, rrsp: 0, medical: 0, donation: 0 };
+  state.files.forEach(f => {
+    const name = f.name.toLowerCase();
+    if (name.includes('t4') || name.includes('relev') || name.includes('r1')) counts.income++;
+    else if (name.includes('reer') || name.includes('rrsp') || name.includes('celi')) counts.rrsp++;
+    else if (name.includes('medic') || name.includes('pharma') || name.includes('sante')) counts.medical++;
+    else if (name.includes('don') || name.includes('charit') || name.includes('recus')) counts.donation++;
+  });
+  document.getElementById('countIncome').textContent = counts.income;
+  document.getElementById('countRRSP').textContent = counts.rrsp;
+  document.getElementById('countMedical').textContent = counts.medical;
+  document.getElementById('countDonation').textContent = counts.donation;
+}
+
+function removeFile(index) {
+  state.files.splice(index, 1);
+  renderUploadedFiles();
+}
+
+// ===== STEP 5 — SUMMARY =====
+function populateSummary() {
+  const p = state.profile;
+  document.getElementById('sumSituation').value = p.family === 'celibataire' ? 'Célibataire' : p.family === 'couple' ? 'En couple' : p.family === 'famille' ? 'Famille avec enfants' : p.family === 'monoparental' ? 'Monoparental(e)' : '-';
+  document.getElementById('sumProvince').value = p.province === 'QC' ? 'Québec' : p.province === 'ON' ? 'Ontario' : p.province === 'BC' ? 'Colombie-Britannique' : p.province || '-';
+
+  // Generate semi-realistic numbers based on profile
+  const emp = p.employment || 'salarie';
+  let employment = 0, selfEmp = 0, investment = 0, rrsp = 0, medical = 0, donations = 0, childcare = 0;
+
+  if (emp === 'salarie') { employment = 52000 + Math.floor(Math.random() * 20000); }
+  else if (emp === 'autonome') { selfEmp = 45000 + Math.floor(Math.random() * 30000); }
+  else if (emp === 'etudiant') { employment = 8000 + Math.floor(Math.random() * 12000); }
+  else if (emp === 'retraite') { employment = 25000 + Math.floor(Math.random() * 15000); }
+
+  const sources = p.income_sources || [];
+  if (sources.includes('placements')) investment = 2000 + Math.floor(Math.random() * 5000);
+  if (sources.includes('pensions')) employment += 15000;
+
+  rrsp = Math.floor(Math.random() * 8000) + 1000;
+  medical = Math.floor(Math.random() * 3000);
+  donations = Math.floor(Math.random() * 1500);
+  if (p.family === 'famille' || p.family === 'monoparental') childcare = 4000 + Math.floor(Math.random() * 4000);
+
+  document.getElementById('sumEmployment').value = formatMoney(employment);
+  document.getElementById('sumSelfEmployment').value = formatMoney(selfEmp);
+  document.getElementById('sumInvestment').value = formatMoney(investment);
+  document.getElementById('sumRRSP').value = formatMoney(rrsp);
+  document.getElementById('sumMedical').value = formatMoney(medical);
+  document.getElementById('sumDonations').value = formatMoney(donations);
+  document.getElementById('sumChildcare').value = formatMoney(childcare);
+
+  const totalIncome = employment + selfEmp + investment;
+  const totalDeductions = rrsp + medical + donations + childcare;
+  const savings = Math.floor(totalDeductions * 0.28);
+  const refund = Math.floor(totalDeductions * 0.32) + Math.floor(Math.random() * 500);
+
+  document.getElementById('savingsAmount').textContent = formatMoney(savings);
+  document.getElementById('estimateAmount').textContent = formatMoney(refund);
+
+  state.summaryData = { totalIncome, totalDeductions, refund };
+}
+
+function formatMoney(n) {
+  return n.toLocaleString('fr-CA') + ' $';
+}
+
+// ===== STEP 6 — SUBMIT =====
+function populateRecap() {
+  const d = state.summaryData || { totalIncome: 0, totalDeductions: 0, refund: 1247 };
+  document.getElementById('recapRevenue').textContent = formatMoney(d.totalIncome);
+  document.getElementById('recapDeductions').textContent = formatMoney(d.totalDeductions);
+  document.getElementById('recapDocs').textContent = state.files.length;
+  document.getElementById('recapRefund').textContent = formatMoney(d.refund);
+}
+
+function toggleSubmit() {
+  document.getElementById('submitBtn').disabled = !document.getElementById('consentCheck').checked;
+}
+
+function submitDeclaration() {
+  document.getElementById('submitForm').style.display = 'none';
+  document.getElementById('confirmation').classList.add('show');
+}
+
+// ===== CPA FORM =====
+function submitCpaForm() {
+  const form = document.querySelector('.cpa-form');
+  const success = document.getElementById('cpaSuccess');
+  form.style.display = 'none';
+  success.style.display = 'block';
+}
+
+// ===== INIT =====
+document.getElementById('progressFill').style.width = '16.6%';
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+window.scrollTo({ top: 0, behavior: 'instant' });
+</script>
+</body>
+</html>
