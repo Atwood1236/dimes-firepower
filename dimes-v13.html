@@ -190,12 +190,15 @@
   /* Browser chrome tabs */
   .chrome-tabs{display:flex;align-items:flex-end;justify-content:flex-end;padding:10px 0 0 0;margin-right:calc(18px + 16px + 28px + 6px + 28px + 6px + 28px);background:transparent;position:relative}
   .chrome-tab{display:flex;align-items:center;gap:8px;padding:8px 32px 14px;background:linear-gradient(180deg,rgba(255,255,255,.04) 0%,transparent 100%);border-radius:10px 10px 0 0;font-size:11px;color:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.06);border-bottom:none;-webkit-mask-image:linear-gradient(to bottom,black 70%,transparent 100%);mask-image:linear-gradient(to bottom,black 70%,transparent 100%)}
-  .chrome-tab.inactive{-webkit-mask-image:linear-gradient(to bottom,black 70%,transparent 100%),linear-gradient(to right,black 50%,transparent 100%);mask-image:linear-gradient(to bottom,black 70%,transparent 100%),linear-gradient(to right,black 50%,transparent 100%);-webkit-mask-composite:destination-in;mask-composite:intersect;color:rgba(238,255,0,.25);border-color:rgba(238,255,0,.08);background:linear-gradient(180deg,rgba(238,255,0,.03) 0%,transparent 100%)}
+  .chrome-tab.inactive{-webkit-mask-image:linear-gradient(to bottom,black 70%,transparent 100%),linear-gradient(to right,black 50%,transparent 100%);mask-image:linear-gradient(to bottom,black 70%,transparent 100%),linear-gradient(to right,black 50%,transparent 100%);-webkit-mask-composite:destination-in;mask-composite:intersect;color:rgba(238,255,0,.25);border-color:rgba(238,255,0,.08);background:linear-gradient(180deg,rgba(238,255,0,.03) 0%,transparent 100%);transition:color .3s,border-color .3s,background .3s}
   .inactive-tab-wrap{position:relative;display:flex}
   .inactive-tab-wrap::before{content:'';position:absolute;inset:0;border-radius:10px 10px 0 0;pointer-events:none;border:0.5px solid rgba(238,255,0,0);border-bottom:none;animation:pulse-tab-ring 3s ease-in-out infinite;z-index:51;-webkit-mask-image:linear-gradient(to bottom,black 70%,transparent 100%),linear-gradient(to right,black 50%,transparent 100%);mask-image:linear-gradient(to bottom,black 70%,transparent 100%),linear-gradient(to right,black 50%,transparent 100%);-webkit-mask-composite:destination-in;mask-composite:intersect}
   .inactive-tab-wrap::after{content:'';position:absolute;inset:0;border-radius:10px 10px 0 0;pointer-events:none;border:4px solid rgba(238,255,0,0);border-bottom:none;filter:blur(16px);animation:pulse-tab-glow 3s ease-in-out infinite;z-index:50;-webkit-mask-image:linear-gradient(to bottom,black 70%,transparent 100%),linear-gradient(to right,black 50%,transparent 100%);mask-image:linear-gradient(to bottom,black 70%,transparent 100%),linear-gradient(to right,black 50%,transparent 100%);-webkit-mask-composite:destination-in;mask-composite:intersect}
   @keyframes pulse-tab-ring{0%,100%{border-color:rgba(238,255,0,0)}50%{border-color:rgba(238,255,0,.5)}}
   @keyframes pulse-tab-glow{0%,100%{border-color:rgba(238,255,0,0)}50%{border-color:rgba(238,255,0,.15)}}
+  .chrome-tab.inactive.lit{color:rgba(238,255,0,.9);border-color:rgba(238,255,0,.5);background:linear-gradient(180deg,rgba(238,255,0,.14) 0%,rgba(238,255,0,.03) 100%);-webkit-mask-image:linear-gradient(to bottom,black 85%,transparent 100%),linear-gradient(to right,black 70%,transparent 100%);mask-image:linear-gradient(to bottom,black 85%,transparent 100%),linear-gradient(to right,black 70%,transparent 100%)}
+  .inactive-tab-wrap.pulse-hidden::before,.inactive-tab-wrap.pulse-hidden::after{opacity:0;transition:opacity .3s}
+  .inactive-tab-wrap::before,.inactive-tab-wrap::after{transition:opacity .3s}
   .chrome-tab.active{background:linear-gradient(180deg,rgba(255,255,255,.07) 0%,rgba(255,255,255,.03) 60%,transparent 100%);color:rgba(255,255,255,.5)}
   .tab-close{font-size:9px;opacity:1;color:inherit}
 
@@ -210,6 +213,31 @@
   .chrome-extensions{display:flex;align-items:center;gap:6px;border-radius:5px}
   .ext-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.04);cursor:default;font-size:11px;color:var(--text-muted);transition:all .3s;box-shadow:0 4px 20px rgba(0,0,0,.6)}
   .ext-icon.dimes-ext{background:rgba(255,255,255,.03);color:var(--text-muted);border:1px solid rgba(255,255,255,.04)}
+
+  /* CLI view (inline replacement for iframe) */
+  .cli-view{display:none;min-height:480px;align-items:center;justify-content:flex-end;padding:32px 340px 32px 0;background:#0a0a0a}
+  .cli-terminal{width:560px;background:#111;border:1px solid rgba(255,255,255,.06);border-radius:12px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.03)}
+  .cli-titlebar{padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.05);background:rgba(255,255,255,.015)}
+  .cli-dots{display:flex;gap:6px}
+  .cli-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.08)}
+  .cli-titlebar-left{display:flex;align-items:center;gap:8px}
+  .cli-titlebar-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:#555;margin-left:6px}
+  .cli-titlebar-right{display:flex;align-items:center;gap:6px}
+  .cli-badge{width:18px;height:18px;border-radius:4px;background:rgba(238,255,0,.06);border:1px solid rgba(238,255,0,.1);display:flex;align-items:center;justify-content:center}
+  .cli-badge span{font-size:9px;font-weight:700;color:#EEFF00}
+  .cli-badge-label{font-family:var(--font);font-size:11px;font-weight:500;color:#555}
+  .cli-content{display:flex;flex-direction:column;align-items:center}
+  .cli-header{text-align:center;margin-bottom:28px}
+  .cli-header-title{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;font-size:16px;font-weight:600;color:#e8e8e8}
+  .cli-header-sub{font-size:13px;color:#666;font-weight:300;line-height:20px}
+  .cli-header-sub span{color:#888}
+  .cli-body{padding:14px 16px 10px;min-height:200px}
+  .cli-footer{display:flex;gap:24px;margin-top:28px}
+  .cli-cmd{text-align:center}
+  .cli-cmd-name{font-family:'JetBrains Mono',monospace;font-size:11px;color:#EEFF00;font-weight:500;margin-bottom:3px}
+  .cli-cmd-desc{font-size:11px;color:#555;font-weight:300}
+  .cli-cursor{display:inline-block;width:7px;height:15px;background:#EEFF00;animation:blink 1s step-end infinite;vertical-align:text-bottom}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 
   /* Terminal body */
   .terminal-body{display:grid;grid-template-columns:1fr 340px;min-height:480px}
@@ -426,7 +454,7 @@
   @media(max-width:900px){
     nav{padding:16px 24px}.hero{padding:100px 24px 60px}
     .process{padding:80px 24px}.process-grid{grid-template-columns:1fr}.process-step{border-left:none}
-    .products{padding:80px 24px 140px}.terminal-body{grid-template-columns:1fr}.terminal-sidebar{border-left:none;border-top:1px solid var(--t-border)}
+    .products{padding:80px 24px 140px}.terminal-body{grid-template-columns:1fr}.cli-view{padding-left:20px;padding-right:20px}.terminal-sidebar{border-left:none;border-top:1px solid var(--t-border)}
     .why{padding:80px 24px}.why-grid{grid-template-columns:1fr}.why-center{display:none}.why-card:nth-child(n){border-radius:16px;padding:40px 36px}.cta-inner{grid-template-columns:1fr;gap:40px}.cta-content{text-align:center}
     .backer-logos{flex-wrap:wrap;gap:32px}.social-proof{flex-direction:column;gap:20px}footer{flex-direction:column;gap:20px}.footer-links{flex-wrap:wrap;justify-content:center}
   }
@@ -485,6 +513,33 @@
         </div>
       </div>
 
+      <div class="cli-view" id="cliView">
+        <div class="cli-content">
+          <div class="cli-header">
+            <div class="cli-header-title"><div class="cli-badge"><span>D</span></div><span>Dimes CLI</span></div>
+            <div class="cli-header-sub">Credit primitives for AI trading agents.<br><span>Borrow against your bags. Let the agent trade.</span></div>
+          </div>
+          <div class="cli-terminal">
+            <div class="cli-titlebar">
+              <div class="cli-titlebar-left">
+                <div class="cli-dots"><div class="cli-dot"></div><div class="cli-dot"></div><div class="cli-dot"></div></div>
+                <div class="cli-titlebar-label">claude-agent</div>
+              </div>
+              <div class="cli-titlebar-right">
+                <div class="cli-badge"><span>D</span></div>
+                <span class="cli-badge-label">dimes cli</span>
+              </div>
+            </div>
+            <div class="cli-body"><span class="cli-cursor"></span></div>
+          </div>
+          <div class="cli-footer">
+            <div class="cli-cmd"><div class="cli-cmd-name">dimes portfolio</div><div class="cli-cmd-desc">Check borrowing power</div></div>
+            <div class="cli-cmd"><div class="cli-cmd-name">dimes quote</div><div class="cli-cmd-desc">Preview terms</div></div>
+            <div class="cli-cmd"><div class="cli-cmd-name">dimes credit</div><div class="cli-cmd-desc">Open position</div></div>
+            <div class="cli-cmd"><div class="cli-cmd-name">dimes repay</div><div class="cli-cmd-desc">Close & collect</div></div>
+          </div>
+        </div>
+      </div>
       <div class="terminal-body">
         <div class="terminal-main">
           <div class="terminal-nav">
@@ -725,6 +780,7 @@ function zoomToTarget(key) {
 
 function selectProduct(key) {
   if (activeProduct === key) { resetProduct(); return; }
+  if (typeof hideCliView === 'function' && key !== 'dimescli') hideCliView();
 
   fpPreview.classList.remove('active');
   fpPreview.classList.remove('selected');
@@ -802,6 +858,7 @@ function selectProduct(key) {
 function resetProduct() {
   const wasMultiply = activeProduct === 'multiply';
   activeProduct = null;
+  if (typeof hideCliView === 'function') hideCliView();
   fpPreview.classList.remove('selected');
   fpPreview.classList.remove('active');
   positionFpPreview();
@@ -873,6 +930,7 @@ window.addEventListener('message', e => {
   if (e.data && e.data.type === 'stream-height') streamPreview.style.height = e.data.h + 'px';
 });
 
+const dimesTab = document.querySelector('.chrome-tab.inactive');
 function hoverProduct(key) {
   if (activeProduct && activeProduct === key) return;
   if (!activeProduct) {
@@ -880,6 +938,9 @@ function hoverProduct(key) {
     highlightProduct(key);
     terminalEl.classList.add('dimmed');
     hlEls.forEach(el => el.classList.toggle('hl-active', el.dataset.hl === key));
+    const wrap = dimesTab && dimesTab.closest('.inactive-tab-wrap');
+    if (dimesTab) { dimesTab.classList.toggle('lit', key === 'dimescli'); }
+    if (wrap) { wrap.classList.toggle('pulse-hidden', key !== 'dimescli'); }
     if (key === 'firepower') {
       positionFpPreview();
       fpPreview.classList.add('active');
@@ -903,6 +964,7 @@ function unhoverProduct() {
     showIdleRings();
     terminalEl.classList.remove('dimmed');
     hlEls.forEach(el => el.classList.remove('hl-active'));
+    if (dimesTab) { dimesTab.classList.remove('lit'); dimesTab.closest('.inactive-tab-wrap').classList.remove('pulse-hidden'); }
   }
   tabs.forEach(t => t.classList.remove('hovered'));
 }
@@ -974,6 +1036,59 @@ hlEls.forEach(el => {
 const idleRingEls = document.querySelectorAll('.idle-ring');
 function showIdleRings() { idleRingEls.forEach(r => r.classList.remove('hidden')); }
 function hideIdleRings() { idleRingEls.forEach(r => r.classList.add('hidden')); }
+
+// Dimes CLI view — toggle terminal body vs inline CLI
+const cliView = document.getElementById('cliView');
+const termBody = document.querySelector('.terminal-body');
+const chromeUrlEl = document.querySelector('.chrome-url');
+const inactiveTabEl = document.querySelector('.chrome-tab.inactive');
+const activeTabEl = document.querySelector('.chrome-tab.active');
+const inactiveWrap = document.querySelector('.inactive-tab-wrap');
+let cliViewActive = false;
+
+function showCliView() {
+  if (cliViewActive) return;
+  cliViewActive = true;
+  cliView.style.minHeight = termBody.offsetHeight + 'px';
+  termBody.style.display = 'none';
+  cliView.style.display = 'flex';
+  // swap tab states
+  inactiveTabEl.classList.remove('inactive');
+  inactiveTabEl.classList.add('active');
+  activeTabEl.classList.remove('active');
+  activeTabEl.classList.add('inactive');
+  // swap URL text
+  chromeUrlEl.dataset.origHtml = chromeUrlEl.innerHTML;
+  chromeUrlEl.innerHTML = chromeUrlEl.querySelector('svg').outerHTML + ' dimes.cli';
+  // hide pulse
+  inactiveWrap.classList.add('pulse-hidden');
+}
+
+function hideCliView() {
+  if (!cliViewActive) return;
+  cliViewActive = false;
+  cliView.style.display = 'none';
+  termBody.style.display = '';
+  // restore tab states
+  inactiveTabEl.classList.add('inactive');
+  inactiveTabEl.classList.remove('active');
+  activeTabEl.classList.add('active');
+  activeTabEl.classList.remove('inactive');
+  // restore URL
+  if (chromeUrlEl.dataset.origHtml) chromeUrlEl.innerHTML = chromeUrlEl.dataset.origHtml;
+  // restore pulse
+  inactiveWrap.classList.remove('pulse-hidden');
+}
+
+// Click on dimes.cli chrome tab
+inactiveWrap.addEventListener('click', e => { e.stopPropagation(); showCliView(); });
+// Click on your.app chrome tab (when CLI view is active)
+activeTabEl.addEventListener('click', e => { e.stopPropagation(); if (cliViewActive) hideCliView(); });
+// Click on "Dimes CLI" product tab text
+document.querySelector('.product-tab[data-product="dimescli"]').addEventListener('click', e => {
+  e.stopPropagation();
+  showCliView();
+});
 
 // Timeline buttons — click to morph to "coming soon" and back
 function morphTimeline(btn, text, cb) {
