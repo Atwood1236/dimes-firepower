@@ -40,7 +40,7 @@
 <script type="text/babel">
 const{useState,useRef,useCallback,useEffect,useMemo}=React;
 const T={
-  bg:"#000000",card:"#141414",
+  bg:"#111",card:"#141414",
   border:"rgba(255,255,255,0.06)",borderMed:"rgba(255,255,255,0.08)",borderLight:"rgba(255,255,255,0.12)",
   surface:"rgba(255,255,255,0.03)",surfHover:"rgba(255,255,255,0.05)",
   text:"#e8e8e8",sub:"#888",dim:"#999",muted:"#888",faint:"#777",
@@ -51,7 +51,6 @@ const TOKENS=[
   {id:"sol", sym:"SOL",  color:"#9945FF", price:132.10, qty:312.4,  hc:0.85},
   {id:"btc", sym:"BTC",  color:"#F7931A", price:82000,  qty:0.082,  hc:0.92},
   {id:"eth", sym:"ETH",  color:"#627EEA", price:3400,   qty:1.24,   hc:0.88},
-  {id:"jto", sym:"JTO",  color:"#58c4c5", price:3.20,   qty:1850,   hc:0.72},
 ];
 const STREAM_ASSETS=[
   {id:"btc",sym:"BTC",color:"#F7931A",price:82000},
@@ -191,19 +190,19 @@ function WalletView({onSelect,streams}){
   const hasStreams=streamingTotal>0;
   return(
     <div style={{animation:"fadeIn 0.25s ease"}}>
-      <div style={{padding:"18px 20px 0",display:"flex",alignItems:"center",justifyContent:"space-between",opacity:0.3}}>
+      <div style={{padding:"18px 20px 0",display:"flex",alignItems:"center",justifyContent:"space-between",opacity:0.5}}>
         <div style={{display:"flex",alignItems:"center",gap:8}}>
           <div style={{width:22,height:22,borderRadius:5,background:T.border,display:"flex",alignItems:"center",justifyContent:"center"}}><span style={{fontSize:11,fontWeight:700,color:T.accent}}>D</span></div>
           <span style={{fontSize:13,fontWeight:500,color:T.text}}>dimes</span>
         </div>
         <div style={{display:"flex",gap:3}}>{[0,1,2].map(i=><div key={i} style={{width:3,height:3,borderRadius:"50%",background:T.muted}}/>)}</div>
       </div>
-      <div style={{padding:"22px 20px 6px",textAlign:"center",opacity:0.3}}>
+      <div style={{padding:"22px 20px 6px",textAlign:"center",opacity:0.5}}>
         <div style={{fontSize:36,fontWeight:600,color:T.text,letterSpacing:"-0.5px"}}>{fmt(TOTAL_PORT)}</div>
-        <div style={{fontSize:11,color:T.dim,fontWeight:100,opacity:0.6,marginTop:-2}}>Portfolio Value</div>
+        <div style={{fontSize:11,color:T.dim,fontWeight:300,opacity:1,marginTop:-2}}>Portfolio Value</div>
         {hasStreams&&<div style={{fontSize:11,color:T.accent,marginTop:5,display:"flex",alignItems:"center",justifyContent:"center",gap:4}}>+{fmt(streamingTotal)} streaming<FlowDots size={2}/></div>}
       </div>
-      <div style={{padding:"12px 20px 16px",opacity:0.3}}>
+      <div style={{padding:"12px 20px 16px",opacity:0.5,position:"relative"}}>
         <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}>
           <span style={{fontSize:13,color:T.faint}}>Tokens</span>
           <div style={{flex:1,height:1,background:T.border}}/>
@@ -233,6 +232,7 @@ function WalletView({onSelect,streams}){
             </div>
           );
         })}
+        <div style={{position:"absolute",bottom:0,left:0,right:0,height:50,background:"linear-gradient(to bottom, transparent, #111)",pointerEvents:"none"}}/>
       </div>
     </div>
   );
