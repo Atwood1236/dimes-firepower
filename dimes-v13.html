@@ -157,6 +157,7 @@
   .docs-link:hover .docs-arrow{animation:none}
   .docs-link:hover .docs-arrow{transform:translateX(2px)}
   .tab-group.active .docs-link{display:inline-block}
+  .docs-link-active{color:rgba(255,255,255,.85);border-color:rgba(255,255,255,.25)}
 
   /* Firepower hover preview */
   .firepower-preview{position:absolute;width:480px;height:548px;top:0;left:0;transform:scale(.75) translateY(18px);transform-origin:top right;border:none;border-radius:14px;z-index:52;opacity:0;pointer-events:none;transition:opacity .5s ease,transform 1.2s cubic-bezier(.4,0,.2,1),top 1.2s cubic-bezier(.4,0,.2,1),left 1.2s cubic-bezier(.4,0,.2,1);background:transparent;box-shadow:0 40px 120px rgba(0,0,0,.8),0 12px 40px rgba(0,0,0,.5);overflow:hidden}
@@ -406,7 +407,7 @@
   .cta-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:0;min-height:500px;overflow:visible}
   .cta-visual{display:flex;align-items:flex-end;justify-content:flex-start;align-self:end;overflow:visible}
   .hand-clasp-container{position:relative}
-  .hand-clasp-img{width:800px;mix-blend-mode:screen;display:block;margin-left:-110px}
+  .hand-clasp-img{width:800px;display:block;margin-left:-110px}
   .cta-content{text-align:center;margin-left:-100px}
   .cta-content h2{font-size:clamp(28px,3.2vw,42px);font-weight:600;line-height:1.15;letter-spacing:-.03em;margin-bottom:20px}
   .cta-content h2 em{font-style:normal;font-weight:300;color:var(--yellow)}
@@ -651,7 +652,7 @@
         <div class="product-tab" data-product="multiply">Multiply</div>
         <div class="tab-for">For prediction market terminals</div>
         <div class="tab-desc" id="descMultiply"></div>
-        <a href="#" class="docs-link">Learn more <span class="docs-arrow">&#8594;</span></a>
+        <a href="#" class="docs-link docs-link-active">Read doc <span class="docs-arrow">&#8594;</span></a>
       </div>
       <div class="tab-group" data-for="firepower">
         <div class="product-tab" data-product="firepower">Firepower</div>
@@ -669,12 +670,12 @@
 
   </div>
   <div class="firepower-preview" id="firepowerPreview"><iframe class="fp-iframe" data-src="Firepower.html"></iframe></div>
-  <div class="stream-preview" id="streamPreview"><iframe class="stream-iframe" data-src="Stream.html?v=3"></iframe></div>
+  <div class="stream-preview" id="streamPreview"><iframe class="stream-iframe" data-src="Stream.html?v=4"></iframe></div>
 
 </section>
 
 <section class="browser-section">
-  <div class="section-header reveal"><h2 class="section-title">Headless onchain credit<br>built for the agentic era</h2></div>
+  <div class="section-header reveal"><h2 class="section-title">Headless credit for the agentic era</h2></div>
   <div class="browser-window">
     <div class="browser-chrome" style="padding:0 18px 0;align-items:flex-end">
       <div style="padding:16px 0;display:flex;align-items:center">
@@ -743,7 +744,7 @@
   <div class="cta-inner">
     <div class="cta-visual" id="ctaVisual">
       <div class="hand-clasp-container">
-        <img src="assets/Dimes_Clasp.png" alt="Dimes handshake" class="hand-clasp-img">
+        <canvas id="dabCanvas" class="hand-clasp-img" style="pointer-events:none"></canvas>
       </div>
     </div>
     <div class="cta-content">
@@ -782,7 +783,7 @@ const tabs = document.querySelectorAll('.product-tab');
 const tabGroups = document.querySelectorAll('.tab-group');
 
 const products = {
-  multiply: { name:'Multiply', desc:'Offer your users 2-10x leverage on Kalshi and Polymarket.' },
+  multiply: { name:'Multiply', desc:'Offer your users up to 10x leverage on Polymarket and Kalshi.' },
   firepower: { name:'Firepower', desc:'Let your users unlock new trades using their existing positions as collateral.' },
   stream: { name:'Stream', desc:'Turn any portfolio into a self-managing BTC accumulation engine. No selling, no margin calls.' }
 };
@@ -1358,11 +1359,37 @@ new IntersectionObserver(entries => {
   }, { threshold: 0.15 }).observe(ctaSection);
 })();
 
-// CTA image scroll-synced blur-in, scale-in, glide-in (gated by visibility)
+// CTA visual scroll-synced: blur-in, scale-in, glide-in + WebM frame sequence
 (function(){
   var visual = document.getElementById('ctaVisual');
-  if (!visual) return;
-  var running = false;
+  var canvas = document.getElementById('dabCanvas');
+  if (!visual || !canvas) return;
+  var ctx = canvas.getContext('2d');
+  var frames = [], ready = false, running = false;
+  var targetFrame = 0, smoothFrame = 0;
+
+  /* Create video in JS only — never in the DOM */
+  var video = document.createElement('video');
+  video.muted = true; video.playsInline = true; video.preload = 'auto';
+  video.src = 'assets/Dab.webm';
+
+  video.addEventListener('canplaythrough', function(){
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    function capture(){
+      createImageBitmap(video, {premultiplyAlpha:'none'}).then(function(bmp){ frames.push(bmp); });
+      if (!video.ended) video.requestVideoFrameCallback(capture);
+    }
+    video.requestVideoFrameCallback(capture);
+    video.addEventListener('ended', function(){
+      video.src = ''; video = null;
+      if (frames.length > 0){ ctx.drawImage(frames[0], 0, 0); }
+      ready = true;
+    }, {once:true});
+    video.playbackRate = 1;
+    video.play().catch(function(){});
+  }, {once:true});
+
   function lerp(a, b, t) { return a + (b - a) * Math.max(0, Math.min(1, t)); }
   function update() {
     if (!running) return;
@@ -1374,6 +1401,13 @@ new IntersectionObserver(entries => {
     var opacity = lerp(0, 1, progress);
     visual.style.opacity = opacity;
     visual.style.transform = 'translateY(' + ty + 'px) scale(' + scale + ')';
+    if (ready && frames.length > 1) {
+      targetFrame = progress * (frames.length - 1);
+      smoothFrame += (targetFrame - smoothFrame) * 0.14;
+      var fi = Math.round(Math.max(0, Math.min(frames.length - 1, smoothFrame)));
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(frames[fi], 0, 0);
+    }
     requestAnimationFrame(update);
   }
   new IntersectionObserver(function(entries){
@@ -1529,8 +1563,8 @@ document.querySelectorAll('.reveal').forEach(el => {
         fill.style.maskImage = '';
       }
     }
-    // Phase 4: underglow + text at ~85%
-    if (p >= 0.85 && !ctaWrap.classList.contains('glow-on')){
+    // Phase 4: underglow + text immediately
+    if (p >= 0 && !ctaWrap.classList.contains('glow-on')){
       ctaWrap.classList.add('glow-on');
       ctaBtn.classList.add('text-on');
     }

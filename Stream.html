@@ -559,7 +559,7 @@ function App(){
   return(
     <div style={{background:"transparent",display:"flex",alignItems:"flex-start",justifyContent:"center"}}>
       <div style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
-        <div className={isWallet?"wallet-mode":""} style={{width:380,position:"relative",zIndex:0,display:"flex",flexDirection:"column",background:isWallet?"transparent":"var(--glow), "+T.card,border:"1px solid "+T.border,borderRadius:isWallet?"0 0 24px 24px":T.r,boxShadow:isWallet?"none":"0 32px 80px rgba(0,0,0,0.7), inset 0 -20px 60px rgba(238,255,0,0.04)",overflow:isWallet?"hidden":"visible"}}>
+        <div className={isWallet?"wallet-mode":""} style={{width:380,position:"relative",zIndex:0,display:"flex",flexDirection:"column",background:isWallet?"transparent":"var(--glow), "+T.card,border:"1px solid "+T.border,borderRadius:isWallet?"0 0 24px 24px":T.r,boxShadow:isWallet?"none":"0 32px 80px rgba(0,0,0,0.7), inset 0 -20px 60px rgba(238,255,0,0.04)",overflow:"hidden",maxHeight:view==="setup"?480:undefined}}>
           {isWallet&&<WalletView onSelect={handleSelect} streams={streams}/>}
           {view==="setup"&&asset&&<SetupView assetId={sel} existing={streams[sel]} onBack={()=>{setSel(null);setView("wallet")}} onActivate={handleActivate}/>}
           {view==="active"&&asset&&streams[sel]&&<ActiveView stream={streams[sel]} onBack={()=>{setSel(null);setView("wallet")}} onDeactivate={handleClose} onAdjust={()=>setView("setup")}/>}
