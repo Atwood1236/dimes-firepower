@@ -35,6 +35,8 @@ input,textarea,select{font-family:inherit;outline:none}
 .header-top{padding:0 24px;display:flex;align-items:stretch;justify-content:space-between;height:52px}
 .logo{display:flex;align-items:center;gap:10px;font-size:1.25rem;font-weight:800;color:var(--blue-900);cursor:pointer;flex-shrink:0}
 .logo svg{width:32px;height:32px}
+.nav-link-autre{font-size:.85rem;color:var(--blue-600);font-weight:500;text-decoration:none;white-space:nowrap}
+.nav-link-autre:hover{text-decoration:underline}
 .header-badge{display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--green-600);font-weight:600;flex-shrink:0}
 .header-badge svg{width:16px;height:16px}
 .step-indicator{display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--gray-600)}
@@ -110,7 +112,7 @@ input,textarea,select{font-family:inherit;outline:none}
 
 /* ===== STEP 2 — PROFIL ===== */
 .profil-step{min-height:calc(100vh - 64px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px}
-.question-container{max-width:600px;width:100%;text-align:center}
+.question-container{width:100%;max-width:960px;text-align:center;padding:0 24px}
 .q-progress{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:28px}
 .q-dot{width:36px;height:36px;border-radius:50%;border:2px solid var(--gray-300);background:var(--white);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:var(--gray-400);cursor:pointer;transition:var(--transition)}
 .q-dot:hover{border-color:var(--blue-400);color:var(--blue-400)}
@@ -120,7 +122,7 @@ input,textarea,select{font-family:inherit;outline:none}
 .q-line{width:24px;height:2px;background:var(--gray-300);transition:var(--transition)}
 .q-line.filled{background:var(--green-500)}
 .question-num{font-size:.85rem;color:var(--gray-400);font-weight:600;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
-.question-text{font-size:clamp(1.3rem,3vw,1.8rem);font-weight:700;color:var(--blue-900);margin-bottom:12px}
+.question-text{font-size:clamp(1.3rem,3vw,1.8rem);font-weight:700;color:var(--blue-900);margin-bottom:40px}
 .options-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;width:100%}
 .option-card{width:calc(33.333% - 8px);min-width:160px}
 .option-card{display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px 16px;background:var(--white);border:2px solid var(--gray-200);border-radius:var(--radius);cursor:pointer;transition:var(--transition);font-weight:600;color:var(--gray-700);font-size:.95rem}
@@ -129,7 +131,7 @@ input,textarea,select{font-family:inherit;outline:none}
 .option-card.selected{border-color:var(--blue-500);background:var(--blue-50);color:var(--blue-900);box-shadow:0 0 0 3px rgba(49,130,206,.15)}
 .option-tagline{font-size:.8rem;color:var(--gray-500);font-weight:400;line-height:1.3;margin-top:4px}
 .option-desc{font-size:.75rem;color:var(--gray-500);font-weight:400;line-height:1.3;margin-top:2px;opacity:.55}
-.multi-note{font-size:.9rem;color:var(--gray-400);margin-top:4px;margin-bottom:20px}
+.multi-note{font-size:.9rem;color:var(--gray-400);margin-top:-28px;margin-bottom:20px}
 .profil-nav{display:flex;gap:12px;margin-top:32px;justify-content:flex-end;width:100%}
 .nav-btn{padding:12px 28px;border-radius:100px;font-weight:600;font-size:.95rem;transition:var(--transition)}
 .nav-btn.primary{background:var(--blue-600);color:var(--white)}
@@ -147,6 +149,8 @@ input,textarea,select{font-family:inherit;outline:none}
 .msg{max-width:85%;padding:14px 18px;border-radius:18px;font-size:.95rem;line-height:1.5;animation:msgIn .3s ease}
 @keyframes msgIn{from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
 .msg.bot{align-self:flex-start;background:var(--white);border:1px solid var(--gray-200);border-bottom-left-radius:4px;color:var(--gray-900)}
+.msg.bot a{color:var(--blue-600);text-decoration:underline;font-weight:600}
+.msg.bot a:hover{color:var(--blue-700)}
 .msg.user{align-self:flex-end;background:var(--blue-600);color:var(--white);border-bottom-right-radius:4px}
 .msg.tip{align-self:flex-start;background:var(--green-100);border:1px solid var(--green-500);border-left:4px solid var(--green-500);border-radius:var(--radius);color:var(--gray-900);max-width:90%}
 .msg.tip::before{content:"💡 Astuce fiscale";display:block;font-weight:700;font-size:.8rem;color:var(--green-600);margin-bottom:4px}
@@ -291,25 +295,22 @@ input,textarea,select{font-family:inherit;outline:none}
 <header class="header" id="mainHeader">
   <div class="header-top">
     <div class="logo" onclick="goToStep(1)">
-      <svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#1a365d"/><path d="M8 22V10h4v12H8zm6-8v8h4v-8h-4zm6-4v12h4V10h-4z" fill="#48bb78"/></svg>
+      <svg viewBox="0 0 167.22 154.54" style="width:28px;height:28px"><defs><linearGradient id="atw-lg" x1="0" y1="77.27" x2="167.22" y2="77.27" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#3987c3"/><stop offset="1" stop-color="#44b87c"/></linearGradient></defs><path fill="#3489c3" d="M68.48,75.86c7.76-1.49,9.05,10.47.79,10.03-6.92-.37-6.46-8.94-.79-10.03Z"/><path fill="#429fa0" d="M84.41,75.86c7.76-1.49,9.05,10.47.79,10.03-6.92-.37-6.46-8.94-.79-10.03Z"/><path fill="#52b37f" d="M100.34,75.86c7.76-1.49,9.05,10.47.79,10.03-6.92-.37-6.46-8.94-.79-10.03Z"/><path fill="url(#atw-lg)" d="M135.87,75.6l-12.12,2.17-13.75-27.49-9.95,8.78h-30.13s-10.52-10.08-10.52-10.08c-9.63,13.08-19.58,28.77-8.76,44.4,20.18,29.15,97.25,18.12,100.67-25.2,3.25-41.21-46.01-62.47-81.03-54.64C12.48,26.45-4.1,96.29,50.35,126.53c27.92,15.5,63.73,13.96,90.63-2.95l11.71,11.73c-43.95,34.95-125.67,21.27-147.47-33.12C-15.49,50.53,28.75,4.81,78.85.34c42.13-3.76,91.7,23.75,88.2,71.07-3.98,53.79-92.74,71.25-125.5,34.28-13.91-15.7-11.3-32.71-3.07-48.37,3.13-5.96,16.46-25.2,18.74-29.13l18.63,18.66,19.1.16,17.94-18.61,22.97,47.19Z"/></svg>
       Atwood
+      <span style="width:1px;height:20px;background:var(--gray-300);margin:0 4px;flex-shrink:0"></span>
+      <span style="font-size:.75rem;font-weight:400;color:var(--gray-500);white-space:nowrap">La déclaration d'impôts intelligente, enfin!</span>
     </div>
-    <nav class="nav-tabs" id="navTabs">
-      <div class="nav-tab active" data-tab="particuliers" onclick="switchTab('particuliers')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        Particuliers
-      </div>
-      <div class="nav-tab" data-tab="comptables" onclick="switchTab('comptables')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h4"/></svg>
-        Comptables & CPA
-      </div>
-    </nav>
+    <nav class="nav-tabs" id="navTabs" style="display:none"></nav>
     <div class="step-indicator" id="stepIndicator" style="display:none">
       <span>Étape 1</span> / 6
     </div>
-    <div class="header-badge">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-      Sécurisé
+    <div style="display:flex;align-items:center;gap:32px">
+      <a href="#" class="nav-link-autre" onclick="event.preventDefault();switchTab('comptables')">Comptables & CPA</a>
+      <a href="#" class="nav-link-autre" onclick="event.preventDefault()">Produire une autre année</a>
+      <div class="header-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        Sécurisé
+      </div>
     </div>
   </div>
 </header>
@@ -417,6 +418,26 @@ input,textarea,select{font-family:inherit;outline:none}
     </div>
   </section>
 
+  <!-- ===== STEP 3 — CHATBOT ===== -->
+  <section class="step chat-step" data-step="3">
+    <div class="chat-header">
+      <h2>🤖 Assistant fiscal</h2>
+      <p>Répondez à quelques questions pour optimiser votre déclaration</p>
+      <button id="tipsToggle" onclick="toggleTips()" style="margin-top:8px;background:none;border:1px solid var(--gray-300);border-radius:100px;padding:6px 14px;font-size:.8rem;color:var(--gray-600);cursor:pointer;transition:var(--transition)">💡 Désactiver les astuces</button>
+    </div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="quick-replies" id="quickReplies"></div>
+    <div class="chat-input-area">
+      <input type="text" class="chat-input" id="chatInput" placeholder="Écrivez votre réponse..." onkeydown="if(event.key==='Enter')sendChat()">
+      <button class="chat-send" onclick="sendChat()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg>
+      </button>
+    </div>
+    <div class="chat-skip">
+      <button onclick="goToStep(4)">Passer cette étape →</button>
+    </div>
+  </section>
+
   <!-- ===== STEP 4 — UPLOAD ===== -->
   <section class="step upload-step" data-step="4">
     <h2>📎 Téléversez vos documents</h2>
@@ -452,7 +473,7 @@ input,textarea,select{font-family:inherit;outline:none}
     </div>
     <div class="uploaded-files" id="uploadedFiles"></div>
     <div class="upload-nav">
-      <button class="nav-btn secondary" onclick="goToStep(2)">← Retour</button>
+      <button class="nav-btn secondary" onclick="goToStep(3)">← Retour</button>
       <button class="nav-btn primary" onclick="goToStep(5)">Continuer →</button>
     </div>
   </section>
@@ -583,43 +604,139 @@ input,textarea,select{font-family:inherit;outline:none}
 </footer>
 
 <script>
+// ===== API CONFIG =====
+const USE_MOCK = true; // ← flip to false when connecting real Claude API
+const API_CONFIG = {
+  baseUrl: 'https://api.anthropic.com/v1',
+  apiKey: '', // set when USE_MOCK = false
+  model: 'claude-sonnet-4-20250514'
+};
+
+// ===== API LAYER =====
+const AttwoodAPI = {
+  /**
+   * Chat — walks chatScripts in mock mode.
+   * Real mode would POST to Claude Messages API.
+   */
+  async chat(messages, profile) {
+    if (USE_MOCK) {
+      const script = chatScripts[profile] || chatScripts.autre;
+      const idx = chatScriptIndex;
+      if (idx >= script.length) return { done: true };
+      const step = script[idx];
+      chatScriptIndex++;
+      return { done: false, ...step };
+    }
+    // Real implementation template:
+    // const res = await fetch(`${API_CONFIG.baseUrl}/messages`, {
+    //   method: 'POST',
+    //   headers: { 'x-api-key': API_CONFIG.apiKey, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
+    //   body: JSON.stringify({ model: API_CONFIG.model, max_tokens: 1024, messages })
+    // });
+    // return res.json();
+  },
+
+  /**
+   * Upload — validates and classifies file by filename heuristic.
+   */
+  async uploadDocument(file) {
+    if (USE_MOCK) {
+      const allowed = ['application/pdf', 'image/jpeg', 'image/png'];
+      const maxSize = 10 * 1024 * 1024;
+      if (!allowed.includes(file.type)) throw new Error(`Format non supporté: ${file.name}. Utilisez PDF, JPG ou PNG.`);
+      if (file.size > maxSize) throw new Error(`Fichier trop volumineux: ${file.name}. Maximum 10 Mo.`);
+      const name = file.name.toLowerCase();
+      let category = 'other';
+      if (name.includes('t4') || name.includes('relev') || name.includes('r1')) category = 'income';
+      else if (name.includes('reer') || name.includes('rrsp') || name.includes('celi')) category = 'rrsp';
+      else if (name.includes('medic') || name.includes('pharma') || name.includes('sante')) category = 'medical';
+      else if (name.includes('don') || name.includes('charit') || name.includes('recus')) category = 'donation';
+      await new Promise(r => setTimeout(r, 300 + Math.random() * 400));
+      return { success: true, name: file.name, size: file.size, type: file.type, category };
+    }
+    // Real: upload to storage + call Claude for classification
+  },
+
+  /**
+   * Calculate tax estimate — generates semi-random mock numbers.
+   */
+  async calculateTaxEstimate(profile, docs, chatData) {
+    if (USE_MOCK) {
+      await new Promise(r => setTimeout(r, 800 + Math.random() * 600));
+      const sources = profile.income_sources || [];
+      let employment = 0, selfEmp = 0, investment = 0;
+      if (sources.includes('salarie')) employment = 52000 + Math.floor(Math.random() * 20000);
+      if (sources.includes('autonome')) selfEmp = 45000 + Math.floor(Math.random() * 30000);
+      if (sources.includes('etudiant')) employment += 8000 + Math.floor(Math.random() * 12000);
+      if (sources.includes('pensions')) employment += 25000 + Math.floor(Math.random() * 15000);
+      if (sources.includes('placements')) investment = 2000 + Math.floor(Math.random() * 5000);
+      if (sources.includes('location')) investment += 6000 + Math.floor(Math.random() * 12000);
+      if (sources.includes('prestations')) employment += 10000 + Math.floor(Math.random() * 8000);
+      if (employment === 0 && selfEmp === 0) employment = 40000 + Math.floor(Math.random() * 20000);
+      const rrsp = Math.floor(Math.random() * 8000) + 1000;
+      const medical = Math.floor(Math.random() * 3000);
+      const donations = Math.floor(Math.random() * 1500);
+      const childcare = (profile.family === 'conjoint_fait' || profile.family === 'marie') ? 4000 + Math.floor(Math.random() * 4000) : 0;
+      const totalIncome = employment + selfEmp + investment;
+      const totalDeductions = rrsp + medical + donations + childcare;
+      const savings = Math.floor(totalDeductions * 0.28);
+      const refund = Math.floor(totalDeductions * 0.32) + Math.floor(Math.random() * 500);
+      return { employment, selfEmp, investment, rrsp, medical, donations, childcare, totalIncome, totalDeductions, savings, refund };
+    }
+    // Real: POST profile + docs to Claude for tax analysis
+  },
+
+  /**
+   * Submit declaration — returns success + reference number.
+   */
+  async submitDeclaration(data) {
+    if (USE_MOCK) {
+      await new Promise(r => setTimeout(r, 1200 + Math.random() * 800));
+      const ref = 'ATW-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2, 6).toUpperCase();
+      return { success: true, reference: ref, message: 'Déclaration soumise avec succès' };
+    }
+    // Real: POST to submission endpoint
+  }
+};
+
 // ===== STATE =====
 const state = {
   step: 1,
   profile: {},
   chatData: {},
   files: [],
-  qIndex: 0
+  qIndex: 0,
+  tipsDisabled: false
 };
 
 // ===== QUESTIONS (Step 2) =====
 const questions = [
   {
-    id: 'income_sources',
+    id: 'family',
     num: '1 / 3',
+    text: 'Quel est votre statut marital au 31 décembre 2025?',
+    options: [
+      { label: 'Célibataire', value: 'celibataire', desc: "Sans conjoint(e), Pas séparé(e) d'un mariage", icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' },
+      { label: 'Conjoint(e) de fait', value: 'conjoint_fait', desc: 'Vie commune depuis 12 mois+, Enfant(s) ensemble', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-3-3.87M9 21v-2a4 4 0 00-4-4H5"/><circle cx="9" cy="7" r="4"/><circle cx="17" cy="7" r="3"/></svg>' },
+      { label: 'Marié(e)', value: 'marie', desc: 'Union légale reconnue', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>' },
+      { label: 'Séparé(e)', value: 'separe', desc: 'Séparé(e) depuis 90 jours+', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>' },
+      { label: 'Divorcé(e)', value: 'divorce', desc: 'Divorce légalement prononcé', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>' },
+      { label: 'Veuf / veuve', value: 'veuf', desc: 'Conjoint(e) décédé(e)', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>' }
+    ]
+  },
+  {
+    id: 'income_sources',
+    num: '2 / 3',
     text: 'Quelles sont vos sources de revenus?',
     multi: true,
     options: [
       { label: 'Emploi salarié', value: 'salarie', tagline: "Revenus provenant d'un employeur", desc: "Feuillet T4 / Relevé 1, Dépenses d'emploi (T2200)", icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>' },
-      { label: 'Travail autonome', value: 'autonome', tagline: 'Revenus générés par toi-même', desc: 'Pigiste, Contrats, Entreprise Individuelle (T2125)', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>' },
-      { label: 'Placements', value: 'placements', tagline: "Revenus d'investissement", desc: 'Intérêts (T5), Dividendes, Gains en Capital, Crypto/Trading', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>' },
-      { label: 'Revenus de location', value: 'location', tagline: 'Si tu loues une propriété', desc: 'Loyer Perçu d\'un Immeuble', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>' },
-      { label: 'Pensions / Retraite', value: 'pensions', tagline: 'Revenus liés à la retraite', desc: 'RRQ, PSV, FERR, Rente d\'Employeur', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>' },
-      { label: 'Bourses / Études', value: 'etudiant', tagline: 'Pour les étudiants ou anciens étudiants', desc: 'Bourses, Prêts Étudiants, T2202', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 3 3 6 3s6-1 6-3v-5"/></svg>' },
-      { label: 'Prestations gouvernementales', value: 'prestations', tagline: 'Revenus provenant de programmes publics', desc: 'Assurance Emploi (T4E), Prestations Parentales, Aide Sociale, Autres Programmes Provinciaux', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/></svg>' }
-    ]
-  },
-  {
-    id: 'family',
-    num: '2 / 3',
-    text: 'Quelle est votre situation familiale?',
-    options: [
-      { label: 'Célibataire', value: 'celibataire', desc: 'Jamais Marié(e), Sans Conjoint', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' },
-      { label: 'Conjoint de fait', value: 'conjoint_fait', desc: 'Vie Commune Depuis 12 Mois+', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-3-3.87M9 21v-2a4 4 0 00-4-4H5"/><circle cx="9" cy="7" r="4"/><circle cx="17" cy="7" r="3"/></svg>' },
-      { label: 'Marié(e)', value: 'marie', desc: 'Union Légale Reconnue', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>' },
-      { label: 'Séparé(e)', value: 'separe', desc: 'Séparé(e) Depuis 90 Jours+', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>' },
-      { label: 'Divorcé(e)', value: 'divorce', desc: 'Divorce Légalement Prononcé', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>' },
-      { label: 'Veuf/ve', value: 'veuf', desc: 'Décès du Conjoint', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>' }
+      { label: 'Travail autonome', value: 'autonome', tagline: 'Revenus générés par toi-même', desc: 'Pigiste, Contrats, Entreprise individuelle (T2125)', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>' },
+      { label: 'Placements', value: 'placements', tagline: "Revenus d'investissement", desc: 'Intérêts (T5), Dividendes, Gains en capital, Crypto/trading', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>' },
+      { label: 'Revenus de location', value: 'location', tagline: 'Si tu loues une propriété', desc: 'Loyer perçu d\'un immeuble', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>' },
+      { label: 'Pensions / Retraite', value: 'pensions', tagline: 'Revenus liés à la retraite', desc: 'RRQ, PSV, FERR, Rente d\'employeur', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>' },
+      { label: 'Bourses / Études', value: 'etudiant', tagline: 'Pour les étudiants ou anciens étudiants', desc: 'Bourses, Prêts étudiants, T2202', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 3 3 6 3s6-1 6-3v-5"/></svg>' },
+      { label: 'Prestations gouvernementales', value: 'prestations', tagline: 'Revenus provenant de programmes publics', desc: 'Assurance emploi (T4E), Prestations parentales, Aide sociale, Autres programmes provinciaux', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/></svg>' }
     ]
   },
   {
@@ -627,9 +744,9 @@ const questions = [
     num: '3 / 3',
     text: 'Dans quelle province résidez-vous?',
     options: [
-      { label: 'Québec', value: 'QC', desc: 'Déclaration Fédérale + Provinciale', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>' },
-      { label: 'Ontario', value: 'ON', desc: 'Déclaration Fédérale Uniquement', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>' },
-      { label: 'Colombie-Britannique', value: 'BC', desc: 'Déclaration Fédérale Uniquement', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>' },
+      { label: 'Québec', value: 'QC', desc: 'Déclaration fédérale + provinciale', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>' },
+      { label: 'Ontario', value: 'ON', desc: 'Déclaration fédérale uniquement', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>' },
+      { label: 'Colombie-Britannique', value: 'BC', desc: 'Déclaration fédérale uniquement', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>' },
       { label: 'Autre province', value: 'other', desc: 'AB, MB, SK, NB, etc.', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>' }
     ]
   }
@@ -639,38 +756,43 @@ const questions = [
 const chatScripts = {
   salarie: [
     { msg: "Parfait! En tant que salarié(e), j'ai quelques questions pour optimiser votre déclaration.", delay: 800 },
-    { msg: "Avez-vous cotisé à un REER cette année?", delay: 1200, replies: ["Oui", "Non", "Je ne sais pas"] },
+    { msg: "Avez-vous cotisé à un REER cette année?", delay: 1200, replies: ["Oui", "Non", "Je ne sais pas"], help: "Vérifiez vos relevés bancaires ou l'espace client de votre institution financière. Cherchez des cotisations à un « régime enregistré d'épargne-retraite ». Vous pouvez aussi vérifier votre plafond de cotisation sur <a href='https://www.canada.ca/fr/agence-revenu/services/services-electroniques/services-electroniques-particuliers/dossier-particuliers.html'>Mon dossier de l'ARC</a>." },
     { tip: "Les cotisations REER réduisent directement votre revenu imposable. Chaque dollar cotisé peut vous faire économiser entre 30¢ et 50¢ en impôt!", delay: 1000 },
-    { msg: "Avez-vous eu des frais médicaux importants (plus de 2,421$ ou 3% de votre revenu)?", delay: 1200, replies: ["Oui", "Non"] },
-    { msg: "Avez-vous fait des dons à des organismes de charité?", delay: 1000, replies: ["Oui", "Non"] },
+    { msg: "Avez-vous eu des frais médicaux importants (plus de 2,421$ ou 3% de votre revenu)?", delay: 1200, replies: ["Oui", "Non", "Je ne sais pas"], help: "Rassemblez vos reçus de pharmacie, dentiste, optométriste et autres professionnels de la santé. Vérifiez aussi vos primes d'assurance maladie privée. Consultez la <a href='https://www.canada.ca/fr/agence-revenu/services/impot/particuliers/sujets/tout-votre-declaration-revenus/declaration-revenus/remplir-declaration-revenus/deductions-credits-depenses/lignes-33099-33199-frais-medicaux-admissibles.html'>liste des frais médicaux admissibles</a> sur le site de l'ARC." },
+    { msg: "Avez-vous fait des dons à des organismes de charité?", delay: 1000, replies: ["Oui", "Non", "Je ne sais pas"], help: "Vérifiez vos courriels et relevés bancaires pour des dons à des organismes enregistrés (Centraide, Croix-Rouge, fondations, etc.). Vous pouvez aussi vérifier si un organisme est enregistré via la <a href='https://apps.cra-arc.gc.ca/ebci/hacc/srch/pub/dsplyBscSrch?request_locale=fr'>recherche de l'ARC</a>." },
     { tip: "Les dons de plus de 200$ donnent un crédit fédéral de 29% + provincial. Pensez à regrouper vos dons avec votre conjoint(e) pour maximiser le crédit!", delay: 1000 },
-    { msg: "Avez-vous travaillé de la maison cette année? (même partiellement)", delay: 1200, replies: ["Oui", "Non"] },
+    { msg: "Avez-vous travaillé de la maison cette année? (même partiellement)", delay: 1200, replies: ["Oui", "Non", "Je ne sais pas"], help: "Si votre employeur vous a permis de travailler de la maison (même quelques jours par semaine), vous êtes admissible. Consultez les <a href='https://www.canada.ca/fr/agence-revenu/services/impot/particuliers/sujets/tout-votre-declaration-revenus/declaration-revenus/remplir-declaration-revenus/deductions-credits-depenses/depenses-travail-domicile-employes.html'>détails sur la déduction</a> — la méthode simplifiée à 2$/jour ne nécessite aucun reçu." },
     { tip: "Si vous avez travaillé de la maison, vous pouvez déduire jusqu'à 2$/jour (max 500$/an) avec la méthode simplifiée. Aucun reçu nécessaire!", delay: 1200 },
-    { msg: "Avez-vous un compte CELI? Les revenus du CELI ne sont pas imposables.", delay: 1000, replies: ["Oui", "Non"] },
+    { msg: "Avez-vous un compte CELI? Les revenus du CELI ne sont pas imposables.", delay: 1000, replies: ["Oui", "Non", "Je ne sais pas"], help: "Consultez votre espace client bancaire en ligne et cherchez un compte « CELI » ou « compte d'épargne libre d'impôt ». Vérifiez votre plafond sur <a href='https://www.canada.ca/fr/agence-revenu/services/services-electroniques/services-electroniques-particuliers/dossier-particuliers.html'>Mon dossier de l'ARC</a>. Plus d'infos dans le <a href='https://www.canada.ca/fr/agence-revenu/services/formulaires-publications/publications/rc4466.html'>guide CELI</a>." },
     { msg: "Excellent! J'ai collecté assez d'informations pour préparer votre déclaration. Passons au téléversement de vos documents.", delay: 1000, action: 'complete' }
   ],
   autonome: [
     { msg: "Super! En tant que travailleur autonome, il y a beaucoup d'optimisations possibles.", delay: 800 },
     { msg: "Quel est approximativement votre revenu brut annuel?", delay: 1200, replies: ["Moins de 30,000$", "30,000$ - 60,000$", "60,000$ - 100,000$", "Plus de 100,000$"] },
-    { msg: "Utilisez-vous un espace de votre domicile comme bureau?", delay: 1000, replies: ["Oui", "Non"] },
+    { msg: "Utilisez-vous un espace de votre domicile comme bureau?", delay: 1000, replies: ["Oui", "Non", "Je ne sais pas"], helpFlow: [
+      { msg: "Pas de souci, on va estimer ça ensemble! Quel type de logement habitez-vous?", key: "homeType", replies: ["Appartement", "Condo", "Maison", "Autre"] },
+      { msg: "Combien de pièces avez-vous au total? (salon, chambres, cuisine, bureau, salle à manger…)", key: "totalRooms", replies: ["2-3 pièces", "4-5 pièces", "6-7 pièces", "8 pièces ou plus"] },
+      { msg: "Votre espace de travail est-il une pièce dédiée ou un coin dans une autre pièce?", key: "officeType", replies: ["Pièce dédiée (bureau fermé)", "Grande section d'une pièce", "Petit coin / bureau dans le salon", "Table de cuisine / espace partagé"] },
+      { msg: "Approximativement, quelle est la superficie totale de votre logement?", key: "totalArea", replies: ["Moins de 500 pi²", "500 - 800 pi²", "800 - 1,200 pi²", "1,200 - 1,800 pi²", "Plus de 1,800 pi²"] }
+    ] },
     { tip: "Bureau à domicile = déduction proportionnelle du loyer/hypothèque, électricité, internet, chauffage! Calculez le % de superficie de votre bureau vs votre logement.", delay: 1200 },
-    { msg: "Avez-vous un véhicule utilisé pour le travail?", delay: 1000, replies: ["Oui", "Non"] },
+    { msg: "Avez-vous un véhicule utilisé pour le travail?", delay: 1000, replies: ["Oui", "Non", "Je ne sais pas"], help: "Si vous utilisez votre véhicule pour rencontrer des clients, livrer des produits ou vous rendre sur des chantiers (pas juste pour le trajet maison-bureau), c'est déductible au prorata. Voir les <a href='https://www.canada.ca/fr/agence-revenu/services/impot/entreprises/sujets/revenus-depenses-entreprise-travailleurs-independants/depenses-vehicules-moteur.html'>dépenses de véhicule admissibles</a>." },
     { tip: "Tenez un registre de kilométrage! Vous pouvez déduire l'essence, l'assurance, l'entretien et l'amortissement au prorata de l'utilisation professionnelle.", delay: 1200 },
-    { msg: "Êtes-vous inscrit(e) aux fichiers TPS/TVQ?", delay: 1000, replies: ["Oui", "Non", "Revenus sous 30,000$"] },
+    { msg: "Êtes-vous inscrit(e) aux fichiers TPS/TVQ?", delay: 1000, replies: ["Oui", "Non", "Je ne sais pas"], help: "Vérifiez si vous avez un numéro de TPS/TVQ. Connectez-vous à <a href='https://www.canada.ca/fr/agence-revenu/services/services-electroniques/services-electroniques-entreprises/dossier-entreprise.html'>Mon dossier d'entreprise (ARC)</a> ou à <a href='https://www.revenuquebec.ca/fr/services-en-ligne/mon-dossier/'>Mon dossier (Revenu Québec)</a>. Si votre revenu brut dépasse 30,000$ sur 4 trimestres consécutifs, l'inscription est obligatoire." },
     { tip: "Si votre revenu brut dépasse 30,000$, vous DEVEZ vous inscrire à la TPS/TVQ. En dessous, c'est optionnel mais souvent avantageux pour récupérer les taxes sur vos achats professionnels.", delay: 1400 },
-    { msg: "Avez-vous cotisé au RRQ (Régime de rentes du Québec)?", delay: 1000, replies: ["Oui", "Non"] },
+    { msg: "Avez-vous cotisé au RRQ (Régime de rentes du Québec)?", delay: 1000, replies: ["Oui", "Non", "Je ne sais pas"], help: "En tant que travailleur autonome au Québec, vous cotisez automatiquement au RRQ quand vous produisez votre déclaration. Vérifiez votre relevé de participation sur <a href='https://www.retraitequebec.gouv.qc.ca/fr/services-en-ligne/pages/services-en-ligne.aspx'>Retraite Québec</a>." },
     { msg: "Parfait! J'ai une bonne vue d'ensemble. Passons aux documents.", delay: 800, action: 'complete' }
   ],
   etudiant: [
     { msg: "Excellent! Les étudiants ont droit à plusieurs crédits intéressants.", delay: 800 },
-    { msg: "Avez-vous reçu un T2202 (frais de scolarité) de votre établissement?", delay: 1200, replies: ["Oui", "Non", "C'est quoi?"] },
+    { msg: "Avez-vous reçu un T2202 (frais de scolarité) de votre établissement?", delay: 1200, replies: ["Oui", "Non", "C'est quoi?"], help: "Le T2202 est un relevé émis par votre école, cégep ou université. Connectez-vous au portail étudiant de votre établissement (section « relevés fiscaux »). Vous pouvez aussi le trouver sur <a href='https://www.canada.ca/fr/agence-revenu/services/services-electroniques/services-electroniques-particuliers/dossier-particuliers.html'>Mon dossier de l'ARC</a> sous « Feuillets d'impôt »." },
     { tip: "Vos frais de scolarité donnent un crédit d'impôt fédéral de 15% + provincial. Si vous n'avez pas assez de revenus pour les utiliser, vous pouvez les reporter aux années futures ou les transférer à un parent!", delay: 1400 },
     { msg: "Avez-vous eu un emploi ou un stage rémunéré cette année?", delay: 1000, replies: ["Oui, à temps partiel", "Oui, stage/coop", "Non"] },
-    { msg: "Avez-vous reçu des bourses d'études?", delay: 1000, replies: ["Oui", "Non"] },
+    { msg: "Avez-vous reçu des bourses d'études?", delay: 1000, replies: ["Oui", "Non", "Je ne sais pas"], help: "Vérifiez auprès de votre établissement ou du programme d'aide financière. Les bourses d'excellence, d'admission et de recherche comptent. Consultez votre dossier sur <a href='https://www.quebec.ca/education/aide-financiere-aux-etudes'>Aide financière aux études (Québec)</a>." },
     { tip: "Bonne nouvelle: la plupart des bourses d'études sont exonérées d'impôt si vous étiez inscrit(e) à un programme admissible!", delay: 1000 },
-    { msg: "Avez-vous payé des intérêts sur un prêt étudiant gouvernemental?", delay: 1200, replies: ["Oui", "Non"] },
+    { msg: "Avez-vous payé des intérêts sur un prêt étudiant gouvernemental?", delay: 1200, replies: ["Oui", "Non", "Je ne sais pas"], help: "Vérifiez votre dossier sur <a href='https://www.quebec.ca/education/aide-financiere-aux-etudes'>l'aide financière aux études (Québec)</a> ou le <a href='https://www.csnpe-nslsc.canada.ca/fr/home'>Centre de service national de prêts aux étudiants</a>. Seuls les intérêts sur prêts gouvernementaux sont admissibles (pas les lignes de crédit privées)." },
     { tip: "Les intérêts sur les prêts étudiants gouvernementaux donnent un crédit d'impôt non remboursable. Vous pouvez les reporter sur 5 ans!", delay: 1000 },
-    { msg: "Recevez-vous le crédit de solidarité du Québec?", delay: 1000, replies: ["Oui", "Non", "Je ne sais pas"] },
+    { msg: "Recevez-vous le crédit de solidarité du Québec?", delay: 1000, replies: ["Oui", "Non", "Je ne sais pas"], help: "Vérifiez vos dépôts bancaires : le crédit de solidarité est versé le 5 de chaque mois. Consultez <a href='https://www.revenuquebec.ca/fr/services-en-ligne/mon-dossier/'>Mon dossier (Revenu Québec)</a> pour voir si vous le recevez. Plus d'infos sur le <a href='https://www.revenuquebec.ca/fr/citoyens/credits-dimpot/credit-dimpot-pour-solidarite/'>crédit de solidarité</a>." },
     { tip: "Le crédit de solidarité peut vous donner jusqu'à ~1,000$/an si vous habitez au Québec. Il faut produire sa déclaration pour y avoir droit, même sans revenu!", delay: 1200 },
     { msg: "Super! On a tout ce qu'il faut. Passons aux documents.", delay: 800, action: 'complete' }
   ],
@@ -680,20 +802,20 @@ const chatScripts = {
     { tip: "Le fractionnement du revenu de pension permet de transférer jusqu'à 50% de vos revenus de pension admissibles à votre conjoint(e). Ça peut réduire l'impôt du couple significativement!", delay: 1400 },
     { msg: "Avez-vous 65 ans ou plus?", delay: 1000, replies: ["Oui", "Non, moins de 65"] },
     { tip: "À 65 ans+, vous avez droit au montant en raison de l'âge (fédéral: ~8,396$ et provincial). C'est automatique, mais vérifiez que c'est bien inscrit!", delay: 1200 },
-    { msg: "Avez-vous des frais médicaux importants?", delay: 1000, replies: ["Oui, beaucoup", "Quelques-uns", "Non"] },
+    { msg: "Avez-vous des frais médicaux importants?", delay: 1000, replies: ["Oui, beaucoup", "Quelques-uns", "Non", "Je ne sais pas"], help: "Additionnez vos reçus de pharmacie, dentiste, lunettes, prothèses auditives et primes d'assurance non remboursées. Consultez la <a href='https://www.canada.ca/fr/agence-revenu/services/impot/particuliers/sujets/tout-votre-declaration-revenus/declaration-revenus/remplir-declaration-revenus/deductions-credits-depenses/lignes-33099-33199-frais-medicaux-admissibles.html'>liste complète des frais admissibles</a> (incluant les frais de résidence pour aînés)." },
     { tip: "Les frais médicaux admissibles incluent: médicaments sur ordonnance, primes d'assurance maladie, soins dentaires, lunettes, prothèses auditives, et bien plus!", delay: 1200 },
-    { msg: "Avez-vous des revenus de placements (FERR, dividendes, intérêts)?", delay: 1200, replies: ["Oui", "Non"] },
+    { msg: "Avez-vous des revenus de placements (FERR, dividendes, intérêts)?", delay: 1200, replies: ["Oui", "Non", "Je ne sais pas"], help: "Vérifiez vos relevés bancaires et de courtage pour des intérêts, dividendes ou gains. Vos feuillets T3/T5 seront disponibles sur <a href='https://www.canada.ca/fr/agence-revenu/services/services-electroniques/services-electroniques-particuliers/dossier-particuliers.html'>Mon dossier de l'ARC</a> sous « Feuillets d'impôt » dès février." },
     { msg: "Parfait! J'ai tout ce qu'il me faut. Passons aux documents.", delay: 800, action: 'complete' }
   ],
   autre: [
     { msg: "Merci! Je vais vous poser quelques questions générales pour bien préparer votre déclaration.", delay: 800 },
-    { msg: "Avez-vous reçu des revenus d'emploi (feuillets T4 ou Relevé 1) cette année?", delay: 1200, replies: ["Oui", "Non"] },
-    { msg: "Avez-vous d'autres sources de revenus? (travail autonome, placements, location, pensions)", delay: 1200, replies: ["Oui", "Non"] },
-    { msg: "Avez-vous cotisé à un REER cette année?", delay: 1000, replies: ["Oui", "Non", "Je ne sais pas"] },
+    { msg: "Avez-vous reçu des revenus d'emploi (feuillets T4 ou Relevé 1) cette année?", delay: 1200, replies: ["Oui", "Non", "Je ne sais pas"], help: "Si vous avez travaillé pour un employeur en 2025, vous devriez recevoir un T4 et Relevé 1 avant fin février. Connectez-vous à <a href='https://www.canada.ca/fr/agence-revenu/services/services-electroniques/services-electroniques-particuliers/dossier-particuliers.html'>Mon dossier de l'ARC</a> — vos feuillets y sont disponibles automatiquement." },
+    { msg: "Avez-vous d'autres sources de revenus? (travail autonome, placements, location, pensions)", delay: 1200, replies: ["Oui", "Non", "Je ne sais pas"], help: "Pensez à : revenus de pigiste, intérêts bancaires, dividendes, loyers perçus, pensions alimentaires, prestations d'assurance-emploi, retraits REER. Vérifiez vos feuillets sur <a href='https://www.canada.ca/fr/agence-revenu/services/services-electroniques/services-electroniques-particuliers/dossier-particuliers.html'>Mon dossier de l'ARC</a> — même de petits montants doivent être déclarés." },
+    { msg: "Avez-vous cotisé à un REER cette année?", delay: 1000, replies: ["Oui", "Non", "Je ne sais pas"], help: "Vérifiez vos relevés bancaires ou l'espace client de votre institution financière. Cherchez des cotisations à un « régime enregistré d'épargne-retraite ». Vous pouvez aussi vérifier votre plafond de cotisation sur <a href='https://www.canada.ca/fr/agence-revenu/services/services-electroniques/services-electroniques-particuliers/dossier-particuliers.html'>Mon dossier de l'ARC</a>." },
     { tip: "Les cotisations REER réduisent directement votre revenu imposable. Chaque dollar cotisé peut vous faire économiser entre 30¢ et 50¢ en impôt!", delay: 1000 },
-    { msg: "Avez-vous eu des frais médicaux, fait des dons de charité, ou payé des frais de garde?", delay: 1200, replies: ["Oui", "Non"] },
+    { msg: "Avez-vous eu des frais médicaux, fait des dons de charité, ou payé des frais de garde?", delay: 1200, replies: ["Oui", "Non", "Je ne sais pas"], help: "Rassemblez vos reçus de pharmacie, dentiste, dons et frais de garderie. Consultez la <a href='https://www.canada.ca/fr/agence-revenu/services/impot/particuliers/sujets/tout-votre-declaration-revenus/declaration-revenus/remplir-declaration-revenus/deductions-credits-depenses/lignes-33099-33199-frais-medicaux-admissibles.html'>liste des frais médicaux admissibles</a> et vérifiez vos relevés d'assurance pour les montants non remboursés." },
     { tip: "Même de petits montants comptent! Les frais médicaux, dons et frais de garde peuvent tous donner droit à des crédits d'impôt.", delay: 1000 },
-    { msg: "Avez-vous travaillé de la maison cette année?", delay: 1000, replies: ["Oui", "Non"] },
+    { msg: "Avez-vous travaillé de la maison cette année?", delay: 1000, replies: ["Oui", "Non", "Je ne sais pas"], help: "Si votre employeur vous a permis de travailler de la maison (même quelques jours par semaine), vous êtes admissible. Consultez les <a href='https://www.canada.ca/fr/agence-revenu/services/impot/particuliers/sujets/tout-votre-declaration-revenus/declaration-revenus/remplir-declaration-revenus/deductions-credits-depenses/depenses-travail-domicile-employes.html'>détails sur la déduction</a> — la méthode simplifiée à 2$/jour ne nécessite aucun reçu." },
     { tip: "Si vous avez travaillé de la maison, vous pouvez déduire jusqu'à 2$/jour (max 500$/an) avec la méthode simplifiée. Aucun reçu nécessaire!", delay: 1200 },
     { msg: "Parfait! J'ai assez d'informations. Passons au téléversement de vos documents.", delay: 800, action: 'complete' }
   ]
@@ -703,23 +825,16 @@ const chatScripts = {
 function goToStep(n) {
   document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
   const target = document.querySelector(`[data-step="${n}"]`);
-  if (target) { target.classList.add('active'); }
+  if (target) target.classList.add('active');
   state.step = n;
   document.getElementById('progressFill').style.width = ((n / 6) * 100) + '%';
   document.getElementById('stepIndicator').innerHTML = `<span>Étape ${n}</span> / 6`;
-  // Show nav tabs on landing, step indicator during flow
-  const tabs = document.getElementById('navTabs');
-  const indicator = document.getElementById('stepIndicator');
-  if (n === 1) {
-    tabs.style.display = 'flex';
-  } else {
-    tabs.style.display = 'none';
-  }
-  indicator.style.display = 'none';
+  document.getElementById('navTabs').style.display = n === 1 ? 'flex' : 'none';
+  document.getElementById('stepIndicator').style.display = 'none';
   if (n === 2 && state.qIndex === 0) renderQuestion();
+  if (n === 3) startChat();
   if (n === 5) populateSummary();
   if (n === 6) populateRecap();
-  // Smooth scroll to the active step
   setTimeout(() => {
     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, 50);
@@ -738,7 +853,7 @@ function switchTab(tab) {
 // ===== STEP 2 — PROFIL LOGIC =====
 function renderQuestion() {
   const q = questions[state.qIndex];
-  if (!q) { goToStep(4); return; }
+  if (!q) { goToStep(3); return; }
   const container = document.getElementById('questionContainer');
   const isMulti = q.multi || false;
 
@@ -828,7 +943,7 @@ function confirmCustom(qId) {
 function nextQuestion() {
   state.qIndex++;
   if (state.qIndex >= questions.length) {
-    goToStep(4);
+    goToStep(3);
   } else {
     renderQuestion();
   }
@@ -852,45 +967,52 @@ function jumpToQuestion(index) {
 let chatActive = false;
 let chatScriptIndex = 0;
 
+function getPrimaryProfile() {
+  const sources = state.profile.income_sources || [];
+  if (sources.includes('autonome')) return 'autonome';
+  if (sources.includes('etudiant')) return 'etudiant';
+  if (sources.includes('pensions')) return 'retraite';
+  if (sources.includes('salarie')) return 'salarie';
+  return 'autre';
+}
+
 function startChat() {
-  if (chatActive) return;
-  chatActive = true;
+  chatActive = false;
   chatScriptIndex = 0;
   const msgs = document.getElementById('chatMessages');
   msgs.innerHTML = '';
   document.getElementById('quickReplies').innerHTML = '';
+  chatActive = true;
 
-  const rawProfile = state.profile.employment || 'salarie';
-  const profile = rawProfile.startsWith('autre:') ? 'autre' : rawProfile;
-  const script = chatScripts[profile] || chatScripts.salarie;
-  const customJob = rawProfile.startsWith('autre:') ? rawProfile.slice(6) : '';
-  const name = profile === 'salarie' ? 'salarié(e)' : profile === 'autonome' ? 'travailleur autonome' : profile === 'etudiant' ? 'étudiant(e)' : profile === 'retraite' ? 'retraité(e)' : customJob || 'contribuable';
+  const profile = getPrimaryProfile();
+  const nameMap = { salarie: 'salarié(e)', autonome: 'travailleur autonome', etudiant: 'étudiant(e)', retraite: 'retraité(e)', autre: 'contribuable' };
+  const name = nameMap[profile] || 'contribuable';
 
   addBotMsg(`Bonjour! Je suis votre assistant fiscal. Je vois que vous êtes ${name}. Commençons! 🎯`, () => {
     advanceChat();
   });
 }
 
-function advanceChat() {
-  const rawProf = state.profile.employment || 'salarie';
-  const profile = rawProf.startsWith('autre:') ? 'autre' : rawProf;
-  const script = chatScripts[profile] || chatScripts.salarie;
-  if (chatScriptIndex >= script.length) return;
+async function advanceChat() {
+  const profile = getPrimaryProfile();
+  const result = await AttwoodAPI.chat([], profile);
+  if (result.done) return;
 
-  const step = script[chatScriptIndex];
-  chatScriptIndex++;
-
-  if (step.tip) {
+  if (result.tip) {
+    if (state.tipsDisabled) { setTimeout(() => advanceChat(), 200); return; }
     showTyping(() => {
-      addTipMsg(step.tip);
-      setTimeout(() => advanceChat(), step.delay || 800);
+      addTipMsg(result.tip);
+      setTimeout(() => advanceChat(), 400);
     }, 1200);
-  } else if (step.msg) {
+  } else if (result.msg) {
     showTyping(() => {
-      addBotMsg(step.msg);
-      if (step.replies) {
-        showQuickReplies(step.replies);
-      } else if (step.action === 'complete') {
+      addBotMsg(result.msg);
+      if (result.replies) {
+        lastReplies = result.replies;
+        lastHelpText = result.help || '';
+        lastHelpFlow = result.helpFlow || null;
+        showQuickReplies(result.replies);
+      } else if (result.action === 'complete') {
         setTimeout(() => {
           document.getElementById('quickReplies').innerHTML = `
             <button class="quick-reply" onclick="goToStep(4)" style="background:var(--blue-600);color:white;border-color:var(--blue-600)">
@@ -898,7 +1020,7 @@ function advanceChat() {
             </button>`;
         }, 600);
       } else {
-        setTimeout(() => advanceChat(), step.delay || 800);
+        setTimeout(() => advanceChat(), 400);
       }
     }, 1000);
   }
@@ -928,6 +1050,17 @@ function addBotMsg(text, callback) {
   if (callback) setTimeout(callback, 400);
 }
 
+function addBotHtml(html, callback) {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'msg bot';
+  div.innerHTML = html;
+  div.querySelectorAll('a').forEach(a => { a.target = '_blank'; a.rel = 'noopener'; });
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  if (callback) setTimeout(callback, 400);
+}
+
 function addTipMsg(text) {
   const msgs = document.getElementById('chatMessages');
   const div = document.createElement('div');
@@ -948,14 +1081,96 @@ function addUserMsg(text) {
 
 function showQuickReplies(replies) {
   const container = document.getElementById('quickReplies');
-  container.innerHTML = replies.map(r => `<button class="quick-reply" onclick="handleReply('${r}')">${r}</button>`).join('');
+  container.innerHTML = replies.map((r, i) => `<button class="quick-reply" data-idx="${i}">${r}</button>`).join('');
+  container.querySelectorAll('.quick-reply').forEach(btn => {
+    btn.addEventListener('click', () => handleReply(btn.textContent));
+  });
 }
+
+let lastReplies = [];
+let lastHelpText = '';
+let lastHelpFlow = null;
+let helpFlowIndex = 0;
+let helpFlowData = {};
 
 function handleReply(text) {
   document.getElementById('quickReplies').innerHTML = '';
   addUserMsg(text);
+
+  // Active help flow — collect answer and advance
+  if (lastHelpFlow && helpFlowIndex > 0 && helpFlowIndex <= lastHelpFlow.length) {
+    const step = lastHelpFlow[helpFlowIndex - 1];
+    helpFlowData[step.key] = text;
+    advanceHelpFlow();
+    return;
+  }
+
+  // "Je ne sais pas" — start help flow or show help text
+  if (text === 'Je ne sais pas' || text === "C'est quoi?") {
+    if (lastHelpFlow) {
+      helpFlowIndex = 0;
+      helpFlowData = {};
+      advanceHelpFlow();
+      return;
+    }
+    if (lastHelpText) {
+      showTyping(() => {
+        addBotHtml(lastHelpText);
+        setTimeout(() => {
+          showQuickReplies(lastReplies.filter(r => r !== 'Je ne sais pas' && r !== "C'est quoi?"));
+        }, 400);
+      }, 1000);
+      return;
+    }
+  }
+
+  lastHelpFlow = null;
   state.chatData[chatScriptIndex] = text;
   setTimeout(() => advanceChat(), 600);
+}
+
+function advanceHelpFlow() {
+  if (helpFlowIndex >= lastHelpFlow.length) {
+    // Flow complete — calculate result and re-ask
+    showTyping(() => {
+      const result = calculateOfficePercent(helpFlowData);
+      addBotHtml(result);
+      lastHelpFlow = null;
+      setTimeout(() => {
+        showQuickReplies(lastReplies.filter(r => r !== 'Je ne sais pas'));
+      }, 400);
+    }, 1200);
+    return;
+  }
+  const step = lastHelpFlow[helpFlowIndex];
+  helpFlowIndex++;
+  showTyping(() => {
+    addBotMsg(step.msg);
+    showQuickReplies(step.replies);
+  }, 800);
+}
+
+function calculateOfficePercent(data) {
+  // Estimate total area in sq ft
+  const areaMap = { 'Moins de 500 pi²': 400, '500 - 800 pi²': 650, '800 - 1,200 pi²': 1000, '1,200 - 1,800 pi²': 1500, 'Plus de 1,800 pi²': 2200 };
+  const totalArea = areaMap[data.totalArea] || 800;
+
+  // Estimate office area based on type
+  let officeArea;
+  if (data.officeType === 'Pièce dédiée (bureau fermé)') officeArea = Math.min(120, totalArea * 0.18);
+  else if (data.officeType === 'Grande section d\'une pièce') officeArea = Math.min(80, totalArea * 0.12);
+  else if (data.officeType === 'Petit coin / bureau dans le salon') officeArea = Math.min(40, totalArea * 0.07);
+  else officeArea = Math.min(25, totalArea * 0.04);
+
+  const percent = Math.round((officeArea / totalArea) * 100);
+  const clampedPercent = Math.max(3, Math.min(percent, 25));
+
+  state.chatData.officeEstimate = { ...data, percent: clampedPercent, officeArea: Math.round(officeArea), totalArea };
+
+  return `<strong>Estimation :</strong> votre bureau représente environ <strong>${clampedPercent}%</strong> de votre logement (~${Math.round(officeArea)} pi² sur ${totalArea} pi²).<br><br>` +
+    `Vous pourriez déduire <strong>${clampedPercent}%</strong> de votre loyer/hypothèque, électricité, chauffage et internet. ` +
+    `Pour un calcul précis, mesurez la superficie réelle. Voir le <a href='https://www.canada.ca/fr/agence-revenu/services/impot/entreprises/sujets/revenus-depenses-entreprise-travailleurs-independants/depenses-entreprise-domicile.html'>guide de l'ARC</a>.<br><br>` +
+    `Souhaitez-vous déduire votre bureau à domicile?`;
 }
 
 function sendChat() {
@@ -967,6 +1182,24 @@ function sendChat() {
   addUserMsg(text);
   state.chatData[chatScriptIndex] = text;
   setTimeout(() => advanceChat(), 600);
+}
+
+function toggleTips() {
+  state.tipsDisabled = !state.tipsDisabled;
+  const btn = document.getElementById('tipsToggle');
+  if (state.tipsDisabled) {
+    btn.textContent = '💡 Activer les astuces';
+    btn.style.background = 'var(--gray-100)';
+    btn.style.color = 'var(--gray-400)';
+    btn.style.borderColor = 'var(--gray-200)';
+    btn.style.textDecoration = 'line-through';
+  } else {
+    btn.textContent = '💡 Désactiver les astuces';
+    btn.style.background = 'none';
+    btn.style.color = 'var(--gray-600)';
+    btn.style.borderColor = 'var(--gray-300)';
+    btn.style.textDecoration = 'none';
+  }
 }
 
 // ===== STEP 4 — UPLOAD LOGIC =====
@@ -983,21 +1216,16 @@ function handleDrop(e) {
   handleFiles(e.dataTransfer.files);
 }
 
-function handleFiles(fileList) {
-  const allowed = ['application/pdf', 'image/jpeg', 'image/png'];
-  const maxSize = 10 * 1024 * 1024;
-  Array.from(fileList).forEach(file => {
-    if (!allowed.includes(file.type)) {
-      alert(`Format non supporté: ${file.name}. Utilisez PDF, JPG ou PNG.`);
-      return;
+async function handleFiles(fileList) {
+  for (const file of Array.from(fileList)) {
+    try {
+      const result = await AttwoodAPI.uploadDocument(file);
+      state.files.push({ name: result.name, size: result.size, type: result.type, category: result.category });
+      renderUploadedFiles();
+    } catch (err) {
+      alert(err.message);
     }
-    if (file.size > maxSize) {
-      alert(`Fichier trop volumineux: ${file.name}. Maximum 10 Mo.`);
-      return;
-    }
-    state.files.push({ name: file.name, size: file.size, type: file.type });
-    renderUploadedFiles();
-  });
+  }
 }
 
 function renderUploadedFiles() {
@@ -1017,14 +1245,10 @@ function renderUploadedFiles() {
     </div>
   `).join('');
 
-  // Update category counts (simple heuristic by filename)
+  // Update category counts from API classification
   let counts = { income: 0, rrsp: 0, medical: 0, donation: 0 };
   state.files.forEach(f => {
-    const name = f.name.toLowerCase();
-    if (name.includes('t4') || name.includes('relev') || name.includes('r1')) counts.income++;
-    else if (name.includes('reer') || name.includes('rrsp') || name.includes('celi')) counts.rrsp++;
-    else if (name.includes('medic') || name.includes('pharma') || name.includes('sante')) counts.medical++;
-    else if (name.includes('don') || name.includes('charit') || name.includes('recus')) counts.donation++;
+    if (f.category && counts[f.category] !== undefined) counts[f.category]++;
   });
   document.getElementById('countIncome').textContent = counts.income;
   document.getElementById('countRRSP').textContent = counts.rrsp;
@@ -1038,46 +1262,30 @@ function removeFile(index) {
 }
 
 // ===== STEP 5 — SUMMARY =====
-function populateSummary() {
+async function populateSummary() {
   const p = state.profile;
-  document.getElementById('sumSituation').value = p.family === 'celibataire' ? 'Célibataire' : p.family === 'couple' ? 'En couple' : p.family === 'famille' ? 'Famille avec enfants' : p.family === 'monoparental' ? 'Monoparental(e)' : '-';
+  const familyMap = { celibataire: 'Célibataire', conjoint_fait: 'Conjoint(e) de fait', marie: 'Marié(e)', separe: 'Séparé(e)', divorce: 'Divorcé(e)', veuf: 'Veuf/veuve' };
+  document.getElementById('sumSituation').value = familyMap[p.family] || '-';
   document.getElementById('sumProvince').value = p.province === 'QC' ? 'Québec' : p.province === 'ON' ? 'Ontario' : p.province === 'BC' ? 'Colombie-Britannique' : p.province || '-';
 
-  // Generate semi-realistic numbers based on profile
-  const emp = p.employment || 'salarie';
-  let employment = 0, selfEmp = 0, investment = 0, rrsp = 0, medical = 0, donations = 0, childcare = 0;
+  // Show loading state
+  document.getElementById('estimateAmount').textContent = '...';
+  document.getElementById('savingsAmount').textContent = '...';
 
-  if (emp === 'salarie') { employment = 52000 + Math.floor(Math.random() * 20000); }
-  else if (emp === 'autonome') { selfEmp = 45000 + Math.floor(Math.random() * 30000); }
-  else if (emp === 'etudiant') { employment = 8000 + Math.floor(Math.random() * 12000); }
-  else if (emp === 'retraite') { employment = 25000 + Math.floor(Math.random() * 15000); }
+  const result = await AttwoodAPI.calculateTaxEstimate(p, state.files, state.chatData);
 
-  const sources = p.income_sources || [];
-  if (sources.includes('placements')) investment = 2000 + Math.floor(Math.random() * 5000);
-  if (sources.includes('pensions')) employment += 15000;
+  document.getElementById('sumEmployment').value = formatMoney(result.employment);
+  document.getElementById('sumSelfEmployment').value = formatMoney(result.selfEmp);
+  document.getElementById('sumInvestment').value = formatMoney(result.investment);
+  document.getElementById('sumRRSP').value = formatMoney(result.rrsp);
+  document.getElementById('sumMedical').value = formatMoney(result.medical);
+  document.getElementById('sumDonations').value = formatMoney(result.donations);
+  document.getElementById('sumChildcare').value = formatMoney(result.childcare);
 
-  rrsp = Math.floor(Math.random() * 8000) + 1000;
-  medical = Math.floor(Math.random() * 3000);
-  donations = Math.floor(Math.random() * 1500);
-  if (p.family === 'famille' || p.family === 'monoparental') childcare = 4000 + Math.floor(Math.random() * 4000);
+  document.getElementById('savingsAmount').textContent = formatMoney(result.savings);
+  document.getElementById('estimateAmount').textContent = formatMoney(result.refund);
 
-  document.getElementById('sumEmployment').value = formatMoney(employment);
-  document.getElementById('sumSelfEmployment').value = formatMoney(selfEmp);
-  document.getElementById('sumInvestment').value = formatMoney(investment);
-  document.getElementById('sumRRSP').value = formatMoney(rrsp);
-  document.getElementById('sumMedical').value = formatMoney(medical);
-  document.getElementById('sumDonations').value = formatMoney(donations);
-  document.getElementById('sumChildcare').value = formatMoney(childcare);
-
-  const totalIncome = employment + selfEmp + investment;
-  const totalDeductions = rrsp + medical + donations + childcare;
-  const savings = Math.floor(totalDeductions * 0.28);
-  const refund = Math.floor(totalDeductions * 0.32) + Math.floor(Math.random() * 500);
-
-  document.getElementById('savingsAmount').textContent = formatMoney(savings);
-  document.getElementById('estimateAmount').textContent = formatMoney(refund);
-
-  state.summaryData = { totalIncome, totalDeductions, refund };
+  state.summaryData = { totalIncome: result.totalIncome, totalDeductions: result.totalDeductions, refund: result.refund };
 }
 
 function formatMoney(n) {
@@ -1097,9 +1305,27 @@ function toggleSubmit() {
   document.getElementById('submitBtn').disabled = !document.getElementById('consentCheck').checked;
 }
 
-function submitDeclaration() {
-  document.getElementById('submitForm').style.display = 'none';
-  document.getElementById('confirmation').classList.add('show');
+async function submitDeclaration() {
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Soumission en cours...';
+
+  const result = await AttwoodAPI.submitDeclaration({
+    profile: state.profile,
+    files: state.files,
+    chatData: state.chatData,
+    summaryData: state.summaryData,
+    email: document.getElementById('emailInput').value
+  });
+
+  if (result.success) {
+    document.getElementById('submitForm').style.display = 'none';
+    document.getElementById('confirmation').classList.add('show');
+  } else {
+    btn.disabled = false;
+    btn.textContent = '✅ Soumettre à un comptable certifié';
+    alert('Erreur lors de la soumission. Veuillez réessayer.');
+  }
 }
 
 // ===== CPA FORM =====
