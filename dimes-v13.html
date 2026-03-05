@@ -169,10 +169,10 @@
   @keyframes fp-bg-pulse{0%,100%{background:rgba(238,255,0,0)}50%{background:rgba(238,255,0,.04)}}
 
   /* Stream hover preview */
-  .stream-preview{position:absolute;width:380px;height:500px;top:0;left:0;transform:scale(.9) translateY(-18px);transform-origin:top right;border:none;border-radius:0 0 24px 24px;z-index:52;opacity:0;pointer-events:none;transition:opacity .5s ease,transform 1.2s cubic-bezier(.4,0,.2,1),top 1.2s cubic-bezier(.4,0,.2,1),left 1.2s cubic-bezier(.4,0,.2,1);background:transparent;box-shadow:none;overflow:hidden}
+  .stream-preview{position:absolute;width:380px;height:500px;top:0;left:0;transform:scale(.9) translateY(-18px);transform-origin:top right;border:none;border-radius:0 0 24px 24px;z-index:52;opacity:0;pointer-events:none;transition:opacity .5s ease,transform 1.2s cubic-bezier(.4,0,.2,1),top 1.2s cubic-bezier(.4,0,.2,1),left 1.2s cubic-bezier(.4,0,.2,1),height .4s ease;background:transparent;box-shadow:none;overflow:hidden}
   .stream-iframe{width:100%;height:100%;border:none;border-radius:0;background:transparent}
   .stream-preview.active{opacity:1;transform:scale(.9) translateY(0);transition:opacity .4s ease,transform .5s cubic-bezier(.16,1,.3,1)}
-  .stream-preview.selected{opacity:1;transform:scale(.9);pointer-events:auto;border-radius:14px;background:#0a0a0a;box-shadow:0 40px 120px rgba(0,0,0,1),0 12px 40px rgba(0,0,0,1)}
+  .stream-preview.selected{opacity:1;transform:scale(1.1);pointer-events:auto;border-radius:14px;background:transparent;box-shadow:0 40px 120px rgba(0,0,0,1),0 12px 40px rgba(0,0,0,1)}
 
   /* Scene layout — terminal + side tabs in a row */
   .terminal-scene{position:relative;z-index:1;overflow:visible;padding:80px 0 140px;margin:-80px 0 -140px;min-height:560px;display:flex;align-items:flex-start;justify-content:flex-end;gap:0;mask-image:linear-gradient(to right, transparent 0%, black 15%),linear-gradient(to bottom, transparent 0%, black 10%, black 85%, transparent 100%);-webkit-mask-image:linear-gradient(to right, transparent 0%, black 15%),linear-gradient(to bottom, transparent 0%, black 10%, black 85%, transparent 100%);mask-composite:intersect;-webkit-mask-composite:source-in}
@@ -217,7 +217,7 @@
   .cli-content{display:flex;flex-direction:column;align-items:center}
   .cli-header{text-align:center;margin-bottom:28px}
   .cli-header-title{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;font-size:16px;font-weight:600;color:#e8e8e8}
-  .cli-header-sub{font-size:13px;color:#666;font-weight:300;line-height:20px}
+  .cli-header-sub{font-size:13px;color:#999;font-weight:500;line-height:20px}
   .cli-header-sub span{color:#888}
   .cli-body{padding:14px 16px 10px;min-height:200px;max-height:300px;overflow-y:auto;scroll-behavior:smooth}
   .cli-body::-webkit-scrollbar{width:4px}.cli-body::-webkit-scrollbar-track{background:transparent}.cli-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
@@ -234,7 +234,9 @@
   @keyframes cliGlowPulse{0%{box-shadow:0 0 0 0 rgba(34,197,94,.4)}70%{box-shadow:0 0 24px 12px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
 
   /* ═══ FLOATING BROWSER WINDOW ═══ */
-  .browser-section{padding:40px 48px;display:flex;justify-content:center}
+  .browser-section{padding:40px 48px 120px;display:flex;flex-direction:column;align-items:center}
+  .browser-section .section-header{width:100%;margin-bottom:48px}
+  .browser-section .section-header::before,.browser-section .section-header::after{width:calc(50% - 280px)}
   .browser-window{opacity:0;transform:translateY(40px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1)}
   .browser-window.visible{opacity:1;transform:translateY(0)}
   .browser-window{position:relative;border-radius:20px;overflow:hidden;background:linear-gradient(180deg,rgba(255,255,255,.03) 0%,var(--t-bg) 4%,var(--t-bg) 100%);border:1px solid rgba(255,255,255,.1);box-shadow:0 80px 160px rgba(0,0,0,.6),0 30px 60px rgba(0,0,0,.3),0 0 0 1px rgba(255,255,255,.05),0 0 80px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(255,255,255,.02);width:min(920px,78vw);backdrop-filter:blur(40px) saturate(1.2);-webkit-backdrop-filter:blur(40px) saturate(1.2);margin:0 auto}
@@ -244,6 +246,7 @@
   .browser-dot{width:10px;height:10px;border-radius:50%}
   .browser-dot.red{background:rgba(255,255,255,.2)}.browser-dot.yel{background:rgba(255,255,255,.13)}.browser-dot.grn{background:rgba(255,255,255,.08)}
   .browser-url{flex:1;margin:0 16px;padding:7px 16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.04);border-radius:100px;font-size:12px;color:rgba(255,255,255,.3);display:flex;align-items:center;gap:6px}
+  .browser-tab-active{padding:8px 16px;font-size:12px;font-weight:500;color:rgba(255,255,255,.7);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-bottom:1px solid transparent;border-radius:8px 8px 0 0;position:relative;bottom:-1px}
   .browser-body{min-height:480px;background:#111;display:flex;align-items:center;justify-content:center;padding:24px}
 
   /* Terminal body */
@@ -347,6 +350,7 @@
   .idle-ring{position:absolute;inset:-6px;pointer-events:none;border:none;outline:0.5px solid rgba(238,255,0,.5);box-shadow:0 0 0 4px rgba(238,255,0,.06),0 0 30px rgba(238,255,0,.08);opacity:1;z-index:51;animation:pulse-ring 3s ease-in-out infinite;animation-play-state:paused;transition:opacity .3s ease}
   body.hero-done .idle-ring{animation-play-state:running}
   .idle-ring.hidden{opacity:0}
+  .idle-ring.lit{animation:none;outline-color:rgba(238,255,0,.5);box-shadow:0 0 0 6px rgba(238,255,0,.1),0 0 40px rgba(238,255,0,.14)}
 
   /* ═══════════════════════════════════
      ZOOM STATES — transform-origin based
@@ -670,22 +674,25 @@
 </section>
 
 <section class="browser-section">
+  <div class="section-header reveal"><h2 class="section-title">Headless onchain credit<br>built for the agentic era</h2></div>
   <div class="browser-window">
-    <div class="browser-chrome">
-      <div class="browser-dots">
-        <div class="browser-dot red"></div>
-        <div class="browser-dot yel"></div>
-        <div class="browser-dot grn"></div>
+    <div class="browser-chrome" style="padding:0 18px 0;align-items:flex-end">
+      <div style="padding:16px 0;display:flex;align-items:center">
+        <div class="browser-dots">
+          <div class="browser-dot red"></div>
+          <div class="browser-dot yel"></div>
+          <div class="browser-dot grn"></div>
+        </div>
       </div>
-      <div class="browser-url">
-        <svg width="10" height="12" viewBox="0 0 10 12" fill="none" style="opacity:.2"><rect x="0" y="5" width="10" height="7" rx="1.5" fill="#fff"/><path d="M2.5 5V3.5a2.5 2.5 0 015 0V5" stroke="#fff" stroke-width="1.5" fill="none"/></svg> dimes.cli
+      <div style="margin-left:28px">
+        <div class="browser-tab-active">Claude Code <span style="margin-left:8px;font-size:10px;color:rgba(255,255,255,.3);cursor:pointer">&times;</span></div>
       </div>
     </div>
     <div class="browser-body" id="cliView">
         <div class="cli-content">
           <div class="cli-header">
             <div class="cli-header-title"><div class="cli-badge"><span>D</span></div><span>Dimes CLI</span></div>
-            <div class="cli-header-sub">Credit primitives for AI trading agents.<br><span>Borrow against your bags. Let the agent trade.</span></div>
+            <div class="cli-header-sub">Credit primitives for AI trading agents.</div>
           </div>
           <div class="cli-terminal">
             <div class="cli-titlebar">
@@ -856,16 +863,15 @@ function selectProduct(key) {
       terminalEl.classList.add('dimmed');
       hlEls.forEach(el => el.classList.toggle('hl-active', el.dataset.hl === 'stream'));
       streamPreview.classList.remove('active');
-      if (!cachedStreamPos) positionStreamPreview();
       streamPreview.style.top = cachedStreamPos.top + 'px';
       streamPreview.style.left = cachedStreamPos.left + 'px';
       streamPreview.classList.add('selected');
       streamPreview.querySelector('iframe').contentWindow.postMessage({type:'stream-mode',mode:'selected'},'*');
     }
+    if (!cachedStreamPos) positionStreamPreview();
     if (previousProduct && previousProduct !== 'stream') {
-      setTimeout(showStream, 200);
+      setTimeout(showStream, 350);
     } else {
-      positionStreamPreview();
       showStream();
     }
   } else {
@@ -908,10 +914,15 @@ function highlightProduct(key) {
   idleRingEls.forEach(r => {
     const match = r.parentElement.dataset.hl === key;
     r.classList.toggle('hidden', !match);
+    r.classList.toggle('lit', match);
   });
 }
 
 function unhighlightProduct() {
+  /* Remove lit + restart all pulse animations in sync */
+  idleRingEls.forEach(r => { r.classList.remove('lit'); r.style.animation = 'none'; });
+  void idleRingEls[0].offsetWidth; /* force reflow */
+  idleRingEls.forEach(r => { r.style.animation = ''; });
   showIdleRings();
 }
 
@@ -936,9 +947,10 @@ let cachedStreamPos = null;
 function positionStreamPreview() {
   const chromeBar = document.querySelector('.terminal-chrome');
   const chromeRect = chromeBar.getBoundingClientRect();
-  const iconRect = streamIcon.getBoundingClientRect();
+  const extBox = document.querySelector('.chrome-extensions');
+  const extRect = extBox.getBoundingClientRect();
   const parentRect = productsSection.getBoundingClientRect();
-  const anchorRight = iconRect.right - parentRect.left;
+  const anchorRight = extRect.right + 6 - parentRect.left; /* +6 for idle-ring inset:-6px */
   const anchorY = chromeRect.bottom - parentRect.top;
   cachedStreamPos = { top: anchorY, left: anchorRight - 380 };
   streamPreview.style.top = cachedStreamPos.top + 'px';
@@ -1245,10 +1257,17 @@ function stopCliChat(){
 }
 function _runStep(){
   if(_cliIdx<0||_cliIdx>=CLI_SCRIPT.length){
-    // done — show final cursor
+    // done — show final cursor + replay button
     if(_cliBody){const w=_el('div',{padding:'6px 0',animation:'cliFadeIn 0.5s ease'});
     w.appendChild(_el('span',{fontFamily:_M+',monospace',fontSize:'12px',color:'#22c55e'},'$ '));
-    w.appendChild(_cursor());_cliBody.appendChild(w);_scroll();}
+    w.appendChild(_cursor());_cliBody.appendChild(w);
+    const rb=_el('div',{textAlign:'center',padding:'12px 0 4px',animation:'cliFadeIn 0.5s ease'});
+    const btn=_el('button',{background:'none',border:'1px solid rgba(255,255,255,.1)',borderRadius:'6px',padding:'6px 16px',cursor:'pointer',fontSize:'11px',fontFamily:_S,fontWeight:'500',color:'#888',display:'inline-flex',alignItems:'center',gap:'6px',transition:'all .2s ease'});
+    btn.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg> Replay';
+    btn.onmouseenter=function(){this.style.borderColor='rgba(238,255,0,.3)';this.style.color='#EEFF00';};
+    btn.onmouseleave=function(){this.style.borderColor='rgba(255,255,255,.1)';this.style.color='#888';};
+    btn.onclick=function(){startCliChat();};
+    rb.appendChild(btn);_cliBody.appendChild(rb);_scroll();}
     return;
   }
   const step=CLI_SCRIPT[_cliIdx];
