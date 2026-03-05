@@ -109,10 +109,11 @@
   .step-arrow{position:absolute;bottom:12px;right:14px;font-size:18px;color:rgba(255,255,255,.2);transform:scaleX(0.6)}
 
   /* ═══ SECTION HEADER ═══ */
-  .section-header{text-align:center;margin-bottom:80px;position:relative}
-  .section-header::before,.section-header::after{content:'';position:absolute;top:50%;height:1px;width:calc(50% - 160px);background:linear-gradient(to right,transparent,rgba(255,255,255,.08))}
-  .section-header::before{left:0}.section-header::after{right:0;background:linear-gradient(to left,transparent,rgba(255,255,255,.08))}
-  .section-title{font-size:clamp(32px,4vw,48px);font-weight:600;letter-spacing:-.03em}
+  .section-header{text-align:center;margin-bottom:80px;display:flex;align-items:center;gap:24px}
+  .section-header::before,.section-header::after{content:'';flex:1;height:1px;min-width:20px}
+  .section-header::before{background:linear-gradient(to right,transparent,rgba(255,255,255,.08))}
+  .section-header::after{background:linear-gradient(to left,transparent,rgba(255,255,255,.08))}
+  .section-title{font-size:clamp(32px,4vw,48px);font-weight:600;letter-spacing:-.03em;line-height:1.1}
   .section-title em{font-style:normal;font-weight:300;color:var(--yellow)}
 
   /* ═══════════════════════════════════
@@ -125,7 +126,7 @@
   .products.zoomed::before{opacity:1}
   .process-hand.fade-out{opacity:0 !important;transition:opacity .6s ease !important}
   .products .section-header{margin-bottom:64px}
-  .products .section-header::before,.products .section-header::after{top:50%;width:calc(50% - 270px)}
+  .products .section-header::before,.products .section-header::after{}
 
   /* Tabs + subtitle (vertical side tabs) */
   .product-tab{padding:0;border-radius:0;font-size:25px;font-weight:700;color:#fff;border:none;cursor:pointer;transition:font-size .4s,opacity .4s;font-family:var(--font);position:relative;display:inline-block;text-align:left;white-space:nowrap;-webkit-text-stroke:0.4px rgba(0,0,0,.35)}
@@ -238,7 +239,7 @@
   /* ═══ FLOATING BROWSER WINDOW ═══ */
   .browser-section{padding:40px 48px 120px;display:flex;flex-direction:column;align-items:center}
   .browser-section .section-header{width:100%;margin-bottom:48px}
-  .browser-section .section-header::before,.browser-section .section-header::after{width:calc(50% - 280px)}
+  .browser-section .section-header::before,.browser-section .section-header::after{}
   .browser-window{opacity:0;transform:translateY(40px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1)}
   .browser-window.visible{opacity:1;transform:translateY(0)}
   .browser-window{position:relative;border-radius:20px;overflow:hidden;background:linear-gradient(180deg,rgba(255,255,255,.03) 0%,var(--t-bg) 4%,var(--t-bg) 100%);border:1px solid rgba(255,255,255,.1);box-shadow:0 80px 160px rgba(0,0,0,.6),0 30px 60px rgba(0,0,0,.3),0 0 0 1px rgba(255,255,255,.05),0 0 80px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(255,255,255,.02);width:min(920px,78vw);backdrop-filter:blur(40px) saturate(1.2);-webkit-backdrop-filter:blur(40px) saturate(1.2);margin:0 auto}
@@ -359,7 +360,7 @@
      ═══════════════════════════════════ */
   /* ═══ WHY / BACKERS / CTA / FOOTER ═══ */
   .why{padding:40px 48px 60px;max-width:1200px;margin:0 auto;position:relative}
-  .why .section-header::before,.why .section-header::after{width:calc(50% - 230px)}
+  .why .section-header::before,.why .section-header::after{}
   .why-grid{display:grid;grid-template-columns:repeat(2,1fr);grid-template-rows:1fr 1fr;gap:8px;margin-top:80px;position:relative}
   .why-card{padding:30px 36px;cursor:default;background:rgba(255,255,255,.015);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);border-radius:16px;border:1px solid rgba(255,255,255,.04);position:relative;overflow:hidden;transition:all .4s;text-align:center;display:grid;place-content:center;min-height:230px}
   .why-card:nth-child(1)::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at bottom right,rgba(238,255,0,.08) 0%,transparent 70%);opacity:0;transition:opacity .5s ease;pointer-events:none}
@@ -396,7 +397,7 @@
   .why-grid:has(.why-card:nth-child(4):hover) .q4{fill:rgba(238,255,0,.4);opacity:1}
 
   .backers{padding:80px 48px 0;max-width:1200px;margin:0 auto}
-  .backers .section-header::before,.backers .section-header::after{width:calc(50% - 130px)}
+  .backers .section-header::before,.backers .section-header::after{}
   .backer-logos{display:flex;align-items:flex-start;justify-content:center;gap:64px;margin-top:60px}
   .backer-item{display:flex;flex-direction:column;align-items:center;position:relative;text-decoration:none;cursor:pointer}
   .backer-item img{height:28px;opacity:.35;transition:opacity .3s;cursor:default}
@@ -677,7 +678,10 @@
 </section>
 
 <section class="browser-section">
-  <div class="section-header reveal"><h2 class="section-title">Headless credit for the agentic era</h2></div>
+  <div class="reveal" style="text-align:center;margin-bottom:40px;width:100%">
+    <div class="section-header" style="margin-bottom:0"><h2 class="section-title">Headless credit primitives<br>for the agent era</h2></div>
+    <div style="font-size:15px;font-weight:400;color:rgba(255,255,255,.4);margin-top:8px">Powered by Dimes CLI</div>
+  </div>
   <div class="browser-window">
     <div class="browser-chrome" style="padding:0 18px 0;align-items:flex-end">
       <div style="padding:16px 0;display:flex;align-items:center">
