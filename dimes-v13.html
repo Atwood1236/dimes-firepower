@@ -222,9 +222,12 @@
   .cli-header-title{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;font-size:16px;font-weight:600;color:#e8e8e8}
   .cli-header-sub{font-size:13px;color:#999;font-weight:500;line-height:20px}
   .cli-header-sub span{color:#888}
-  .cli-body{padding:14px 16px 10px;min-height:200px;max-height:300px;overflow-y:auto;scroll-behavior:smooth}
+  .cli-body{padding:20px 24px 20px;min-height:410px;max-height:410px;overflow-y:auto;scroll-behavior:smooth}
+  .cli-controls{display:flex;justify-content:center;gap:8px;padding:8px 0 12px}
+  .cli-ctrl-btn{background:none;border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:6px 12px;cursor:pointer;color:#888;display:inline-flex;align-items:center;transition:all .2s ease}
+  .cli-ctrl-btn:hover{border-color:rgba(238,255,0,.3);color:#EEFF00}
   .cli-body::-webkit-scrollbar{width:4px}.cli-body::-webkit-scrollbar-track{background:transparent}.cli-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
-  .cli-footer{display:flex;gap:24px;margin-top:28px}
+  .cli-footer{display:flex;gap:48px;margin-top:40px;position:relative;z-index:1}
   .cli-cmd{text-align:center}
   .cli-cmd-name{font-family:'JetBrains Mono',monospace;font-size:11px;color:#EEFF00;font-weight:500;margin-bottom:3px}
   .cli-cmd-desc{font-size:11px;color:#555;font-weight:300}
@@ -250,7 +253,7 @@
   .browser-dot.red{background:rgba(255,255,255,.2)}.browser-dot.yel{background:rgba(255,255,255,.13)}.browser-dot.grn{background:rgba(255,255,255,.08)}
   .browser-url{flex:1;margin:0 16px;padding:7px 16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.04);border-radius:100px;font-size:12px;color:rgba(255,255,255,.3);display:flex;align-items:center;gap:6px}
   .browser-tab-active{padding:8px 16px;font-size:12px;font-weight:500;color:rgba(255,255,255,.7);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-bottom:1px solid transparent;border-radius:8px 8px 0 0;position:relative;bottom:-1px}
-  .browser-body{min-height:480px;background:#111;display:flex;align-items:center;justify-content:center;padding:24px}
+  .browser-body{min-height:480px;background:#111;padding:0}
 
   /* Terminal body */
   .terminal-body{display:grid;grid-template-columns:1fr 340px;min-height:480px}
@@ -679,49 +682,39 @@
 
 <section class="browser-section">
   <div class="reveal" style="text-align:center;margin-bottom:40px;width:100%">
-    <div class="section-header" style="margin-bottom:0"><h2 class="section-title">Headless credit primitives<br>for the agent era</h2></div>
+    <div class="section-header" style="margin-bottom:0"><h2 class="section-title">Headless credit primitives<br>for the agentic era</h2></div>
     <div style="font-size:15px;font-weight:400;color:rgba(255,255,255,.4);margin-top:8px">Powered by Dimes CLI</div>
   </div>
   <div class="browser-window">
-    <div class="browser-chrome" style="padding:0 18px 0;align-items:flex-end">
-      <div style="padding:16px 0;display:flex;align-items:center">
+    <div class="browser-chrome" style="padding:0 18px;justify-content:space-between">
+      <div style="padding:16px 0;display:flex;align-items:center;gap:20px">
         <div class="browser-dots">
           <div class="browser-dot red"></div>
           <div class="browser-dot yel"></div>
           <div class="browser-dot grn"></div>
         </div>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:rgba(255,255,255,.5)">claude-code</span>
       </div>
-      <div style="margin-left:28px">
-        <div class="browser-tab-active">Claude Code <span style="margin-left:8px;font-size:10px;color:rgba(255,255,255,.3);cursor:pointer">&times;</span></div>
+      <div style="padding:16px 0;display:flex;align-items:center;gap:10px">
+        <div class="cli-badge"><span>D</span></div>
+        <span style="font-size:12px;font-weight:600;color:rgba(255,255,255,.7)">Dimes CLI</span>
+        <span style="width:1px;height:12px;background:rgba(255,255,255,.15);display:inline-block"></span>
+        <span style="font-size:11px;color:rgba(255,255,255,.35)">Credit primitives for AI trading agents</span>
       </div>
     </div>
     <div class="browser-body" id="cliView">
-        <div class="cli-content">
-          <div class="cli-header">
-            <div class="cli-header-title"><div class="cli-badge"><span>D</span></div><span>Dimes CLI</span></div>
-            <div class="cli-header-sub">Credit primitives for AI trading agents.</div>
-          </div>
-          <div class="cli-terminal">
-            <div class="cli-titlebar">
-              <div class="cli-titlebar-left">
-                <div class="cli-dots"><div class="cli-dot"></div><div class="cli-dot"></div><div class="cli-dot"></div></div>
-                <div class="cli-titlebar-label">claude-agent</div>
-              </div>
-              <div class="cli-titlebar-right">
-                <div class="cli-badge"><span>D</span></div>
-                <span class="cli-badge-label">dimes cli</span>
-              </div>
-            </div>
-            <div class="cli-body"><span class="cli-cursor"></span></div>
-          </div>
-          <div class="cli-footer">
-            <div class="cli-cmd"><div class="cli-cmd-name">dimes portfolio</div><div class="cli-cmd-desc">Check borrowing power</div></div>
-            <div class="cli-cmd"><div class="cli-cmd-name">dimes quote</div><div class="cli-cmd-desc">Preview terms</div></div>
-            <div class="cli-cmd"><div class="cli-cmd-name">dimes credit</div><div class="cli-cmd-desc">Open position</div></div>
-            <div class="cli-cmd"><div class="cli-cmd-name">dimes repay</div><div class="cli-cmd-desc">Close & collect</div></div>
-          </div>
-        </div>
+      <div class="cli-body"><span class="cli-cursor"></span></div>
+      <div class="cli-controls">
+        <button class="cli-ctrl-btn" id="cliPlayPause" title="Pause"><svg id="cliPauseIcon" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg><svg id="cliPlayIcon" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="display:none"><polygon points="5,3 19,12 5,21"/></svg></button>
+        <button class="cli-ctrl-btn" id="cliReplay" title="Replay"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg></button>
+      </div>
     </div>
+  </div>
+  <div class="cli-footer">
+    <div class="cli-cmd"><div class="cli-cmd-name">dimes portfolio</div><div class="cli-cmd-desc">Check borrowing power</div></div>
+    <div class="cli-cmd"><div class="cli-cmd-name">dimes quote</div><div class="cli-cmd-desc">Preview terms</div></div>
+    <div class="cli-cmd"><div class="cli-cmd-name">dimes credit</div><div class="cli-cmd-desc">Open position</div></div>
+    <div class="cli-cmd"><div class="cli-cmd-name">dimes repay</div><div class="cli-cmd-desc">Close & collect</div></div>
   </div>
 </section>
 
@@ -1119,7 +1112,7 @@ function _scroll(){if(_cliBody)_cliBody.scrollTop=_cliBody.scrollHeight;}
 
 function _typeInto(span,text,speed,cb){
   let i=0;const cur=_cursor();span.appendChild(cur);
-  const iv=setInterval(()=>{i++;span.firstChild.textContent=text.slice(0,i);_scroll();if(i>=text.length){clearInterval(iv);cur.remove();cb();}},speed);
+  const iv=setInterval(()=>{if(_cliPaused)return;i++;span.firstChild.textContent=text.slice(0,i);_scroll();if(i>=text.length){clearInterval(iv);cur.remove();cb();}},speed);
   _cliIds.push(iv);
 }
 
@@ -1197,8 +1190,8 @@ function _renderThinking(step,cb){
   [0,1,2].forEach(i=>{dots.appendChild(_el('span',{width:'3px',height:'3px',borderRadius:'50%',background:'#666',display:'inline-block',animation:'cliDotFlow 1.2s ease-in-out '+i*0.2+'s infinite'}));});
   wrap.appendChild(dots);
   _cliBody.appendChild(wrap);_scroll();
-  const tid=setTimeout(()=>{dots.remove();cb();},1600);
-  _cliIds.push(tid);
+  let elapsed=0;const chk=setInterval(()=>{if(_cliPaused)return;elapsed+=50;if(elapsed>=1600){clearInterval(chk);dots.remove();cb();}},50);
+  _cliIds.push(chk);
 }
 
 function _renderWait(step,cb){
@@ -1211,7 +1204,7 @@ function _renderWait(step,cb){
   const track=_el('div',{width:'120px',height:'2px',borderRadius:'1px',background:'rgba(255,255,255,0.04)',margin:'0 auto'});
   const fill=_el('div',{height:'100%',width:'0%',borderRadius:'1px',background:'linear-gradient(to right,rgba(238,255,0,0.1),rgba(238,255,0,0.3))',transition:'width 0.05s linear'});
   track.appendChild(fill);wrap.appendChild(track);_cliBody.appendChild(wrap);_scroll();
-  let p=0;const iv=setInterval(()=>{p+=2;fill.style.width=Math.min(100,p)+'%';if(p>=100){clearInterval(iv);setTimeout(cb,400);}},30);
+  let p=0;const iv=setInterval(()=>{if(_cliPaused)return;p+=2;fill.style.width=Math.min(100,p)+'%';if(p>=100){clearInterval(iv);setTimeout(cb,400);}},30);
   _cliIds.push(iv);
 }
 
@@ -1265,35 +1258,50 @@ function _renderTable(step,cb){
   _cliIds.push(iv);
 }
 
+var _cliPaused=false,_cliInStep=false;
 function startCliChat(){
+  _cliPaused=false;_cliInStep=false;
+  _updatePlayPauseIcon();
   _cliBody=cliView.querySelector('.cli-body');
   _cliBody.innerHTML='';_cliIdx=0;_runStep();
 }
 function stopCliChat(){
   _cliIds.forEach(id=>{clearTimeout(id);clearInterval(id);});
-  _cliIds=[];_cliIdx=-1;
+  _cliIds=[];_cliIdx=-1;_cliPaused=false;_cliInStep=false;
+  _updatePlayPauseIcon();
   const b=cliView.querySelector('.cli-body');
   if(b)b.innerHTML='<span class="cli-cursor"></span>';
 }
+function pauseCliChat(){
+  _cliPaused=true;
+  _updatePlayPauseIcon();
+}
+function resumeCliChat(){
+  _cliPaused=false;
+  _updatePlayPauseIcon();
+  // Only re-trigger if between steps; mid-step intervals resume on their own
+  if(!_cliInStep&&_cliIdx>=0&&_cliIdx<CLI_SCRIPT.length)_runStep();
+}
+function _updatePlayPauseIcon(){
+  var pause=document.getElementById('cliPauseIcon');
+  var play=document.getElementById('cliPlayIcon');
+  if(pause&&play){pause.style.display=_cliPaused?'none':'block';play.style.display=_cliPaused?'block':'none';}
+}
 function _runStep(){
   if(_cliIdx<0||_cliIdx>=CLI_SCRIPT.length){
-    // done — show final cursor + replay button
+    // done — show final cursor
     if(_cliBody){const w=_el('div',{padding:'6px 0',animation:'cliFadeIn 0.5s ease'});
     w.appendChild(_el('span',{fontFamily:_M+',monospace',fontSize:'12px',color:'#22c55e'},'$ '));
-    w.appendChild(_cursor());_cliBody.appendChild(w);
-    const rb=_el('div',{textAlign:'center',padding:'12px 0 4px',animation:'cliFadeIn 0.5s ease'});
-    const btn=_el('button',{background:'none',border:'1px solid rgba(255,255,255,.1)',borderRadius:'6px',padding:'6px 16px',cursor:'pointer',fontSize:'11px',fontFamily:_S,fontWeight:'500',color:'#888',display:'inline-flex',alignItems:'center',gap:'6px',transition:'all .2s ease'});
-    btn.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg> Replay';
-    btn.onmouseenter=function(){this.style.borderColor='rgba(238,255,0,.3)';this.style.color='#EEFF00';};
-    btn.onmouseleave=function(){this.style.borderColor='rgba(255,255,255,.1)';this.style.color='#888';};
-    btn.onclick=function(){startCliChat();};
-    rb.appendChild(btn);_cliBody.appendChild(rb);_scroll();}
+    w.appendChild(_cursor());_cliBody.appendChild(w);_scroll();}
     return;
   }
   const step=CLI_SCRIPT[_cliIdx];
+  _cliInStep=false;
   const tid=setTimeout(()=>{
+    if(_cliPaused){return;}
+    _cliInStep=true;
     const render={prompt:_renderPrompt,agent:_renderAgent,cmd:_renderCmd,json:_renderJson,thinking:_renderThinking,wait:_renderWait,profit:_renderProfit,table:_renderTable}[step.t];
-    if(render)render(step,()=>{_cliIdx++;_runStep();});
+    if(render)render(step,()=>{_cliInStep=false;_cliIdx++;if(!_cliPaused)_runStep();});
   },step.d);
   _cliIds.push(tid);
 }
@@ -1313,6 +1321,14 @@ function _runStep(){
     });
   }, { threshold: 0.15 }).observe(document.querySelector('.browser-section'));
 })();
+
+// CLI play/pause/replay controls
+document.getElementById('cliPlayPause').addEventListener('click',function(){
+  if(_cliPaused) resumeCliChat(); else pauseCliChat();
+});
+document.getElementById('cliReplay').addEventListener('click',function(){
+  stopCliChat();startCliChat();
+});
 
 // Timeline buttons — click to morph to "coming soon" and back
 function morphTimeline(btn, text, cb) {
