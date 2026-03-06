@@ -1600,45 +1600,47 @@ document.querySelectorAll('.reveal').forEach(el => {
     canvas.width = img.width;
     canvas.height = img.height;
 
-    const total = params.amplifications;
     const duration = 2800;
     const imgStartOffset = -250;
     let startTime = null;
-
     function easeOutQuart(t){ return 1 - Math.pow(1 - t, 4); }
 
     function animate(timestamp){
       if (!startTime) startTime = timestamp;
       const progress = Math.min((timestamp - startTime) / duration, 1);
       const eased = easeOutQuart(progress);
-
-      // Hand slides from left to final position
       const imgOffset = imgStartOffset * (1 - eased);
-      // Per-strip refraction progress: each strip refracts sequentially
-      const stripRefractions = [];
-      for (let s = 0; s < total; s++){
-        const stripStart = s / (total + 2);
-        const stripEnd = (s + 3) / (total + 2);
-        const stripProg = Math.max(0, Math.min(1, (eased - stripStart) / (stripEnd - stripStart)));
-        stripRefractions.push(stripProg);
-      }
-
-      drawEffect(undefined, imgOffset, total, stripRefractions);
+      drawEffect(undefined, imgOffset, params.amplifications, null, stripAlphas);
       updateCta(eased);
-
       if (progress < 1) requestAnimationFrame(animate);
       else requestAnimationFrame(hoverLoop);
     }
     requestAnimationFrame(animate);
   };
 
-  // ── Hero image scale on button hover (image only, not strips) ───────────────
+  // ── Strip fade state ──────────────────────────────────────────────────────────
+  var stripAlphas = [0,0,0,0,0,0,0,0];
+  var stripTargetAlphas = [0,0,0,0,0,0,0,0];
+  var stripTimers = [];
+  var STRIP_ALPHA_LERP = 0.28;
+  var STRIP_STAGGER = 30;
+
+  // ── Hero image scale + strip reveal on CTA hover ─────────────────────────────
   var ctaImgScale = 1, ctaImgScaleTarget = 1;
-  document.querySelector('.hero-cta-wrap').addEventListener('mouseenter', function(){
+  var ctaWrapEl = document.querySelector('.hero-cta-wrap');
+  ctaWrapEl.addEventListener('mouseenter', function(){
     ctaImgScaleTarget = 1.03;
+    stripTimers.forEach(clearTimeout); stripTimers = [];
+    for (var i = 0; i < 8; i++){
+      (function(idx){ stripTimers.push(setTimeout(function(){ stripTargetAlphas[idx] = 1; }, idx * STRIP_STAGGER)); })(i);
+    }
   });
-  document.querySelector('.hero-cta-wrap').addEventListener('mouseleave', function(){
+  ctaWrapEl.addEventListener('mouseleave', function(){
     ctaImgScaleTarget = 1;
+    stripTimers.forEach(clearTimeout); stripTimers = [];
+    for (var i = 0; i < 8; i++){
+      (function(idx){ stripTimers.push(setTimeout(function(){ stripTargetAlphas[7 - idx] = 0; }, idx * STRIP_STAGGER)); })(i);
+    }
   });
 
   // ── Button animation sequence ───────────────────────────────────────────────
@@ -1680,20 +1682,27 @@ document.querySelectorAll('.reveal').forEach(el => {
   heroEl.addEventListener('mouseleave', function(){ targetHoverX = 0; isHovering = false; });
   heroEl.addEventListener('mouseenter', function(){ isHovering = true; });
 
-  let isHovering = true;
+  let isHovering = false;
   const RETURN_LERP = 0.012;
 
   function hoverLoop(){
     const lerp = isHovering ? HOVER_LERP : RETURN_LERP;
     hoverX += (targetHoverX - hoverX) * lerp;
-    // Smoothly interpolate image scale for CTA hover
     if (typeof ctaImgScale !== 'undefined') ctaImgScale += (ctaImgScaleTarget - ctaImgScale) * 0.05;
-    if (Math.abs(hoverX) < 0.05 && targetHoverX === 0 && Math.abs(ctaImgScale - ctaImgScaleTarget) < 0.0005){ hoverX = 0; ctaImgScale = ctaImgScaleTarget; requestAnimationFrame(hoverLoop); return; }
-    drawEffect(undefined, hoverX, params.amplifications, null);
+    // Lerp strip alphas toward targets
+    for (var si = 0; si < 8; si++){
+      stripAlphas[si] += (stripTargetAlphas[si] - stripAlphas[si]) * STRIP_ALPHA_LERP;
+      if (stripAlphas[si] < 0.005) stripAlphas[si] = 0;
+      if (stripAlphas[si] > 0.995) stripAlphas[si] = 1;
+    }
+    var stripsSettled = true;
+    for (var si = 0; si < 8; si++){ if (Math.abs(stripAlphas[si] - stripTargetAlphas[si]) > 0.005){ stripsSettled = false; break; } }
+    if (stripsSettled && Math.abs(hoverX) < 0.05 && targetHoverX === 0 && Math.abs(ctaImgScale - ctaImgScaleTarget) < 0.0005){ hoverX = 0; ctaImgScale = ctaImgScaleTarget; requestAnimationFrame(hoverLoop); return; }
+    drawEffect(undefined, hoverX, params.amplifications, null, stripAlphas);
     requestAnimationFrame(hoverLoop);
   }
 
-  function drawEffect(posX, imgOffset, numVisible, stripRefractions){
+  function drawEffect(posX, imgOffset, numVisible, stripRefractions, stripAlphasArg){
     const W = canvas.width, H = canvas.height;
     if (posX === undefined) posX = W * 0.57 + 25;
     if (imgOffset === undefined) imgOffset = 0;
@@ -1746,15 +1755,6 @@ document.querySelectorAll('.reveal').forEach(el => {
       calcX += uniformW;
     }
 
-    // Black out the area covered by visible strips
-    if (visibleCount > 0){
-      const firstX = strips[0].x;
-      const lastStrip = strips[visibleCount - 1];
-      const endX = lastStrip.x + lastStrip.w;
-      ctx.fillStyle = params.backgroundColor;
-      ctx.fillRect(firstX, 0, endX - firstX, H);
-    }
-
     // Draw visible strips (left to right)
     for (let i = 0; i < visibleCount; i++){
       const s = strips[i];
@@ -1772,6 +1772,9 @@ document.querySelectorAll('.reveal').forEach(el => {
       const refractionAmount = stripRefractions ? stripRefractions[i] : 1;
       const yOffset = -stripCenterX * liftSlope * refractionAmount;
       const drawY = (H - newHeight) / 2 + yOffset;
+
+      const sAlpha = stripAlphasArg ? stripAlphasArg[i] : 1;
+      if (sAlpha < 0.001) continue;
 
       // Copy captured strip from source
       const tempCanvas = document.createElement('canvas');
@@ -1791,6 +1794,10 @@ document.querySelectorAll('.reveal').forEach(el => {
       ctx.beginPath();
       ctx.rect(currentX, 0, newWidth, H);
       ctx.clip();
+
+      // Per-strip blackout
+      ctx.fillStyle = params.backgroundColor;
+      ctx.fillRect(currentX, 0, newWidth, H);
 
       ctx.filter = blur > 0 ? 'blur(' + blur + 'px)' : 'none';
       ctx.drawImage(tempCanvas, 0, 0, captureW, captureH, currentX, drawY, newWidth, newHeight);
@@ -1831,6 +1838,17 @@ document.querySelectorAll('.reveal').forEach(el => {
       ctx.fillRect(currentX, 0, newWidth, H);
 
       ctx.restore();
+
+      // Blend back original image for partial-alpha strips
+      if (sAlpha < 0.999){
+        ctx.save();
+        ctx.globalAlpha = 1 - sAlpha;
+        ctx.beginPath();
+        ctx.rect(currentX, 0, newWidth, H);
+        ctx.clip();
+        ctx.drawImage(sourceCanvas, 0, 0);
+        ctx.restore();
+      }
     }
   }
 })();
