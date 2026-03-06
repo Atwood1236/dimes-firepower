@@ -229,8 +229,8 @@
   .cli-body::-webkit-scrollbar{width:4px}.cli-body::-webkit-scrollbar-track{background:transparent}.cli-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
   .cli-footer{display:flex;gap:48px;margin-top:40px;position:relative;z-index:1}
   .cli-cmd{text-align:center}
-  .cli-cmd-name{font-family:'JetBrains Mono',monospace;font-size:11px;color:#EEFF00;font-weight:500;margin-bottom:3px}
-  .cli-cmd-desc{font-size:11px;color:#555;font-weight:300}
+  .cli-cmd-name{font-family:'JetBrains Mono',monospace;font-size:14px;color:#EEFF00;font-weight:500;margin-bottom:4px}
+  .cli-cmd-desc{font-size:13px;color:#555;font-weight:300}
   .cli-cursor{display:inline-block;width:7px;height:15px;background:#EEFF00;animation:blink 1s step-end infinite;vertical-align:text-bottom}
   @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
   @keyframes cliFadeIn{from{opacity:0}to{opacity:1}}
@@ -243,6 +243,7 @@
   .browser-section{padding:40px 48px 120px;display:flex;flex-direction:column;align-items:center}
   .browser-section .section-header{width:100%;margin-bottom:48px}
   .browser-section .section-header::before,.browser-section .section-header::after{}
+  .browser-section .browser-window{box-shadow:0 0 0 1px rgba(255,255,255,.05),inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(255,255,255,.02)}
   .browser-window{opacity:0;transform:translateY(40px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1)}
   .browser-window.visible{opacity:1;transform:translateY(0)}
   .browser-window{position:relative;border-radius:20px;overflow:hidden;background:linear-gradient(180deg,rgba(255,255,255,.03) 0%,var(--t-bg) 4%,var(--t-bg) 100%);border:1px solid rgba(255,255,255,.1);box-shadow:0 80px 160px rgba(0,0,0,.6),0 30px 60px rgba(0,0,0,.3),0 0 0 1px rgba(255,255,255,.05),0 0 80px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(255,255,255,.02);width:min(920px,78vw);backdrop-filter:blur(40px) saturate(1.2);-webkit-backdrop-filter:blur(40px) saturate(1.2);margin:0 auto}
@@ -744,7 +745,7 @@
   <div class="cta-inner">
     <div class="cta-visual" id="ctaVisual">
       <div class="hand-clasp-container">
-        <canvas id="dabCanvas" class="hand-clasp-img" style="pointer-events:none"></canvas>
+        <img src="assets/Dimes_Clasp.png" class="hand-clasp-img" alt="">
       </div>
     </div>
     <div class="cta-content">
@@ -1487,37 +1488,11 @@ new IntersectionObserver(entries => {
   }, { threshold: 0.15 }).observe(ctaSection);
 })();
 
-// CTA visual scroll-synced: blur-in, scale-in, glide-in + WebM frame sequence
+// CTA visual scroll-synced: fade-in, scale-in, glide-in
 (function(){
   var visual = document.getElementById('ctaVisual');
-  var canvas = document.getElementById('dabCanvas');
-  if (!visual || !canvas) return;
-  var ctx = canvas.getContext('2d');
-  var frames = [], ready = false, running = false;
-  var targetFrame = 0, smoothFrame = 0;
-
-  /* Create video in JS only — never in the DOM */
-  var video = document.createElement('video');
-  video.muted = true; video.playsInline = true; video.preload = 'auto';
-  video.src = 'assets/Dab.webm';
-
-  video.addEventListener('canplaythrough', function(){
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    function capture(){
-      createImageBitmap(video, {premultiplyAlpha:'none'}).then(function(bmp){ frames.push(bmp); });
-      if (!video.ended) video.requestVideoFrameCallback(capture);
-    }
-    video.requestVideoFrameCallback(capture);
-    video.addEventListener('ended', function(){
-      video.src = ''; video = null;
-      if (frames.length > 0){ ctx.drawImage(frames[0], 0, 0); }
-      ready = true;
-    }, {once:true});
-    video.playbackRate = 1;
-    video.play().catch(function(){});
-  }, {once:true});
-
+  if (!visual) return;
+  var running = false;
   function lerp(a, b, t) { return a + (b - a) * Math.max(0, Math.min(1, t)); }
   function update() {
     if (!running) return;
@@ -1529,13 +1504,6 @@ new IntersectionObserver(entries => {
     var opacity = lerp(0, 1, progress);
     visual.style.opacity = opacity;
     visual.style.transform = 'translateY(' + ty + 'px) scale(' + scale + ')';
-    if (ready && frames.length > 1) {
-      targetFrame = progress * (frames.length - 1);
-      smoothFrame += (targetFrame - smoothFrame) * 0.14;
-      var fi = Math.round(Math.max(0, Math.min(frames.length - 1, smoothFrame)));
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(frames[fi], 0, 0);
-    }
     requestAnimationFrame(update);
   }
   new IntersectionObserver(function(entries){
