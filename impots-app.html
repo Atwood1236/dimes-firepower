@@ -37,6 +37,14 @@ input,textarea,select{font-family:inherit;outline:none}
 .logo svg{width:32px;height:32px}
 .nav-link-autre{font-size:.85rem;color:var(--blue-600);font-weight:500;text-decoration:none;white-space:nowrap}
 .nav-link-autre:hover{text-decoration:underline}
+.theme-toggle{width:32px;height:32px;border-radius:8px;background:none;border:1px solid var(--gray-300);display:flex;align-items:center;justify-content:center;color:var(--gray-600);cursor:pointer;transition:var(--transition);flex-shrink:0}
+.theme-toggle:hover{background:var(--gray-100);color:var(--gray-700)}
+.theme-toggle .icon-moon{display:none}
+html.dark .theme-toggle .icon-sun{display:none}
+html.dark .theme-toggle .icon-moon{display:block}
+.lang-toggle{display:flex;border:1px solid var(--gray-300);border-radius:6px;overflow:hidden;flex-shrink:0}
+.lang-btn{padding:4px 10px;font-size:.75rem;font-weight:600;background:none;color:var(--gray-500);border:none;cursor:pointer;transition:var(--transition)}
+.lang-btn.active{background:var(--blue-900);color:var(--white)}
 .header-badge{display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--green-600);font-weight:600;flex-shrink:0}
 .header-badge svg{width:16px;height:16px}
 .step-indicator{display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--gray-600)}
@@ -54,9 +62,10 @@ input,textarea,select{font-family:inherit;outline:none}
 @keyframes fadeSlideIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
 /* ===== STEP 1 — HERO ===== */
+body.lock-scroll{overflow:hidden}
 .hero{display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 24px}
-.hero-fold{min-height:calc(100vh - 64px);display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%}
-.hero-tag{display:inline-flex;align-items:center;gap:8px;background:var(--blue-100);color:var(--blue-600);padding:8px 16px;border-radius:100px;font-size:.85rem;font-weight:600;margin-bottom:24px}
+.hero-fold{height:calc(100vh - 64px);display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;overflow:hidden}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(43,108,176,.1);color:var(--blue-600);padding:8px 16px;border-radius:100px;font-size:.85rem;font-weight:600;margin-bottom:24px}
 .hero-tag svg{width:18px;height:18px}
 .hero h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:800;color:var(--blue-900);line-height:1.15;max-width:700px;margin-bottom:16px}
 .hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--blue-500),var(--green-500));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
@@ -110,8 +119,31 @@ input,textarea,select{font-family:inherit;outline:none}
 .cpa-form-success h3{font-size:1.1rem;color:var(--blue-900);margin-top:12px}
 .cpa-form-success p{color:var(--gray-600);font-size:.9rem;margin-top:4px}
 
+/* ===== AUTH SCREEN ===== */
+.auth-step{min-height:calc(100vh - 64px);display:flex;align-items:center;justify-content:center;padding:40px 24px}
+.auth-card{width:100%;max-width:420px;background:var(--white);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);padding:40px 32px;text-align:center}
+.auth-card h2{font-size:1.5rem;color:var(--blue-900);margin-bottom:6px}
+.auth-subtitle{font-size:.9rem;color:var(--gray-600);margin-bottom:28px;line-height:1.5}
+.auth-form{display:flex;flex-direction:column;gap:20px;text-align:left}
+.auth-field{display:flex;flex-direction:column;gap:6px}
+.auth-field label{font-size:.85rem;font-weight:600;color:var(--gray-600)}
+.auth-field input{padding:14px 16px;border:1.5px solid var(--gray-200);border-radius:10px;font-size:1rem;transition:var(--transition);width:100%}
+.auth-field input:focus{border-color:var(--blue-400);box-shadow:0 0 0 3px rgba(49,130,206,.1)}
+.auth-password-wrap{position:relative}
+.auth-password-wrap input{padding-right:48px}
+.auth-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--gray-400);cursor:pointer;padding:4px;display:flex;align-items:center;justify-content:center}
+.auth-eye:hover{color:var(--gray-600)}
+.auth-hint{font-size:.75rem;color:var(--gray-400)}
+.auth-email-status{font-size:.75rem;display:flex;align-items:center;gap:4px;min-height:18px;opacity:0;transition:opacity .3s ease}
+.auth-email-status.visible{opacity:1}
+.auth-legal{font-size:.75rem;color:var(--gray-400);margin:24px 0 20px;line-height:1.5}
+.auth-legal a{color:var(--blue-600);text-decoration:underline}
+.auth-submit{width:100%;padding:16px;border-radius:100px;font-size:1.05rem;font-weight:700;background:linear-gradient(135deg,var(--blue-600),var(--blue-500));color:var(--white);box-shadow:0 4px 20px rgba(49,130,206,.35);transition:var(--transition);border:none}
+.auth-submit:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 30px rgba(49,130,206,.45)}
+.auth-submit:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+
 /* ===== STEP 2 — PROFIL ===== */
-.profil-step{min-height:calc(100vh - 64px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px}
+.profil-step{position:relative;min-height:calc(100vh - 64px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px}
 .question-container{width:100%;max-width:960px;text-align:center;padding:0 24px}
 .q-progress{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:28px}
 .q-dot{width:36px;height:36px;border-radius:50%;border:2px solid var(--gray-300);background:var(--white);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:var(--gray-400);cursor:pointer;transition:var(--transition)}
@@ -147,7 +179,11 @@ input,textarea,select{font-family:inherit;outline:none}
 .ai-sidebar-title{font-size:.95rem;font-weight:700;color:var(--blue-900);flex:1;display:flex;align-items:center;gap:6px}
 .ai-sidebar-close{width:28px;height:28px;border-radius:6px;background:none;color:var(--gray-400);display:flex;align-items:center;justify-content:center;font-size:1.1rem;transition:var(--transition)}
 .ai-sidebar-close:hover{background:var(--gray-100);color:var(--gray-700)}
-.ai-sidebar-context{padding:8px 16px;background:var(--blue-50);font-size:.8rem;color:var(--blue-600);font-weight:600;border-bottom:1px solid var(--gray-200);flex-shrink:0}
+.tips-toggle-track{position:relative;width:28px;height:16px;background:var(--gray-300);border-radius:100px;transition:var(--transition);flex-shrink:0;margin-left:4px}
+.tips-toggle-thumb{position:absolute;top:2px;left:2px;width:12px;height:12px;background:var(--white);border-radius:50%;transition:var(--transition)}
+input:checked+.tips-toggle-track{background:var(--blue-500)}
+input:checked+.tips-toggle-track .tips-toggle-thumb{left:14px}
+.ai-sidebar-context{padding:8px 16px;background:var(--blue-50);font-size:.8rem;color:var(--blue-600);font-weight:600;border-bottom:1px solid var(--gray-200);flex-shrink:0;display:flex;align-items:center}
 .ai-sidebar .chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
 .ai-sidebar .quick-replies{padding:8px 16px;display:flex;flex-wrap:wrap;gap:6px;flex-shrink:0}
 .ai-sidebar .chat-input-area{padding:12px 16px;border-top:1px solid var(--gray-200);display:flex;gap:8px;flex-shrink:0}
@@ -228,6 +264,55 @@ input,textarea,select{font-family:inherit;outline:none}
 .uploaded-file .file-remove svg{width:14px;height:14px}
 .upload-nav{display:flex;justify-content:center;gap:12px;margin-top:32px}
 
+/* Uploaded file card with extraction */
+.uploaded-file-card{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius);overflow:hidden;animation:fadeSlideIn .3s ease}
+.uploaded-file-card .file-header{display:flex;align-items:center;gap:12px;padding:12px 16px}
+.uploaded-file-card .file-icon{width:36px;height:36px;background:var(--blue-100);color:var(--blue-600);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.uploaded-file-card .file-icon svg{width:18px;height:18px}
+.uploaded-file-card .file-details{flex:1}
+.uploaded-file-card .file-details h4{font-size:.85rem;font-weight:600;color:var(--gray-900)}
+.uploaded-file-card .file-details p{font-size:.75rem;color:var(--gray-400)}
+.uploaded-file-card .file-remove{width:28px;height:28px;border-radius:50%;background:var(--gray-100);color:var(--gray-400);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);flex-shrink:0}
+.uploaded-file-card .file-remove:hover{background:var(--red-100);color:var(--red-500)}
+.uploaded-file-card .file-remove svg{width:14px;height:14px}
+
+.file-extraction{display:flex;gap:20px;padding:0 16px 16px;border-top:1px solid var(--gray-200);padding-top:12px}
+.file-preview{flex-shrink:0}
+.doc-mock{width:160px;height:210px;background:var(--gray-100);border-radius:8px;position:relative;overflow:hidden}
+.doc-mock::before{content:'';position:absolute;top:12px;left:14px;right:14px;bottom:12px;background:repeating-linear-gradient(180deg,var(--gray-300) 0,var(--gray-300) 2px,transparent 2px,transparent 10px);opacity:.35;border-radius:2px}
+.doc-highlight{position:absolute;border-radius:3px;display:flex;align-items:flex-start;justify-content:flex-start;padding:2px 4px}
+.doc-highlight-label{font-size:.55rem;font-weight:700;background:var(--white);padding:1px 5px;border-radius:100px;white-space:nowrap;line-height:1.4}
+.doc-highlight.hl-blue{background:rgba(49,130,206,.12);border:2px solid var(--blue-400)}
+.doc-highlight.hl-blue .doc-highlight-label{color:var(--blue-600)}
+.doc-highlight.hl-green{background:rgba(56,161,105,.12);border:2px solid var(--green-500)}
+.doc-highlight.hl-green .doc-highlight-label{color:var(--green-600)}
+.doc-highlight.hl-orange{background:rgba(237,137,54,.12);border:2px solid var(--orange-500)}
+.doc-highlight.hl-orange .doc-highlight-label{color:var(--orange-500)}
+.doc-highlight.hl-gray{background:rgba(160,174,192,.12);border:2px solid var(--gray-400)}
+.doc-highlight.hl-gray .doc-highlight-label{color:var(--gray-600)}
+
+.file-extracted-values{flex:1;display:flex;flex-direction:column;gap:8px}
+.file-extracted-values h4{font-size:.85rem;font-weight:700;color:var(--blue-900);margin-bottom:2px}
+.extracted-row{display:flex;align-items:center;gap:8px;font-size:.85rem}
+.extracted-row .check-icon{width:18px;height:18px;color:var(--green-500);flex-shrink:0}
+.extracted-label{color:var(--gray-700);flex:1}
+.extracted-value{font-weight:700;color:var(--gray-900);white-space:nowrap}
+.extracted-note{font-size:.75rem;color:var(--gray-400);font-style:italic;margin-top:4px}
+
+/* Parsing animation */
+.file-parsing{padding:16px;display:flex;align-items:center;gap:12px;border-top:1px solid var(--gray-200)}
+.parsing-bar{flex:1;height:4px;background:var(--gray-200);border-radius:100px;overflow:hidden}
+.parsing-bar-fill{height:100%;background:linear-gradient(90deg,var(--blue-500),var(--green-500));border-radius:100px;animation:parseProgress 1.2s ease forwards}
+@keyframes parseProgress{from{width:0}to{width:100%}}
+.parsing-text{font-size:.8rem;color:var(--blue-600);font-weight:600;white-space:nowrap}
+
+/* Manual entry */
+.manual-toggle{margin-top:20px;text-align:center}
+.manual-toggle button{background:none;color:var(--blue-500);font-size:.9rem;font-weight:600;padding:8px 16px;border-radius:8px;transition:var(--transition)}
+.manual-toggle button:hover{background:var(--blue-50);color:var(--blue-600)}
+.manual-entry{margin-top:16px;background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius);padding:20px}
+.manual-entry h4{font-size:.9rem;font-weight:700;color:var(--blue-900);margin-bottom:12px}
+
 /* ===== STEP 5 — RÉSUMÉ ===== */
 .summary-step{min-height:calc(100vh - 64px);padding:40px 24px;max-width:800px;margin:0 auto;width:100%}
 .summary-step h2{font-size:1.5rem;font-weight:700;color:var(--blue-900);text-align:center;margin-bottom:8px}
@@ -290,9 +375,12 @@ input,textarea,select{font-family:inherit;outline:none}
 .timeline-info p{font-size:.8rem;color:var(--gray-400)}
 
 /* ===== FOOTER ===== */
-.footer{background:var(--blue-900);color:rgba(255,255,255,.6);text-align:center;padding:24px;font-size:.8rem}
-.footer a{color:rgba(255,255,255,.8)}
-.footer a:hover{color:var(--white)}
+.footer{position:fixed;bottom:0;left:0;right:0;background:none;color:var(--gray-400);text-align:center;padding:12px 24px;font-size:.75rem;z-index:10;transition:background .3s,color .3s}
+.footer a{color:var(--gray-400)}
+.footer a:hover{color:var(--gray-600)}
+.footer.footer-full{background:var(--blue-900);color:rgba(255,255,255,.6);padding:24px;font-size:.8rem}
+.footer.footer-full a{color:rgba(255,255,255,.8)}
+.footer.footer-full a:hover{color:var(--white)}
 
 /* ===== RESPONSIVE ===== */
 @media(max-width:768px){
@@ -311,7 +399,54 @@ input,textarea,select{font-family:inherit;outline:none}
   .options-grid{grid-template-columns:1fr}
   .form-row{grid-template-columns:1fr}
   .file-categories{grid-template-columns:1fr}
+  .file-extraction{flex-direction:column}
+  .doc-mock{width:100%;height:180px}
 }
+
+/* ===== DARK MODE ===== */
+html.dark{
+  --gray-900:#e2e8f0;--gray-700:#cbd5e0;--gray-600:#a0aec0;--gray-400:#718096;
+  --gray-300:#4a5568;--gray-200:#2d3748;--gray-100:#1a202c;--gray-50:#171923;
+  --white:#1a202c;--blue-50:#1a202c;--green-50:#1a202c;
+  --blue-100:#2a3a5a;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.3);--shadow-md:0 4px 12px rgba(0,0,0,.4);
+  --shadow-lg:0 10px 30px rgba(0,0,0,.5);--shadow-xl:0 20px 50px rgba(0,0,0,.6);
+}
+html.dark body{background:#0f1117;color:var(--gray-900)}
+html.dark .header{background:rgba(15,17,23,.95);border-color:var(--gray-200)}
+html.dark .header-badge{color:var(--green-500)}
+html.dark .hero-tag{background:rgba(49,130,206,.15)}
+html.dark .cta-btn{box-shadow:0 4px 20px rgba(49,130,206,.25)}
+html.dark .option-card{background:var(--gray-100);border-color:var(--gray-300)}
+html.dark .option-card:hover{border-color:var(--blue-400)}
+html.dark .option-card.selected{background:#1e2a45;border-color:var(--blue-500)}
+html.dark .ai-sidebar{background:var(--gray-100);border-color:var(--gray-200)}
+html.dark .msg.bot{background:var(--gray-200)}
+html.dark .msg.user{background:var(--blue-600)}
+html.dark .chat-input{background:var(--gray-200);color:var(--gray-900);border-color:var(--gray-300)}
+html.dark .modal-backdrop .modal{background:var(--gray-100);color:var(--gray-900)}
+html.dark .lang-btn{color:var(--gray-400)}
+html.dark .lang-btn.active{background:var(--blue-600);color:#fff}
+html.dark .lang-toggle{border-color:var(--gray-300)}
+html.dark .theme-toggle{border-color:var(--gray-300);color:var(--gray-400)}
+html.dark .theme-toggle:hover{background:var(--gray-200);color:var(--gray-700)}
+html.dark .footer{color:var(--gray-400)}
+html.dark .footer a{color:var(--gray-400)}
+html.dark .footer.footer-full{background:#0d1017}
+html.dark .footer.footer-full a{color:rgba(255,255,255,.6)}
+html.dark .quick-reply{background:var(--gray-100);border-color:var(--gray-300);color:var(--blue-400)}
+html.dark .uploaded-file{background:var(--gray-100);border-color:var(--gray-200)}
+html.dark .uploaded-file-card{background:var(--gray-100);border-color:var(--gray-200)}
+html.dark .doc-mock{background:var(--gray-200)}
+html.dark .doc-highlight-label{background:var(--gray-100)}
+html.dark .manual-entry{background:var(--gray-100);border-color:var(--gray-200)}
+html.dark .file-cat{background:var(--gray-100);border-color:var(--gray-200)}
+html.dark .nav-btn.secondary{background:var(--gray-200);color:var(--gray-900)}
+html.dark .summary-card{background:var(--gray-100);border-color:var(--gray-200)}
+html.dark .ai-sidebar-context{background:var(--gray-200);border-color:var(--gray-300)}
+html.dark .auth-card{background:var(--gray-100);box-shadow:0 10px 30px rgba(0,0,0,.4)}
+html.dark .auth-field input{background:var(--gray-200);border-color:var(--gray-300);color:var(--gray-900)}
+html.dark .auth-field input:focus{border-color:var(--blue-400);box-shadow:0 0 0 3px rgba(49,130,206,.2)}
 </style>
 </head>
 <body>
@@ -335,6 +470,14 @@ input,textarea,select{font-family:inherit;outline:none}
     <div style="display:flex;align-items:center;gap:32px">
       <a href="#" class="nav-link-autre" onclick="event.preventDefault();document.getElementById('cpaModal').classList.add('show')">Intégrations pour Comptables & CPA</a>
       <a href="#" class="nav-link-autre" onclick="event.preventDefault()">Produire une autre année</a>
+      <div class="lang-toggle" id="langToggle">
+        <button class="lang-btn active" onclick="setLang('fr')">FR</button>
+        <button class="lang-btn" onclick="setLang('en')">EN</button>
+      </div>
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Mode sombre">
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+      </button>
       <div class="header-badge">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
         Sécurisé
@@ -354,7 +497,7 @@ input,textarea,select{font-family:inherit;outline:none}
       </div>
       <h1>Vos impôts complétés<br>en <em>15 minutes</em></h1>
       <p style="max-width:720px">Notre assistant intelligent remplit votre déclaration à votre place.<br>Un comptable certifié vérifie et signe. Simple, sécuritaire, économique.</p>
-      <button class="cta-btn" onclick="goToStep(2)">
+      <button class="cta-btn" onclick="showAuth()">
         Commencer maintenant
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14m-6-6l6 6-6 6"/></svg>
       </button>
@@ -426,6 +569,39 @@ input,textarea,select{font-family:inherit;outline:none}
     </div>
   </div>
 
+  <!-- ===== AUTH SCREEN ===== -->
+  <section class="step auth-step" data-step="auth">
+    <div class="auth-card">
+      <h2>Bienvenue</h2>
+      <p class="auth-subtitle">Entrez vos informations pour commencer ou reprendre votre déclaration.</p>
+      <div class="auth-form">
+        <div class="auth-field">
+          <label for="authEmail">Courriel</label>
+          <input type="email" id="authEmail" placeholder="votre@courriel.ca" oninput="validateAuth()">
+          <span class="auth-email-status" id="authEmailStatus"></span>
+        </div>
+        <div class="auth-field">
+          <label for="authPassword">Mot de passe</label>
+          <div class="auth-password-wrap">
+            <input type="password" id="authPassword" placeholder="Minimum 10 caractères" oninput="validateAuth()" onkeydown="if(event.key==='Enter'&&!document.getElementById('authSubmit').disabled)handleAuth()">
+            <button type="button" class="auth-eye" onclick="togglePasswordVisibility()">
+              <svg class="eye-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg class="eye-closed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><path d="M1 1l22 22"/><path d="M14.12 14.12a3 3 0 11-4.24-4.24"/></svg>
+            </button>
+          </div>
+          <span class="auth-hint">Minimum 10 caractères.</span>
+        </div>
+        <div class="auth-field" id="authConfirmField" style="display:none">
+          <label for="authConfirm">Confirmez le mot de passe</label>
+          <input type="password" id="authConfirm" placeholder="Entrez-le à nouveau" oninput="validateAuth()" onkeydown="if(event.key==='Enter'&&!document.getElementById('authSubmit').disabled)handleAuth()">
+          <span class="auth-hint auth-match-hint" id="authMatchHint"></span>
+        </div>
+      </div>
+      <p class="auth-legal">En continuant, vous acceptez nos <a href="#">Conditions d'utilisation</a> et notre <a href="#">Politique de confidentialité</a>.</p>
+      <button class="auth-submit" id="authSubmit" onclick="handleAuth()">Continuer</button>
+    </div>
+  </section>
+
   <!-- ===== STEP 2 — PROFIL ===== -->
   <section class="step profil-step" data-step="2">
     <div class="question-container" id="questionContainer">
@@ -435,13 +611,13 @@ input,textarea,select{font-family:inherit;outline:none}
 
   <!-- ===== STEP 3 — UPLOAD ===== -->
   <section class="step upload-step" data-step="3">
-    <h2>📎 Téléversez vos documents</h2>
-    <p class="subtitle">Glissez-déposez vos feuillets fiscaux ou cliquez pour parcourir</p>
+    <h2>Déposez vos documents</h2>
+    <p class="subtitle">Atwood analyse et remplit automatiquement votre déclaration</p>
     <div class="dropzone" id="dropzone" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)" onclick="document.getElementById('fileInput').click()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
       <h3>Glissez vos fichiers ici</h3>
       <p>ou <span class="browse-link">parcourez vos fichiers</span></p>
-      <p style="margin-top:8px;font-size:.75rem;color:var(--gray-400)">PDF, JPG, PNG — Max 10 Mo par fichier</p>
+      <p style="margin-top:8px;font-size:.75rem;color:var(--gray-400)">Formats acceptés: PDF, JPG, PNG — Max 10 Mo</p>
       <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png" style="display:none" onchange="handleFiles(this.files)">
     </div>
     <div class="file-categories">
@@ -467,6 +643,28 @@ input,textarea,select{font-family:inherit;outline:none}
       </div>
     </div>
     <div class="uploaded-files" id="uploadedFiles"></div>
+    <div class="manual-toggle">
+      <button onclick="toggleManualEntry()">+ Ajouter des informations manuellement</button>
+    </div>
+    <div class="manual-entry" id="manualEntry" style="display:none">
+      <h4>Saisie manuelle</h4>
+      <div class="form-row">
+        <div class="form-group"><label>Revenus d'emploi</label><input type="text" id="manualEmployment" placeholder="0 $" oninput="updateManualTotals()"></div>
+        <div class="form-group"><label>Revenus autonome</label><input type="text" id="manualSelfEmp" placeholder="0 $" oninput="updateManualTotals()"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Revenus de placement</label><input type="text" id="manualInvestment" placeholder="0 $" oninput="updateManualTotals()"></div>
+        <div class="form-group"><label>Cotisations REER</label><input type="text" id="manualRRSP" placeholder="0 $" oninput="updateManualTotals()"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Frais médicaux</label><input type="text" id="manualMedical" placeholder="0 $" oninput="updateManualTotals()"></div>
+        <div class="form-group"><label>Dons de charité</label><input type="text" id="manualDonations" placeholder="0 $" oninput="updateManualTotals()"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Frais de garde</label><input type="text" id="manualChildcare" placeholder="0 $" oninput="updateManualTotals()"></div>
+        <div class="form-group"></div>
+      </div>
+    </div>
     <div class="upload-nav">
       <button class="nav-btn secondary" onclick="goToStep(2)">← Retour</button>
       <button class="nav-btn primary" onclick="goToStep(4)">Continuer →</button>
@@ -598,10 +796,9 @@ input,textarea,select{font-family:inherit;outline:none}
 <aside class="ai-sidebar hidden" id="aiSidebar">
   <div class="ai-sidebar-header">
     <span class="ai-sidebar-title"><svg viewBox="0 0 150.23 130.5" style="width:20px;height:20px;flex-shrink:0"><path fill="#49b67f" d="M140.19,53.48c-2.13-2.58-3.13-5.75-2.7-8.92l5.04-37.22c.61-4.53-5.27-7.43-9.29-4.59l-34.18,24.2c-.25.18-.51.33-.77.49,21.91,8.36,36.92,25.37,36.92,45.01,0,27.9-30.27,50.52-67.61,50.52-10.68,0-20.78-1.86-29.77-5.16,11.93,7.88,27.59,12.68,44.77,12.68,37.34,0,67.61-22.62,67.61-50.52,0-9.72-3.67-18.79-10.03-26.5Z"/><path fill="#3787c3" d="M15,79.98c0-27.9,30.27-50.52,67.61-50.52,2.14,0,4.25.07,6.34.22,3.32.23,6.62-.56,9.34-2.23-9.21-3.51-19.64-5.51-30.69-5.51-2.42,0-4.82.1-7.18.28-3.16.25-6.31-.47-8.97-2L17.75.83c-4.06-2.34-9.37.56-8.84,4.83l4.02,32.55c.3,2.42-.43,4.87-2.1,6.8C3.98,52.91,0,62.34,0,72.46c0,19.92,15.43,37.14,37.84,45.36-14-9.26-22.84-22.77-22.84-37.84Z"/><path fill="#25395a" d="M135.22,72.46c0-19.64-15.01-36.65-36.92-45.01-2.72,1.68-6.02,2.46-9.34,2.23-2.09-.15-4.2-.22-6.34-.22-37.34,0-67.61,22.62-67.61,50.52,0,15.07,8.84,28.59,22.84,37.84,8.98,3.3,19.08,5.16,29.77,5.16,37.34,0,67.61-22.62,67.61-50.52Z"/><circle fill="#fff" cx="45.43" cy="78.14" r="9.52"/><circle fill="#fff" cx="75.29" cy="81.67" r="6.03"/><circle fill="#fff" cx="104.8" cy="78.14" r="9.52"/></svg> Atwood</span>
-    <button id="tipsToggle" onclick="toggleTips()" style="background:none;border:1px solid var(--gray-300);border-radius:100px;padding:4px 10px;font-size:.75rem;color:var(--gray-600);cursor:pointer;transition:var(--transition)">💡 Astuces</button>
-    <button class="ai-sidebar-close" onclick="toggleSidebar()">✕</button>
+    <button class="ai-sidebar-close" onclick="toggleSidebar()" title="Réduire"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
   </div>
-  <div class="ai-sidebar-context" id="sidebarContext">Étape 2 · Profil</div>
+  <div class="ai-sidebar-context" id="sidebarContext"><span id="sidebarContextLabel">Étape 1 · Profil</span><label id="tipsToggle" style="display:inline-flex;align-items:center;gap:3px;font-size:.75rem;color:var(--gray-600);cursor:pointer;user-select:none;margin-left:auto"><svg style="flex-shrink:0" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 1 4 12.7V17H8v-2.3A7 7 0 0 1 12 2z"/></svg><span>Astuces</span><input type="checkbox" checked onchange="toggleTips()" style="display:none"><span class="tips-toggle-track"><span class="tips-toggle-thumb"></span></span></label></div>
   <div class="chat-messages" id="chatMessages"></div>
   <div class="quick-replies" id="quickReplies"></div>
   <div class="chat-input-area">
@@ -622,10 +819,9 @@ input,textarea,select{font-family:inherit;outline:none}
   <div class="ai-mobile-sheet">
     <div class="ai-sidebar-header">
       <span class="ai-sidebar-title"><svg viewBox="0 0 150.23 130.5" style="width:20px;height:20px;flex-shrink:0"><path fill="#49b67f" d="M140.19,53.48c-2.13-2.58-3.13-5.75-2.7-8.92l5.04-37.22c.61-4.53-5.27-7.43-9.29-4.59l-34.18,24.2c-.25.18-.51.33-.77.49,21.91,8.36,36.92,25.37,36.92,45.01,0,27.9-30.27,50.52-67.61,50.52-10.68,0-20.78-1.86-29.77-5.16,11.93,7.88,27.59,12.68,44.77,12.68,37.34,0,67.61-22.62,67.61-50.52,0-9.72-3.67-18.79-10.03-26.5Z"/><path fill="#3787c3" d="M15,79.98c0-27.9,30.27-50.52,67.61-50.52,2.14,0,4.25.07,6.34.22,3.32.23,6.62-.56,9.34-2.23-9.21-3.51-19.64-5.51-30.69-5.51-2.42,0-4.82.1-7.18.28-3.16.25-6.31-.47-8.97-2L17.75.83c-4.06-2.34-9.37.56-8.84,4.83l4.02,32.55c.3,2.42-.43,4.87-2.1,6.8C3.98,52.91,0,62.34,0,72.46c0,19.92,15.43,37.14,37.84,45.36-14-9.26-22.84-22.77-22.84-37.84Z"/><path fill="#25395a" d="M135.22,72.46c0-19.64-15.01-36.65-36.92-45.01-2.72,1.68-6.02,2.46-9.34,2.23-2.09-.15-4.2-.22-6.34-.22-37.34,0-67.61,22.62-67.61,50.52,0,15.07,8.84,28.59,22.84,37.84,8.98,3.3,19.08,5.16,29.77,5.16,37.34,0,67.61-22.62,67.61-50.52Z"/><circle fill="#fff" cx="45.43" cy="78.14" r="9.52"/><circle fill="#fff" cx="75.29" cy="81.67" r="6.03"/><circle fill="#fff" cx="104.8" cy="78.14" r="9.52"/></svg> Atwood</span>
-      <button onclick="toggleTips()" style="background:none;border:1px solid var(--gray-300);border-radius:100px;padding:4px 10px;font-size:.75rem;color:var(--gray-600);cursor:pointer">💡 Astuces</button>
       <button class="ai-sidebar-close" onclick="toggleMobileChat()">✕</button>
     </div>
-    <div class="ai-sidebar-context" id="mobileContext">Étape 2 · Profil</div>
+    <div class="ai-sidebar-context" id="mobileContext"><span id="mobileContextLabel">Étape 1 · Profil</span><label style="display:inline-flex;align-items:center;gap:3px;font-size:.75rem;color:var(--gray-600);cursor:pointer;user-select:none;margin-left:auto"><svg style="flex-shrink:0" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 1 4 12.7V17H8v-2.3A7 7 0 0 1 12 2z"/></svg><span>Astuces</span><input type="checkbox" checked onchange="toggleTips()" style="display:none"><span class="tips-toggle-track"><span class="tips-toggle-thumb"></span></span></label></div>
     <div class="chat-messages" id="mobileChatMessages"></div>
     <div class="quick-replies" id="mobileQuickReplies"></div>
     <div class="chat-input-area">
@@ -637,8 +833,8 @@ input,textarea,select{font-family:inherit;outline:none}
   </div>
 </div>
 
-<footer class="footer">
-  <p>© 2025 Atwood — Tous droits réservés · <a href="#">Politique de confidentialité</a> · <a href="#">Conditions d'utilisation</a></p>
+<footer class="footer" id="appFooter">
+  <p>© 2026 Atwood — Tous droits réservés · <a href="#">Politique de confidentialité</a> · <a href="#">Conditions d'utilisation</a></p>
   <p style="margin-top:4px">Vos données sont protégées par un chiffrement de niveau bancaire (AES-256)</p>
 </footer>
 
@@ -745,7 +941,8 @@ const state = {
   chatData: {},
   files: [],
   qIndex: 0,
-  tipsDisabled: false
+  tipsDisabled: false,
+  autoFillData: null
 };
 
 // ===== QUESTIONS (Step 2) =====
@@ -926,10 +1123,10 @@ function notifySidebarMessage() {
 
 const contextLabels = {
   1: '',
-  2: 'Étape 2 · Profil',
-  3: 'Étape 3 · Documents',
-  4: 'Étape 4 · Résumé',
-  5: 'Étape 5 · Soumission'
+  2: 'Étape 1 · Profil',
+  3: 'Étape 2 · Documents',
+  4: 'Étape 3 · Résumé',
+  5: 'Étape 4 · Soumission'
 };
 
 const contextMessages = {
@@ -955,9 +1152,9 @@ const contextMessages = {
 
 function updateSidebarContext(step) {
   const label = contextLabels[step] || '';
-  document.getElementById('sidebarContext').textContent = label;
+  document.getElementById('sidebarContextLabel').textContent = label;
   document.getElementById('sidebarContext').style.display = label ? '' : 'none';
-  if (mobileChatOpen) document.getElementById('mobileContext').textContent = label;
+  if (mobileChatOpen) document.getElementById('mobileContextLabel').textContent = label;
 
   // Send contextual message
   const msgFn = contextMessages[step];
@@ -980,6 +1177,7 @@ function goToStep(n) {
   document.getElementById('stepIndicator').innerHTML = `<span>Étape ${n}</span> / ${TOTAL_STEPS}`;
   document.getElementById('navTabs').style.display = n === 1 ? 'flex' : 'none';
   document.getElementById('stepIndicator').style.display = 'none';
+  document.body.classList.toggle('lock-scroll', n <= 2);
 
   // Sidebar visibility
   const fab = document.getElementById('aiFab');
@@ -993,6 +1191,7 @@ function goToStep(n) {
     if (fab) fab.style.display = 'none';
   }
 
+  document.getElementById('appFooter').classList.toggle('footer-full', n === 5);
   if (n === 2 && state.qIndex === 0) renderQuestion();
   if (n === 2 && !chatActive) startChat();
   if (n === 4) populateSummary();
@@ -1140,7 +1339,7 @@ function startChat() {
   const nameMap = { salarie: 'salarié(e)', autonome: 'travailleur autonome', etudiant: 'étudiant(e)', retraite: 'retraité(e)', autre: 'contribuable' };
   const name = nameMap[profile] || 'contribuable';
 
-  addBotMsg(`Bonjour! Je suis votre assistant fiscal. Je vois que vous êtes ${name}. Commençons! 🎯`, () => {
+  addBotHtml(`Bonjour, je suis votre assistant de déclaration d'impôts<br><br>Je vous poserai quelques questions ciblées pour déterminer les documents nécessaires et optimiser votre déclaration — et votre remboursement!<br><br>Vous pouvez également profiter de cet espace pour poser vos questions fiscales ou obtenir des précisions, comme si votre comptable était au bout du fil. Mes réponses s'appuient exclusivement sur les informations officielles de l'ARC et de Revenu Québec — les sources peuvent être fournies sur demande.<br><br>L'utilisation de l'assistant est entièrement facultative, mais sa sollicitation vous aidera certainement à tirer le maximum de votre déclaration !`, () => {
     advanceChat();
   });
 }
@@ -1345,22 +1544,98 @@ function sendChat() {
   setTimeout(() => advanceChat(), 600);
 }
 
+// ===== AUTH =====
+function showAuth() {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.querySelector('[data-step="auth"]').classList.add('active');
+  document.getElementById('navTabs').style.display = 'none';
+  document.body.classList.add('lock-scroll');
+  document.getElementById('authEmail').focus();
+}
+
+const MOCK_EXISTING_EMAILS = ['test@atwood.ca','demo@gmail.com','jean@cabinet.ca'];
+let authEmailTimer = null;
+let authIsNewUser = true;
+
+function validateAuth() {
+  const email = document.getElementById('authEmail').value;
+  const pw = document.getElementById('authPassword').value;
+  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const pwValid = pw.length >= 10;
+
+  // Show/hide confirm field for new users
+  const confirmField = document.getElementById('authConfirmField');
+  const confirmInput = document.getElementById('authConfirm');
+  const matchHint = document.getElementById('authMatchHint');
+  confirmField.style.display = (authIsNewUser && pwValid) ? '' : 'none';
+
+  let valid = emailValid && pwValid;
+  if (authIsNewUser && pwValid) {
+    const match = confirmInput.value === pw;
+    if (confirmInput.value.length > 0 && !match) {
+      matchHint.textContent = 'Les mots de passe ne correspondent pas.';
+      matchHint.style.color = 'var(--red-500)';
+    } else if (match) {
+      matchHint.textContent = '';
+    } else {
+      matchHint.textContent = '';
+    }
+    valid = valid && match;
+  }
+
+  document.getElementById('authSubmit').disabled = !valid;
+  checkEmailStatus(email, emailValid);
+}
+
+function checkEmailStatus(email, isValid) {
+  const el = document.getElementById('authEmailStatus');
+  clearTimeout(authEmailTimer);
+  if (!isValid) { el.classList.remove('visible'); authIsNewUser = true; return; }
+  authEmailTimer = setTimeout(() => {
+    const exists = MOCK_EXISTING_EMAILS.includes(email.toLowerCase());
+    authIsNewUser = !exists;
+    if (exists) {
+      el.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12.5l2.5 2.5 5.5-5.5"/></svg><span style="color:var(--green-600)">Bon retour! Entrez votre mot de passe pour continuer.</span>';
+    } else {
+      el.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue-500)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 16.8l-6.2 4.5 2.4-7.4L2 9.4h7.6z"/></svg><span style="color:var(--blue-600)">Bienvenue! Créez votre mot de passe pour commencer.</span>';
+    }
+    el.classList.add('visible');
+    validateAuth();
+  }, 400);
+}
+
+function togglePasswordVisibility() {
+  const input = document.getElementById('authPassword');
+  const btn = input.parentElement.querySelector('.auth-eye');
+  const isPassword = input.type === 'password';
+  input.type = isPassword ? 'text' : 'password';
+  btn.querySelector('.eye-open').style.display = isPassword ? 'none' : '';
+  btn.querySelector('.eye-closed').style.display = isPassword ? '' : 'none';
+}
+
+function handleAuth() {
+  const email = document.getElementById('authEmail').value.trim();
+  if (email) state.userEmail = email;
+  goToStep(2);
+}
+
+function toggleTheme() {
+  document.documentElement.classList.toggle('dark');
+  const isDark = document.documentElement.classList.contains('dark');
+  document.getElementById('themeToggle').title = isDark ? 'Mode clair' : 'Mode sombre';
+  localStorage.setItem('atwood-theme', isDark ? 'dark' : 'light');
+}
+
+function setLang(lang) {
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.textContent === lang.toUpperCase()));
+  state.lang = lang;
+  // TODO: full i18n swap
+}
+
 function toggleTips() {
   state.tipsDisabled = !state.tipsDisabled;
-  const btn = document.getElementById('tipsToggle');
-  if (state.tipsDisabled) {
-    btn.textContent = '💡 Astuces off';
-    btn.style.background = 'var(--gray-100)';
-    btn.style.color = 'var(--gray-400)';
-    btn.style.borderColor = 'var(--gray-200)';
-    btn.style.textDecoration = 'line-through';
-  } else {
-    btn.textContent = '💡 Astuces';
-    btn.style.background = 'none';
-    btn.style.color = 'var(--gray-600)';
-    btn.style.borderColor = 'var(--gray-300)';
-    btn.style.textDecoration = 'none';
-  }
+  const lbl = document.getElementById('tipsToggle');
+  lbl.style.color = state.tipsDisabled ? 'var(--gray-400)' : 'var(--gray-600)';
 }
 
 // ===== STEP 3 — UPLOAD LOGIC =====
@@ -1381,8 +1656,16 @@ async function handleFiles(fileList) {
   for (const file of Array.from(fileList)) {
     try {
       const result = await AttwoodAPI.uploadDocument(file);
-      state.files.push({ name: result.name, size: result.size, type: result.type, category: result.category });
+      const extracted = getMockExtraction(result.category);
+      state.files.push({ name: result.name, size: result.size, type: result.type, category: result.category, extracted, parsing: true });
       renderUploadedFiles();
+      // Simulate parsing delay then reveal extraction
+      const idx = state.files.length - 1;
+      setTimeout(() => {
+        state.files[idx].parsing = false;
+        renderUploadedFiles();
+        updateAutoFillTotals();
+      }, 1400);
     } catch (err) {
       alert(err.message);
     }
@@ -1391,22 +1674,55 @@ async function handleFiles(fileList) {
 
 function renderUploadedFiles() {
   const container = document.getElementById('uploadedFiles');
-  container.innerHTML = state.files.map((f, i) => `
-    <div class="uploaded-file">
-      <div class="file-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8m8 4H8m2-8H8"/></svg>
-      </div>
-      <div class="file-details">
-        <h4>${f.name}</h4>
-        <p>${(f.size / 1024).toFixed(0)} Ko · ${f.type.split('/')[1].toUpperCase()}</p>
-      </div>
-      <div class="file-remove" onclick="removeFile(${i})">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-      </div>
-    </div>
-  `).join('');
+  const checkSvg = '<svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>';
 
-  // Update category counts from API classification
+  container.innerHTML = state.files.map((f, i) => {
+    const highlights = getHighlightsForCategory(f.category);
+    const extractedRows = (f.extracted || []).map(e =>
+      `<div class="extracted-row">${checkSvg}<span class="extracted-label">${e.label}</span><span class="extracted-value">${e.value !== null ? formatMoney(e.value) : '—'}</span></div>`
+    ).join('');
+
+    const highlightBoxes = highlights.map(h =>
+      `<div class="doc-highlight hl-${h.color}" style="top:${h.top};left:${h.left};width:${h.w};height:${h.h}"><span class="doc-highlight-label">${h.label}</span></div>`
+    ).join('');
+
+    const parsingHtml = f.parsing ? `
+      <div class="file-parsing">
+        <div class="parsing-bar"><div class="parsing-bar-fill"></div></div>
+        <span class="parsing-text">Analyse en cours...</span>
+      </div>` : '';
+
+    const extractionHtml = (!f.parsing && f.extracted && f.extracted.length) ? `
+      <div class="file-extraction">
+        <div class="file-preview">
+          <div class="doc-mock">${highlightBoxes}</div>
+        </div>
+        <div class="file-extracted-values">
+          <h4>Informations extraites</h4>
+          ${extractedRows}
+          <p class="extracted-note">Vérifiez que les montants correspondent à vos documents.</p>
+        </div>
+      </div>` : '';
+
+    return `<div class="uploaded-file-card">
+      <div class="file-header">
+        <div class="file-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8m8 4H8m2-8H8"/></svg>
+        </div>
+        <div class="file-details">
+          <h4>${f.name}</h4>
+          <p>${(f.size / 1024).toFixed(0)} Ko · ${f.type.split('/')[1].toUpperCase()}</p>
+        </div>
+        <div class="file-remove" onclick="removeFile(${i})">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </div>
+      </div>
+      ${parsingHtml}
+      ${extractionHtml}
+    </div>`;
+  }).join('');
+
+  // Update category counts
   let counts = { income: 0, rrsp: 0, medical: 0, donation: 0 };
   state.files.forEach(f => {
     if (f.category && counts[f.category] !== undefined) counts[f.category]++;
@@ -1420,6 +1736,89 @@ function renderUploadedFiles() {
 function removeFile(index) {
   state.files.splice(index, 1);
   renderUploadedFiles();
+  updateAutoFillTotals();
+}
+
+function getMockExtraction(category) {
+  const extractions = {
+    income: [
+      { label: 'Revenus d\'emploi', value: 52340, field: 'employment', color: 'blue' },
+      { label: 'Impôt fédéral retenu', value: 8920, field: null, color: 'blue' },
+      { label: 'Cotisations RPC/RRQ', value: 3754, field: null, color: 'blue' }
+    ],
+    rrsp: [
+      { label: 'Cotisations REER', value: 6500, field: 'rrsp', color: 'green' }
+    ],
+    medical: [
+      { label: 'Frais médicaux', value: 2180, field: 'medical', color: 'green' }
+    ],
+    donation: [
+      { label: 'Dons de charité', value: 850, field: 'donations', color: 'orange' }
+    ],
+    other: [
+      { label: 'Document reçu', value: null, field: null, color: 'gray' }
+    ]
+  };
+  return extractions[category] || extractions.other;
+}
+
+function getHighlightsForCategory(category) {
+  const highlights = {
+    income: [
+      { top: '18%', left: '12%', w: '65%', h: '9%', color: 'blue', label: 'Revenus d\'emploi' },
+      { top: '38%', left: '12%', w: '50%', h: '9%', color: 'blue', label: 'Impôt retenu' },
+      { top: '58%', left: '12%', w: '55%', h: '9%', color: 'blue', label: 'Cotisations RPC' }
+    ],
+    rrsp: [
+      { top: '25%', left: '12%', w: '60%', h: '9%', color: 'green', label: 'Cotisations REER' }
+    ],
+    medical: [
+      { top: '25%', left: '12%', w: '58%', h: '9%', color: 'green', label: 'Frais médicaux' }
+    ],
+    donation: [
+      { top: '25%', left: '12%', w: '55%', h: '9%', color: 'orange', label: 'Dons de charité' }
+    ],
+    other: [
+      { top: '25%', left: '12%', w: '50%', h: '9%', color: 'gray', label: 'Document' }
+    ]
+  };
+  return highlights[category] || highlights.other;
+}
+
+function updateAutoFillTotals() {
+  const totals = { employment: 0, selfEmp: 0, investment: 0, rrsp: 0, medical: 0, donations: 0, childcare: 0 };
+  state.files.forEach(f => {
+    (f.extracted || []).forEach(e => {
+      if (e.field && totals[e.field] !== undefined) totals[e.field] += e.value;
+    });
+  });
+  state.autoFillData = totals;
+}
+
+function toggleManualEntry() {
+  const el = document.getElementById('manualEntry');
+  const btn = el.previousElementSibling.querySelector('button');
+  if (el.style.display === 'none') {
+    el.style.display = 'block';
+    btn.textContent = '− Masquer la saisie manuelle';
+  } else {
+    el.style.display = 'none';
+    btn.textContent = '+ Ajouter des informations manuellement';
+  }
+}
+
+function updateManualTotals() {
+  const parse = id => parseInt((document.getElementById(id).value || '0').replace(/[^\d]/g, ''), 10) || 0;
+  if (!state.autoFillData) state.autoFillData = { employment: 0, selfEmp: 0, investment: 0, rrsp: 0, medical: 0, donations: 0, childcare: 0 };
+  state.manualData = {
+    employment: parse('manualEmployment'),
+    selfEmp: parse('manualSelfEmp'),
+    investment: parse('manualInvestment'),
+    rrsp: parse('manualRRSP'),
+    medical: parse('manualMedical'),
+    donations: parse('manualDonations'),
+    childcare: parse('manualChildcare')
+  };
 }
 
 // ===== STEP 4 — SUMMARY =====
@@ -1433,20 +1832,49 @@ async function populateSummary() {
   document.getElementById('estimateAmount').textContent = '...';
   document.getElementById('savingsAmount').textContent = '...';
 
-  const result = await AttwoodAPI.calculateTaxEstimate(p, state.files, state.chatData);
+  // Merge auto-fill extracted data + manual overrides
+  const af = state.autoFillData || {};
+  const m = state.manualData || {};
+  const hasExtracted = state.autoFillData && Object.values(state.autoFillData).some(v => v > 0);
+  const hasManual = state.manualData && Object.values(state.manualData).some(v => v > 0);
 
-  document.getElementById('sumEmployment').value = formatMoney(result.employment);
-  document.getElementById('sumSelfEmployment').value = formatMoney(result.selfEmp);
-  document.getElementById('sumInvestment').value = formatMoney(result.investment);
-  document.getElementById('sumRRSP').value = formatMoney(result.rrsp);
-  document.getElementById('sumMedical').value = formatMoney(result.medical);
-  document.getElementById('sumDonations').value = formatMoney(result.donations);
-  document.getElementById('sumChildcare').value = formatMoney(result.childcare);
+  if (hasExtracted || hasManual) {
+    const merge = key => (af[key] || 0) + (m[key] || 0);
+    const d = {
+      employment: merge('employment'), selfEmp: merge('selfEmp'), investment: merge('investment'),
+      rrsp: merge('rrsp'), medical: merge('medical'), donations: merge('donations'), childcare: merge('childcare')
+    };
+    document.getElementById('sumEmployment').value = formatMoney(d.employment);
+    document.getElementById('sumSelfEmployment').value = formatMoney(d.selfEmp);
+    document.getElementById('sumInvestment').value = formatMoney(d.investment);
+    document.getElementById('sumRRSP').value = formatMoney(d.rrsp);
+    document.getElementById('sumMedical').value = formatMoney(d.medical);
+    document.getElementById('sumDonations').value = formatMoney(d.donations);
+    document.getElementById('sumChildcare').value = formatMoney(d.childcare);
 
-  document.getElementById('savingsAmount').textContent = formatMoney(result.savings);
-  document.getElementById('estimateAmount').textContent = formatMoney(result.refund);
+    const totalIncome = d.employment + d.selfEmp + d.investment;
+    const totalDeductions = d.rrsp + d.medical + d.donations + d.childcare;
+    const savings = Math.round(totalDeductions * 0.28);
+    const refund = Math.round(totalDeductions * 0.32);
+    document.getElementById('savingsAmount').textContent = formatMoney(savings);
+    document.getElementById('estimateAmount').textContent = formatMoney(refund);
+    state.summaryData = { totalIncome, totalDeductions, refund };
+  } else {
+    const result = await AttwoodAPI.calculateTaxEstimate(p, state.files, state.chatData);
 
-  state.summaryData = { totalIncome: result.totalIncome, totalDeductions: result.totalDeductions, refund: result.refund };
+    document.getElementById('sumEmployment').value = formatMoney(result.employment);
+    document.getElementById('sumSelfEmployment').value = formatMoney(result.selfEmp);
+    document.getElementById('sumInvestment').value = formatMoney(result.investment);
+    document.getElementById('sumRRSP').value = formatMoney(result.rrsp);
+    document.getElementById('sumMedical').value = formatMoney(result.medical);
+    document.getElementById('sumDonations').value = formatMoney(result.donations);
+    document.getElementById('sumChildcare').value = formatMoney(result.childcare);
+
+    document.getElementById('savingsAmount').textContent = formatMoney(result.savings);
+    document.getElementById('estimateAmount').textContent = formatMoney(result.refund);
+
+    state.summaryData = { totalIncome: result.totalIncome, totalDeductions: result.totalDeductions, refund: result.refund };
+  }
 }
 
 function formatMoney(n) {
@@ -1498,6 +1926,11 @@ function submitCpaForm() {
 }
 
 // ===== INIT =====
+if (localStorage.getItem('atwood-theme') === 'dark' || (!localStorage.getItem('atwood-theme') && window.matchMedia('(prefers-color-scheme:dark)').matches)) {
+  document.documentElement.classList.add('dark');
+  document.getElementById('themeToggle').title = 'Mode clair';
+}
+document.body.classList.add('lock-scroll');
 document.getElementById('progressFill').style.width = '20%';
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 window.scrollTo({ top: 0, behavior: 'instant' });
