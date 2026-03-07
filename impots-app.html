@@ -164,6 +164,12 @@ body.lock-scroll{overflow:hidden}
 .option-tagline{font-size:.8rem;color:var(--gray-500);font-weight:400;line-height:1.3;margin-top:4px}
 .option-desc{font-size:.75rem;color:var(--gray-500);font-weight:400;line-height:1.3;margin-top:2px;opacity:.55}
 .multi-note{font-size:.9rem;color:var(--gray-400);margin-top:-28px;margin-bottom:20px}
+.date-input-wrap{display:flex;justify-content:center;gap:12px;margin-top:8px}
+.date-select-group{display:flex;flex-direction:column;gap:4px}
+.date-select-group label{font-size:.75rem;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.5px}
+.date-select-group select{padding:12px 16px;border:2px solid var(--gray-200);border-radius:var(--radius);font-size:1rem;font-weight:600;color:var(--gray-900);background:var(--white);transition:var(--transition);cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%234a5568' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px}
+.date-select-group select:focus{border-color:var(--blue-400);box-shadow:0 0 0 3px rgba(49,130,206,.1)}
+.date-select-group select option[value=""]{color:var(--gray-400)}
 .profil-nav{display:flex;gap:12px;margin-top:32px;justify-content:flex-end;width:100%}
 .nav-btn{padding:12px 28px;border-radius:100px;font-weight:600;font-size:.95rem;transition:var(--transition)}
 .nav-btn.primary{background:var(--blue-600);color:var(--white)}
@@ -949,8 +955,8 @@ const state = {
 const questions = [
   {
     id: 'family',
-    num: '1 / 3',
-    text: 'Quel est votre statut marital au 31 décembre 2025?',
+    num: '1 / 8',
+    text: 'Quel était votre statut marital au 31 décembre?',
     options: [
       { label: 'Célibataire', value: 'celibataire', desc: "Sans conjoint(e), Pas séparé(e) d'un mariage", icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' },
       { label: 'Conjoint(e) de fait', value: 'conjoint_fait', desc: 'Vie commune depuis 12 mois+, Enfant(s) ensemble', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-3-3.87M9 21v-2a4 4 0 00-4-4H5"/><circle cx="9" cy="7" r="4"/><circle cx="17" cy="7" r="3"/></svg>' },
@@ -961,8 +967,45 @@ const questions = [
     ]
   },
   {
+    id: 'birthdate',
+    num: '2 / 8',
+    text: 'Quelle est votre date de naissance?',
+    type: 'date'
+  },
+  {
+    id: 'dependents',
+    num: '3 / 8',
+    text: 'Avez-vous des enfants ou personnes à charge?',
+    options: [
+      { label: 'Oui', value: 'oui', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>' },
+      { label: 'Non', value: 'non', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>' }
+    ]
+  },
+  {
+    id: 'dependent_type',
+    num: '3 / 8',
+    text: 'De qui s\'agit-il?',
+    multi: true,
+    conditional: true,
+    showIf: { id: 'dependents', value: 'oui' },
+    options: [
+      { label: 'Enfant', value: 'enfant', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="4"/><path d="M5.5 21c0-4.14 2.9-7.5 6.5-7.5s6.5 3.36 6.5 7.5"/></svg>' },
+      { label: 'Parent ou grand-parent', value: 'parent', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><circle cx="16" cy="3.13" r="3"/></svg>' },
+      { label: 'Autre membre de la famille', value: 'autre_famille', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' }
+    ]
+  },
+  {
+    id: 'student',
+    num: '4 / 8',
+    text: 'Étiez-vous étudiant en 2025?',
+    options: [
+      { label: 'Oui', value: 'oui', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 3 3 6 3s6-1 6-3v-5"/></svg>' },
+      { label: 'Non', value: 'non', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>' }
+    ]
+  },
+  {
     id: 'income_sources',
-    num: '2 / 3',
+    num: '5 / 8',
     text: 'Quelles sont vos sources de revenus?',
     multi: true,
     options: [
@@ -976,16 +1019,46 @@ const questions = [
     ]
   },
   {
-    id: 'province',
-    num: '3 / 3',
-    text: 'Dans quelle province résidez-vous?',
+    id: 'deductions',
+    num: '6 / 8',
+    text: 'Avez-vous l\'une des dépenses suivantes?',
+    multi: true,
+    hasNone: true,
     options: [
-      { label: 'Québec', value: 'QC', desc: 'Déclaration fédérale + provinciale', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>' },
-      { label: 'Ontario', value: 'ON', desc: 'Déclaration fédérale uniquement', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>' },
-      { label: 'Colombie-Britannique', value: 'BC', desc: 'Déclaration fédérale uniquement', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>' },
-      { label: 'Autre province', value: 'other', desc: 'AB, MB, SK, NB, etc.', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>' }
+      { label: 'Cotisations REER', value: 'reer', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8 0 3 2 4.5V20h4v-2h3v2h4v-4c1-.5 1.7-1 2-2h2v-4h-2c0-1-.5-1.5-1-2"/><circle cx="14" cy="10" r="1"/></svg>' },
+      { label: 'Frais médicaux', value: 'medical', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>' },
+      { label: 'Dons de charité', value: 'dons', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>' },
+      { label: 'Frais de garde d\'enfants', value: 'garde', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="4"/><path d="M5.5 21c0-4.14 2.9-7.5 6.5-7.5s6.5 3.36 6.5 7.5"/></svg>' },
+      { label: 'Frais de déménagement', value: 'demenagement', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="6" width="15" height="12" rx="2"/><path d="M16 12h5l3 3v5h-2"/><circle cx="7" cy="20" r="2"/><circle cx="20" cy="20" r="2"/></svg>' },
+      { label: 'Dépenses d\'emploi', value: 'depenses_emploi', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>' },
+      { label: 'Aucune', value: 'aucune', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M4.93 4.93l14.14 14.14"/></svg>' }
+    ]
+  },
+  {
+    id: 'special_situations',
+    num: '7 / 8',
+    text: 'Est-ce que l\'une des situations suivantes s\'applique à vous?',
+    multi: true,
+    hasNone: true,
+    options: [
+      { label: 'J\'ai vendu une propriété', value: 'vente_propriete', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg>' },
+      { label: 'J\'ai vendu des actions ou crypto', value: 'vente_actions', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>' },
+      { label: 'Je suis un nouvel arrivant au Canada', value: 'nouvel_arrivant', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>' },
+      { label: 'J\'ai quitté le Canada cette année', value: 'quitte_canada', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 010 8h-1M5 8H4a4 4 0 000 8h1"/><path d="M2 12h20"/><path d="M15 4l-3 4-3-4M15 20l-3-4-3 4"/></svg>' },
+      { label: 'Aucune de ces situations', value: 'aucune', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M4.93 4.93l14.14 14.14"/></svg>' }
+    ]
+  },
+  {
+    id: 'import_method',
+    num: '8 / 8',
+    text: 'Comment préférez-vous ajouter vos documents fiscaux?',
+    options: [
+      { label: 'Importer depuis l\'ARC et Revenu Québec', value: 'import_arc', tagline: 'Automatique et rapide', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>' },
+      { label: 'Télécharger mes documents', value: 'upload', tagline: 'PDF, photos de feuillets', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>' },
+      { label: 'Entrée de données manuelle', value: 'manual', tagline: 'Saisir les montants moi-même', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>' }
     ]
   }
+  // Province hardcoded to QC — Quebec only for now
 ];
 
 // ===== CHATBOT SCRIPTS BY PROFILE =====
@@ -1202,25 +1275,94 @@ function goToStep(n) {
 }
 
 // ===== STEP 2 — PROFIL LOGIC =====
+function isConditionalHidden(q) {
+  return q.conditional && q.showIf && state.profile[q.showIf.id] !== q.showIf.value;
+}
+
+function getVisibleQuestions() {
+  return questions.filter(q => !isConditionalHidden(q));
+}
+
 function renderQuestion() {
   const q = questions[state.qIndex];
   if (!q) { goToStep(3); return; } // go to upload
+
+  // Skip hidden conditional questions (forward)
+  if (isConditionalHidden(q)) {
+    state.qIndex++;
+    renderQuestion();
+    return;
+  }
+
   const container = document.getElementById('questionContainer');
   const isMulti = q.multi || false;
 
-  // Build progress dots
+  // Build progress dots — only for visible questions
+  const visible = getVisibleQuestions();
   let dotsHtml = '';
-  for (let i = 0; i < questions.length; i++) {
-    const isDone = state.profile[questions[i].id] !== undefined;
-    const isActive = i === state.qIndex;
-    const canClick = isDone || i <= state.qIndex;
+  const visibleIndex = visible.indexOf(q);
+  for (let vi = 0; vi < visible.length; vi++) {
+    const vq = visible[vi];
+    const realIdx = questions.indexOf(vq);
+    const isDone = state.profile[vq.id] !== undefined;
+    const isActive = vi === visibleIndex;
+    const canClick = isDone || realIdx <= state.qIndex;
     const cls = isActive ? 'active' : isDone ? 'done' : (!canClick ? 'disabled' : '');
-    const check = isDone && !isActive ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" width="16" height="16"><path d="M20 6L9 17l-5-5"/></svg>' : (i + 1);
-    const onclick = canClick ? `onclick="jumpToQuestion(${i})"` : '';
+    const check = isDone && !isActive ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" width="16" height="16"><path d="M20 6L9 17l-5-5"/></svg>' : (vi + 1);
+    const onclick = canClick ? `onclick="jumpToQuestion(${realIdx})"` : '';
     dotsHtml += `<div class="q-dot ${cls}" ${onclick}>${check}</div>`;
-    if (i < questions.length - 1) {
+    if (vi < visible.length - 1) {
       dotsHtml += `<div class="q-line ${isDone ? 'filled' : ''}"></div>`;
     }
+  }
+
+  // Date dropdowns rendering
+  if (q.type === 'date') {
+    const existingVal = state.profile[q.id] || '';
+    const parts = existingVal ? existingVal.split('-') : ['','',''];
+    const selY = parts[0], selM = parts[1], selD = parts[2];
+    const moisNoms = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+    const currentYear = new Date().getFullYear();
+    let yearOpts = '<option value="">—</option>';
+    for (let y = currentYear; y >= currentYear - 100; y--) yearOpts += `<option value="${y}"${y == selY ? ' selected' : ''}>${y}</option>`;
+    let monthOpts = '<option value="">—</option>';
+    for (let m = 1; m <= 12; m++) { const mv = String(m).padStart(2,'0'); monthOpts += `<option value="${mv}"${mv === selM ? ' selected' : ''}>${moisNoms[m-1]}</option>`; }
+    let dayOpts = '<option value="">—</option>';
+    for (let d = 1; d <= 31; d++) { const dv = String(d).padStart(2,'0'); dayOpts += `<option value="${dv}"${dv === selD ? ' selected' : ''}>${d}</option>`; }
+
+    container.innerHTML = `
+      <div class="q-progress">${dotsHtml}</div>
+      <div class="question-num">${q.num}</div>
+      <div class="question-text">${q.text}</div>
+      <div class="date-input-wrap">
+        <div class="date-select-group"><label>Jour</label><select id="dateDay">${dayOpts}</select></div>
+        <div class="date-select-group"><label>Mois</label><select id="dateMonth">${monthOpts}</select></div>
+        <div class="date-select-group"><label>Année</label><select id="dateYear">${yearOpts}</select></div>
+      </div>
+      <div class="profil-nav">
+        ${state.qIndex > 0 ? '<button class="nav-btn secondary" onclick="prevQuestion()">← Retour</button>' : ''}
+        <button class="nav-btn primary" id="dateContinueBtn" onclick="nextQuestion()" ${existingVal ? '' : 'disabled'}>Continuer →</button>
+      </div>
+    `;
+    function checkDateComplete() {
+      const y = document.getElementById('dateYear').value;
+      const m = document.getElementById('dateMonth').value;
+      const d = document.getElementById('dateDay').value;
+      const btn = document.getElementById('dateContinueBtn');
+      if (y && m && d) {
+        state.profile[q.id] = y + '-' + m + '-' + d;
+        if (btn) btn.disabled = false;
+      } else {
+        if (btn) btn.disabled = true;
+      }
+    }
+    document.getElementById('dateDay').addEventListener('change', checkDateComplete);
+    document.getElementById('dateMonth').addEventListener('change', checkDateComplete);
+    document.getElementById('dateYear').addEventListener('change', checkDateComplete);
+    container.style.animation = 'none';
+    container.offsetHeight;
+    container.style.animation = 'fadeSlideIn .4s ease forwards';
+    return;
   }
 
   container.innerHTML = `
@@ -1254,12 +1396,28 @@ function renderQuestion() {
 }
 
 function selectOption(el, qId, value, isMulti, hasInput) {
+  const q = questions.find(qq => qq.id === qId);
   if (isMulti) {
-    el.classList.toggle('selected');
     if (!state.profile[qId]) state.profile[qId] = [];
-    const idx = state.profile[qId].indexOf(value);
-    if (idx > -1) state.profile[qId].splice(idx, 1);
-    else state.profile[qId].push(value);
+    // "Aucune" mutual exclusivity
+    if (q && q.hasNone && value === 'aucune') {
+      state.profile[qId] = ['aucune'];
+    } else if (q && q.hasNone) {
+      const noneIdx = state.profile[qId].indexOf('aucune');
+      if (noneIdx > -1) state.profile[qId].splice(noneIdx, 1);
+      const idx = state.profile[qId].indexOf(value);
+      if (idx > -1) state.profile[qId].splice(idx, 1);
+      else state.profile[qId].push(value);
+    } else {
+      const idx = state.profile[qId].indexOf(value);
+      if (idx > -1) state.profile[qId].splice(idx, 1);
+      else state.profile[qId].push(value);
+    }
+    // Re-render all option cards to reflect visual state
+    el.parentElement.querySelectorAll('.option-card').forEach(c => {
+      const v = c.getAttribute('data-value');
+      c.classList.toggle('selected', state.profile[qId].includes(v));
+    });
     const btn = document.getElementById('nextQBtn');
     if (btn) btn.disabled = state.profile[qId].length === 0;
   } else {
@@ -1294,6 +1452,7 @@ function confirmCustom(qId) {
 function nextQuestion() {
   state.qIndex++;
   if (state.qIndex >= questions.length) {
+    state.profile.province = 'QC'; // Quebec only for now
     goToStep(3); // go to upload
   } else {
     renderQuestion();
@@ -1303,6 +1462,10 @@ function nextQuestion() {
 function prevQuestion() {
   if (state.qIndex > 0) {
     state.qIndex--;
+    // Skip hidden conditional questions when going back
+    while (state.qIndex > 0 && isConditionalHidden(questions[state.qIndex])) {
+      state.qIndex--;
+    }
     renderQuestion();
   }
 }
@@ -1826,7 +1989,7 @@ async function populateSummary() {
   const p = state.profile;
   const familyMap = { celibataire: 'Célibataire', conjoint_fait: 'Conjoint(e) de fait', marie: 'Marié(e)', separe: 'Séparé(e)', divorce: 'Divorcé(e)', veuf: 'Veuf/veuve' };
   document.getElementById('sumSituation').value = familyMap[p.family] || '-';
-  document.getElementById('sumProvince').value = p.province === 'QC' ? 'Québec' : p.province === 'ON' ? 'Ontario' : p.province === 'BC' ? 'Colombie-Britannique' : p.province || '-';
+  document.getElementById('sumProvince').value = 'Québec';
 
   // Show loading state
   document.getElementById('estimateAmount').textContent = '...';
