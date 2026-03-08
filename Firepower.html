@@ -359,7 +359,7 @@ function SliderWithTooltip({value,onChange,enabled,style}){
     onChange(pct);
   },[onChange]);
   return(
-    <div style={{...style,position:"relative",height:24,display:"flex",alignItems:"center",cursor:"pointer"}}
+    <div style={{...style,position:"relative",height:36,display:"flex",alignItems:"center",cursor:"pointer",touchAction:"none"}}
       ref={trackRef}
       onPointerDown={e=>{if(!enabled)return;setDragging(true);e.currentTarget.setPointerCapture(e.pointerId);updateValue(e)}}
       onPointerMove={e=>{if(dragging&&enabled)updateValue(e)}}

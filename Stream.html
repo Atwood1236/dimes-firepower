@@ -97,13 +97,14 @@ function Slider({value,onChange,min,max,accent=false,style,onDragChange}){
   const ref=useRef(null);
   const[drag,setDrag]=useState(false);
   const pct=((value-min)/(max-min))*100;
-  const update=useCallback(e=>{const r=ref.current?.getBoundingClientRect();if(!r)return;onChange(Math.round(clamp(((e.clientX-r.left)/r.width)*(max-min)+min,min,max)))},[onChange,min,max]);
+  const update=useCallback(e=>{const r=ref.current?.getBoundingClientRect();if(!r)return;const cx=e.clientX!=null?e.clientX:e.touches?e.touches[0].clientX:0;onChange(Math.round(clamp(((cx-r.left)/r.width)*(max-min)+min,min,max)))},[onChange,min,max]);
   const onMove=useCallback(e=>{if(drag)update(e)},[drag,update]);
   const startDrag=()=>{setDrag(true);onDragChange&&onDragChange(true)};
   const endDrag=()=>{setDrag(false);onDragChange&&onDragChange(false)};
   return(
-    <div style={{...style,position:"relative",height:36,display:"flex",alignItems:"center",cursor:"pointer"}} ref={ref}
-      onMouseDown={e=>{startDrag();update(e)}} onMouseMove={onMove} onMouseUp={endDrag} onMouseLeave={endDrag}>
+    <div style={{...style,position:"relative",height:36,display:"flex",alignItems:"center",cursor:"pointer",touchAction:"none"}} ref={ref}
+      onMouseDown={e=>{startDrag();update(e)}} onMouseMove={onMove} onMouseUp={endDrag} onMouseLeave={endDrag}
+      onTouchStart={e=>{startDrag();update(e)}} onTouchMove={onMove} onTouchEnd={endDrag}>
       <div style={{position:"absolute",left:0,right:0,height:2,borderRadius:1,background:T.border}}>
         <div style={{height:"100%",width:pct+"%",borderRadius:1,background:accent?"linear-gradient(to right, transparent, rgba(238,255,0,0.4))":"linear-gradient(to right, transparent, rgba(255,255,255,0.35))",transition:drag?"none":"width 0.05s"}}/>
       </div>
