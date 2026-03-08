@@ -119,6 +119,7 @@
   /* ═══════════════════════════════════
      PRODUCTS — TERMINAL v5
      ═══════════════════════════════════ */
+  .mobile-products{display:none}
   .products{padding:100px 48px 120px;max-width:1400px;margin:0 auto;overflow:visible;position:relative;z-index:51;margin-top:60px}
   .page-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:50;opacity:0;pointer-events:none;transition:opacity .6s ease}
   .page-overlay.active{opacity:1}
@@ -474,6 +475,15 @@
     nav{padding:16px 24px}.hero{padding:100px 24px 60px}
     .process{padding:80px 24px}.process-grid{grid-template-columns:1fr}.process-step{border-left:none}
     .products{padding:80px 24px 140px}.terminal-body{grid-template-columns:1fr}.terminal-sidebar{border-left:none;border-top:1px solid var(--t-border)}
+    .terminal-scene,.product-tabs-side,.firepower-preview,.stream-preview{display:none!important}
+    .mobile-products{display:flex!important;flex-direction:column;gap:48px;align-items:center}
+    .mobile-product{max-width:320px;width:100%}
+    .mobile-product-name{font-size:24px;font-weight:700;color:var(--yellow);margin:0 0 4px}
+    .mobile-product-for{font-size:13px;color:rgba(255,255,255,.5);margin:0 0 8px}
+    .mobile-product-desc{font-size:14px;color:rgba(255,255,255,.75);line-height:1.4;margin:0 0 16px}
+    .mobile-leverage-box{width:100%;border-radius:16px;overflow:hidden;padding:32px;box-sizing:border-box;background:radial-gradient(ellipse 120% 250% at 50% 105%,rgba(238,255,0,0.18) 0%,rgba(238,255,0,0.06) 40%,transparent 70%),#0e0e0e;border:1px solid rgba(255,255,255,.04);box-shadow:inset 0 -20px 60px rgba(238,255,0,0.04),0 4px 20px rgba(0,0,0,.6)}
+    .mobile-product-preview{width:100%;aspect-ratio:4/5;border-radius:14px;overflow:hidden;background:#111;border:1px solid rgba(255,255,255,.06)}
+    .mobile-product-preview iframe{width:100%;height:100%;border:none;pointer-events:none}
     .why{padding:80px 24px}.why-grid{grid-template-columns:1fr}.why-center{display:none}.why-card:nth-child(n){border-radius:16px;padding:40px 36px}.cta-inner{grid-template-columns:1fr;gap:40px}.cta-content{text-align:center}
     .backer-logos{flex-wrap:wrap;gap:32px}.social-proof{flex-direction:column;gap:20px}footer{flex-direction:column;gap:20px}.footer-links{flex-wrap:wrap;justify-content:center}
   }
@@ -488,7 +498,7 @@
     .hero-cta-wrap{margin-top:75px}
     .hero-visual{margin-top:-70px;width:100%;margin-left:0}
     #heroCanvas{width:220%;margin-left:-60%;-webkit-mask-image:radial-gradient(ellipse 65% 55% at 45% 48%,black 40%,transparent 90%),linear-gradient(to top,transparent 15%,black 55%);-webkit-mask-composite:destination-in;mask-image:radial-gradient(ellipse 65% 55% at 45% 48%,black 40%,transparent 90%),linear-gradient(to top,transparent 15%,black 55%);mask-composite:intersect}
-    .social-proof{padding:24px 16px;gap:12px;margin-top:-20px}
+    .social-proof{padding:24px 16px;gap:20px;margin-top:-40px}
     .social-proof>span{font-size:12px}
     .proof-logos{max-width:100%}
     .proof-logo{margin-right:24px}
@@ -497,6 +507,22 @@
     .proof-logo:nth-child(5n+3){height:21px}
     .proof-logo:nth-child(5n+4){height:19px}
     .proof-logo:nth-child(5n+5){height:21px}
+    .products{padding:60px 16px 80px;margin-top:40px}
+    .products .section-header{margin-bottom:32px}
+    .terminal-scene,.product-tabs-side,.firepower-preview,.stream-preview{display:none!important}
+    .mobile-products{display:flex;flex-direction:column;gap:48px}
+    .mobile-product-name{font-size:24px;font-weight:700;color:var(--yellow);margin:0 0 4px}
+    .mobile-product-for{font-size:13px;color:rgba(255,255,255,.5);margin:0 0 8px}
+    .mobile-product-desc{font-size:14px;color:rgba(255,255,255,.75);line-height:1.4;margin:0 0 16px}
+    .mobile-leverage-box{width:100%;border-radius:16px;overflow:hidden;background:radial-gradient(ellipse 120% 250% at 50% 105%, rgba(238,255,0,0.18) 0%, rgba(238,255,0,0.06) 40%, transparent 70%), #0e0e0e;border:1px solid rgba(255,255,255,.04);box-shadow:inset 0 -20px 60px rgba(238,255,0,0.04), 0 4px 20px rgba(0,0,0,.6)}
+    .mobile-product-preview{width:100%;aspect-ratio:4/5;border-radius:14px;overflow:hidden;background:#111;border:1px solid rgba(255,255,255,.06)}
+    .mobile-product-preview iframe{width:100%;height:100%;border:none;pointer-events:none}
+    .process{padding:60px 16px;overflow:visible}
+    .process .section-header{margin-bottom:24px}
+    .process-canvas{display:none}
+    .process-grid{margin-top:0;gap:16px}
+    .process-hand-top{width:280px;top:100px;right:-60px}
+    .process-hand-bottom{width:300px;bottom:-50px;left:-40px;z-index:20}
   }
 </style>
 </head>
@@ -699,6 +725,47 @@
   </div>
   <div class="firepower-preview" id="firepowerPreview"><iframe class="fp-iframe" data-src="Firepower.html"></iframe></div>
   <div class="stream-preview" id="streamPreview"><iframe class="stream-iframe" data-src="Stream.html?v=4"></iframe></div>
+
+  <div class="mobile-products">
+    <div class="mobile-product">
+      <h3 class="mobile-product-name">Multiply</h3>
+      <p class="mobile-product-for">For prediction market terminals</p>
+      <p class="mobile-product-desc">Offer your users up to 10x leverage on Polymarket and Kalshi.</p>
+      <div class="mobile-leverage-box" style="padding:32px 32px;box-sizing:border-box">
+        <div style="padding:0">
+          <div class="leverage-header">
+            <span class="leverage-label">Leverage</span>
+          </div>
+          <div class="leverage-track-wrap">
+            <div class="leverage-track" id="mLevTrack">
+              <div class="leverage-fill" id="mLevFill" style="width:70%"></div>
+              <div class="track-dots"><div class="track-dot"></div><div class="track-dot"></div><div class="track-dot"></div><div class="track-dot"></div><div class="track-dot"></div><div class="track-dot"></div><div class="track-dot"></div><div class="track-dot"></div><div class="track-dot"></div><div class="track-dot"></div></div>
+              <div class="leverage-thumb" id="mLevThumb" style="left:70%"></div>
+            </div>
+            <span class="leverage-value" id="mLevValue">8x</span>
+          </div>
+          <div class="leverage-stats" style="max-height:200px;opacity:1">
+            <div class="leverage-stat"><span class="label">Shares</span><span class="stat-line"></span><span class="val" id="mStatShares">24,242</span></div>
+            <div class="leverage-stat"><span class="label">Position Value</span><span class="stat-line"></span><span class="val" id="mStatPos">$8,000</span></div>
+            <div class="leverage-stat"><span class="label">Liquidation Price</span><span class="stat-line"></span><span class="val" id="mStatLiq">¢26</span></div>
+            <div class="leverage-stat"><span class="val sm">Leverage auto-decays as resolution approaches</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mobile-product">
+      <h3 class="mobile-product-name">Firepower</h3>
+      <p class="mobile-product-for">For launchpads, wallets and terminals</p>
+      <p class="mobile-product-desc">Let your users unlock new trades using their existing positions as collateral.</p>
+      <div class="mobile-product-preview"><iframe src="Firepower.html" loading="lazy"></iframe></div>
+    </div>
+    <div class="mobile-product">
+      <h3 class="mobile-product-name">Stream</h3>
+      <p class="mobile-product-for">For wallets</p>
+      <p class="mobile-product-desc">Turn any portfolio into a self-managing BTC accumulation engine. No selling, no margin calls.</p>
+      <div class="mobile-product-preview"><iframe src="Stream.html?v=4" loading="lazy"></iframe></div>
+    </div>
+  </div>
 
 </section>
 
@@ -2145,6 +2212,38 @@ window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer
   updateUI(DEFAULT);
   // Fix max-height after first render so transition works correctly later
   requestAnimationFrame(() => { statsEl.style.maxHeight = statsEl.scrollHeight + 'px'; });
+})();
+
+// ── Mobile leverage slider ───────────────────────────────────────────────────
+(function(){
+  var t = document.getElementById('mLevTrack');
+  if (!t) return;
+  var f = document.getElementById('mLevFill'), th = document.getElementById('mLevThumb');
+  var v = document.getElementById('mLevValue'), dots = t.querySelectorAll('.track-dot');
+  var sh = document.getElementById('mStatShares'), po = document.getElementById('mStatPos'), lq = document.getElementById('mStatLiq');
+  var MIN=1, MAX=10, cur=8;
+  function ui(l){
+    var p = (l-MIN)/(MAX-MIN)*100;
+    f.style.width=p+'%'; th.style.left=p+'%'; v.textContent=l+'x';
+    dots.forEach(function(d,i){ d.style.opacity = i<l?'0':''; });
+    sh.textContent = Math.round((1000*l)/0.33).toLocaleString();
+    po.textContent = '$'+(1000*l).toLocaleString();
+    lq.textContent = '¢'+Math.max(1,Math.round(100/l*0.78));
+  }
+  function fromPtr(cx){
+    var r=t.getBoundingClientRect();
+    var ratio=Math.max(0,Math.min(1,(cx-r.left)/r.width));
+    return Math.round(MIN+ratio*(MAX-MIN));
+  }
+  var drag=false;
+  function mv(cx){ var l=fromPtr(cx); if(l!==cur){cur=l;ui(l);} }
+  t.addEventListener('mousedown',function(e){drag=true;mv(e.clientX);e.preventDefault();});
+  window.addEventListener('mousemove',function(e){if(drag)mv(e.clientX);});
+  window.addEventListener('mouseup',function(){drag=false;});
+  t.addEventListener('touchstart',function(e){drag=true;mv(e.touches[0].clientX);e.preventDefault();},{passive:false});
+  window.addEventListener('touchmove',function(e){if(drag)mv(e.touches[0].clientX);},{passive:true});
+  window.addEventListener('touchend',function(){drag=false;});
+  ui(cur);
 })();
 </script>
 </body>
