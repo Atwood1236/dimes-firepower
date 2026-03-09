@@ -1,5 +1,6 @@
 {
   "rewrites": [
-    { "source": "/", "destination": "/dimes-v13.html" }
+    { "source": "/", "destination": "/dimes-v13.html" },
+    { "source": "/terms-policy", "destination": "/terms-policy.html" }
   ]
 }
