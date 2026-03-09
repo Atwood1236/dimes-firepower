@@ -232,6 +232,7 @@
   .cli-cmd{text-align:center}
   .cli-cmd-name{font-family:'JetBrains Mono',monospace;font-size:14px;color:#EEFF00;font-weight:500;margin-bottom:4px}
   .cli-cmd-desc{font-size:13px;color:#555;font-weight:300}
+  .cli-cmd-desc br{display:none}
   .cli-cursor{display:inline-block;width:7px;height:15px;background:#EEFF00;animation:blink 1s step-end infinite;vertical-align:text-bottom}
   @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
   @keyframes cliFadeIn{from{opacity:0}to{opacity:1}}
@@ -503,7 +504,19 @@
     .products .section-title{font-size:26px}
     .products .section-header{margin-bottom:32px;justify-content:center}
     .products .section-header::before,.products .section-header::after{display:none}
-    .terminal-scene,.product-tabs-side,.firepower-preview,.stream-preview{display:none!important}
+    .product-tabs-side,.firepower-preview,.stream-preview{display:none!important}
+    .terminal-scene{display:block!important;overflow:hidden!important;padding:0!important;margin:0 -16px 32px!important;min-height:auto!important;width:calc(100% + 32px)!important;-webkit-mask-image:linear-gradient(to right,transparent,black 18%)!important;mask-image:linear-gradient(to right,transparent,black 18%)!important;-webkit-mask-composite:source-over!important;mask-composite:add!important;z-index:auto!important}
+    .terminal-center{display:block!important;overflow:visible!important;margin:0!important;flex:none!important}
+    .terminal-wrapper{width:800px!important;min-width:800px!important;max-width:none!important;zoom:0.50!important;transform:none!important;transition:none!important;pointer-events:none!important;margin-left:calc(200vw - 864px)!important;flex-shrink:0!important}
+    .terminal-body{grid-template-columns:1fr 340px!important}
+    .terminal-sidebar{border-left:1px solid var(--t-border)!important;border-top:none!important}
+    #leverageStats{max-height:200px!important;opacity:1!important}
+    .idle-ring{animation:pulse-ring 3s ease-in-out infinite!important;opacity:1!important}
+    .idle-ring.hidden{opacity:1!important}
+    .term-hl{pointer-events:auto!important;cursor:pointer!important}
+    .terminal-wrapper.dimmed::before{opacity:0!important}
+    .terminal-wrapper.dimmed .term-hl{opacity:1!important}
+    .terminal-wrapper.zoomed-stream,.terminal-wrapper.zoomed-firepower,.terminal-wrapper.zoomed-multiply{-webkit-mask-image:none!important;mask-image:none!important}
     .mobile-products{display:flex;flex-direction:column;gap:48px;align-items:center}
     .mobile-product{max-width:320px;width:100%}
     .mobile-product-name{font-size:24px;font-weight:700;color:var(--yellow);margin:0 0 0}
@@ -513,7 +526,7 @@
     .mobile-product-preview{width:100%;border-radius:16px;overflow:hidden;background:transparent;border:1px solid rgba(255,255,255,.04);position:relative;box-shadow:inset 0 -20px 60px rgba(238,255,0,0.04),0 4px 20px rgba(0,0,0,.6)}
     .mobile-fp-preview{height:365px}
     .mobile-fp-preview iframe{position:absolute;top:0;left:0;width:480px;height:548px;border:none;transform:scale(0.667);transform-origin:top left}
-    .mobile-stream-preview{height:446px}
+    .mobile-stream-preview{height:446px;border:none!important;box-shadow:0 4px 20px rgba(0,0,0,.6)!important}
     .mobile-stream-preview iframe{position:absolute;top:0;left:0;width:380px;height:900px;border:none;transform:scale(0.842);transform-origin:top left}
     .browser-section{padding:40px 32px 80px}
     .browser-section .section-header{justify-content:center}
@@ -521,12 +534,20 @@
     .browser-section .section-title{font-size:24px}
     .browser-window{width:100%}
     .cli-chrome-sep,.cli-chrome-tagline{display:none!important}
+    .browser-body{min-height:auto}
+    .cli-body{min-height:300px;max-height:300px}
+    .cli-footer{gap:12px;margin-top:24px}
+    .cli-cmd-name{font-size:11px}
+    .cli-cmd-desc{font-size:10px}
+    .cli-cmd-desc br{display:inline}
     .process{padding:60px 16px;overflow:visible}
     .process .section-header{margin-bottom:24px}
     .process-canvas{display:none}
     .process-grid{margin-top:0;gap:16px}
     .process-hand-top{width:280px;top:100px;right:-60px}
     .process-hand-bottom{width:300px;bottom:-50px;left:-40px;z-index:20}
+    .why .section-header{margin-bottom:24px}
+    .why-grid{margin-top:0}
   }
 </style>
 </head>
@@ -805,10 +826,10 @@
     </div>
   </div>
   <div class="cli-footer">
-    <div class="cli-cmd"><div class="cli-cmd-name">dimes portfolio</div><div class="cli-cmd-desc">Check borrowing power</div></div>
-    <div class="cli-cmd"><div class="cli-cmd-name">dimes quote</div><div class="cli-cmd-desc">Preview terms</div></div>
-    <div class="cli-cmd"><div class="cli-cmd-name">dimes credit</div><div class="cli-cmd-desc">Open position</div></div>
-    <div class="cli-cmd"><div class="cli-cmd-name">dimes repay</div><div class="cli-cmd-desc">Close & collect</div></div>
+    <div class="cli-cmd"><div class="cli-cmd-name">dimes portfolio</div><div class="cli-cmd-desc">Check borrowing<br>power</div></div>
+    <div class="cli-cmd"><div class="cli-cmd-name">dimes quote</div><div class="cli-cmd-desc">Preview<br>terms</div></div>
+    <div class="cli-cmd"><div class="cli-cmd-name">dimes credit</div><div class="cli-cmd-desc">Open<br>position</div></div>
+    <div class="cli-cmd"><div class="cli-cmd-name">dimes repay</div><div class="cli-cmd-desc">Close &<br>collect</div></div>
   </div>
 </section>
 
@@ -2271,6 +2292,25 @@ window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer
   window.addEventListener('touchmove',function(e){if(drag)mv(e.touches[0].clientX);},{passive:true});
   window.addEventListener('touchend',function(){drag=false;});
   ui(cur);
+})();
+
+// ── Mobile terminal preview — tap icon → scroll to product ──────────────────
+(function(){
+  if (window.innerWidth > 480) return;
+  var products = document.querySelectorAll('.mobile-product');
+  var map = {stream: 2, firepower: 1, multiply: 0};
+  document.querySelectorAll('.term-hl').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      e.stopImmediatePropagation();
+      var idx = map[el.dataset.hl];
+      if (idx !== undefined && products[idx]) {
+        var title = products[idx].querySelector('.mobile-product-name');
+        var target = title || products[idx];
+        var y = target.getBoundingClientRect().top + window.pageYOffset - 70;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    });
+  });
 })();
 
 </script>
