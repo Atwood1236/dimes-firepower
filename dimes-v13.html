@@ -479,7 +479,7 @@
     .why{padding:80px 24px}.why-grid{grid-template-columns:1fr}.why-center{display:none}.why-card:nth-child(n){border-radius:16px;padding:40px 36px}.cta-inner{grid-template-columns:1fr;gap:40px}.cta-content{text-align:center}
     .backer-logos{flex-wrap:wrap;gap:32px}.social-proof{flex-direction:column;gap:20px}footer{flex-direction:column;gap:20px}.footer-links{flex-wrap:wrap;justify-content:center}
   }
-  @media(max-width:480px){
+  @media(max-width:768px){
     html,body{overflow-x:hidden;width:100%}
     nav{padding:14px 16px}
     .nav-cta{font-size:12px;padding:8px 18px}
@@ -548,6 +548,27 @@
     .process-hand-bottom{width:300px;bottom:-50px;left:-40px;z-index:20}
     .why .section-header{margin-bottom:24px}
     .why-grid{margin-top:0}
+    .cta-section{padding:0!important;position:relative;margin-bottom:0;overflow:hidden}
+    .cta-inner{display:flex!important;flex-direction:column!important;align-items:center!important;min-height:auto!important;position:relative}
+    .cta-visual{position:relative;order:2;display:flex;justify-content:center;overflow:hidden;width:100%;margin-bottom:0}
+    .hand-clasp-container{width:100%;display:flex;justify-content:center}
+    .hand-clasp-img{width:100%;max-width:360px;margin:0 auto!important;display:block}
+    .cta-content{order:1;margin:0!important;padding:60px 32px 0;text-align:center!important;position:relative;z-index:2}
+    .cta-content h2{font-size:22px!important}
+    .cta-content h2 em{white-space:normal!important}
+    .cta-content .cta-sub{font-size:12px;margin-bottom:24px;white-space:nowrap}
+    .cta-btn{font-size:13px;padding:11px 26px}
+    .cta-btn-glow{opacity:0;transition:opacity .3s;width:400px!important;height:200px!important}
+    .cta-btn-glow .glow-atmo{width:100%!important;height:100%!important;filter:blur(20px)}
+    .cta-btn-glow .glow-mid{width:250px!important;height:150px!important;filter:blur(15px)}
+    .cta-btn-glow .glow-core{width:120px!important;height:80px!important}
+    .cta-btn-glow .glow-slit,.cta-btn-glow .glow-spill{display:none}
+    .cta-btn-echo{transition:none!important}
+    footer{padding:24px 32px!important;display:grid!important;grid-template-columns:auto 1fr;align-items:start;gap:0!important}
+    .footer-logo{justify-self:start}
+    .footer-logo svg{height:14px}
+    .footer-links{justify-self:end!important;display:flex!important;flex-direction:column!important;align-items:flex-end!important;gap:8px!important}
+    .footer-links a{font-size:12px}
     .backers{padding:60px 16px 0;text-align:center}.backers .section-header{margin-bottom:32px}
     .backer-logos{display:grid;grid-template-columns:1fr 1fr;gap:24px 10px;margin-top:8px;padding-left:10px}
     .backer-item{align-items:center}
@@ -2261,7 +2282,7 @@ window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer
   };
 
   // Initialise to default (8x on mobile preview, 2x on desktop)
-  var initLev = (window.innerWidth <= 480) ? 8 : DEFAULT;
+  var initLev = (window.innerWidth <= 768) ? 8 : DEFAULT;
   currentLev = initLev;
   updateUI(initLev);
   // Fix max-height after first render so transition works correctly later
@@ -2270,7 +2291,7 @@ window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer
 
 // ── Mobile leverage slider ───────────────────────────────────────────────────
 (function(){
-  if (window.innerWidth > 480) return;
+  if (window.innerWidth > 768) return;
   var t = document.getElementById('mLevTrack');
   if (!t) return;
   var f = document.getElementById('mLevFill'), th = document.getElementById('mLevThumb');
@@ -2303,7 +2324,7 @@ window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer
 
 // ── Mobile terminal preview — tap icon → scroll to product ──────────────────
 (function(){
-  if (window.innerWidth > 480) return;
+  if (window.innerWidth > 768) return;
   var products = document.querySelectorAll('.mobile-product');
   var map = {stream: 2, firepower: 1, multiply: 0};
   document.querySelectorAll('.term-hl').forEach(function(el) {
@@ -2318,6 +2339,44 @@ window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer
       }
     });
   });
+})();
+
+// Mobile: scroll-synced CTA echo expansion
+(function(){
+  if (window.innerWidth > 768) return;
+  var wrap = document.querySelector('.cta-btn-wrap');
+  if (!wrap) return;
+  var glow = wrap.querySelector('.cta-btn-glow');
+  var btn = wrap.querySelector('.cta-btn');
+  var echoes = [
+    {el:wrap.querySelector('.echo-1'),tx:6,sx:1.04,sy:1.08,op:.85},
+    {el:wrap.querySelector('.echo-2'),tx:14,sx:1.09,sy:1.18,op:.7},
+    {el:wrap.querySelector('.echo-3'),tx:24,sx:1.15,sy:1.30,op:.55},
+    {el:wrap.querySelector('.echo-4'),tx:36,sx:1.22,sy:1.44,op:.42},
+    {el:wrap.querySelector('.echo-5'),tx:50,sx:1.30,sy:1.60,op:.32},
+    {el:wrap.querySelector('.echo-6'),tx:66,sx:1.39,sy:1.78,op:.22},
+    {el:wrap.querySelector('.echo-7'),tx:84,sx:1.49,sy:1.98,op:.14},
+    {el:wrap.querySelector('.echo-8'),tx:104,sx:1.60,sy:2.20,op:.08}
+  ];
+  function onScroll(){
+    var rect = wrap.getBoundingClientRect();
+    var vh = window.innerHeight;
+    // progress 0→1 as button goes from bottom of viewport to center
+    var p = Math.max(0, Math.min(1, (vh - rect.top) / (vh * 0.6)));
+    if (glow) glow.style.opacity = p;
+    if (btn) {
+      var s = p * 0.3;
+      btn.style.boxShadow = '0 0 '+(50*p)+'px rgba(238,255,0,'+(s)+'),0 0 '+(100*p)+'px rgba(238,255,0,'+(s*0.33)+')';
+    }
+    echoes.forEach(function(e){
+      if (!e.el) return;
+      var t = p;
+      e.el.style.transform = 'translateX('+(e.tx*t)+'px) scaleX('+(1+(e.sx-1)*t)+') scaleY('+(1+(e.sy-1)*t)+')';
+      e.el.style.opacity = e.op * t;
+    });
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
 })();
 
 </script>
