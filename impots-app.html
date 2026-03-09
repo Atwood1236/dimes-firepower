@@ -21,18 +21,22 @@
   --transition:all .3s cubic-bezier(.4,0,.2,1);
 }
 html{font-size:16px;scroll-behavior:smooth}
-body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--gray-900);background:linear-gradient(165deg,var(--blue-50) 0%,var(--white) 40%,var(--green-50) 100%);min-height:100vh;line-height:1.6;overflow-x:hidden}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--gray-900);background:linear-gradient(165deg,var(--blue-50) 0%,var(--white) 40%,var(--green-50) 100%);min-height:100vh;line-height:1.6}
 a{color:var(--blue-600);text-decoration:none}
 button{cursor:pointer;font-family:inherit;border:none;outline:none}
 input,textarea,select{font-family:inherit;outline:none}
 
 /* ===== PROGRESS BAR ===== */
-.progress-bar{position:fixed;top:0;left:0;width:100%;height:4px;background:var(--gray-200);z-index:1000}
+.progress-bar{position:fixed;top:0;left:0;right:0;height:4px;background:var(--gray-200);z-index:1000;transition:right .35s cubic-bezier(.4,0,.2,1)}
+body.sidebar-open .progress-bar{right:360px}
 .progress-fill{height:100%;background:linear-gradient(90deg,var(--blue-500),var(--green-500));transition:width .6s cubic-bezier(.4,0,.2,1);width:0%}
 
 /* ===== HEADER ===== */
-.header{position:fixed;top:4px;left:0;width:100%;z-index:999;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--gray-200)}
-.header-top{padding:0 24px;display:flex;align-items:stretch;justify-content:space-between;height:52px}
+.header{position:fixed;top:0;left:0;right:0;z-index:999;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--gray-200);transition:right .35s cubic-bezier(.4,0,.2,1);overflow:hidden}
+/* header always spans full viewport — sits over sidebar */
+.header-top{padding:0 24px;display:flex;align-items:stretch;justify-content:space-between;height:52px;min-width:0}
+.header-right{display:flex;align-items:center;gap:16px;flex-shrink:1;min-width:0}
+/* nav links stay visible — header spans full width over sidebar */
 .logo{display:flex;align-items:center;gap:10px;font-size:1.25rem;font-weight:800;color:var(--blue-900);cursor:pointer;flex-shrink:0}
 .logo svg{width:32px;height:32px}
 .nav-link-autre{font-size:.85rem;color:var(--blue-600);font-weight:500;text-decoration:none;white-space:nowrap}
@@ -56,7 +60,7 @@ html.dark .theme-toggle .icon-moon{display:block}
 .nav-tab.active{color:var(--blue-600);border-bottom-color:var(--blue-600)}
 
 /* ===== STEPS CONTAINER ===== */
-.app{padding-top:64px}
+.app{padding-top:64px;overflow-x:hidden;transition:margin-right .35s cubic-bezier(.4,0,.2,1)}
 .step{display:none}
 .step.active{display:flex;flex-direction:column;animation:fadeSlideIn .5s ease forwards}
 @keyframes fadeSlideIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
@@ -64,7 +68,7 @@ html.dark .theme-toggle .icon-moon{display:block}
 /* ===== STEP 1 — HERO ===== */
 body.lock-scroll{overflow:hidden}
 .hero{display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 24px}
-.hero-fold{height:calc(100vh - 64px);display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;overflow:hidden}
+.hero-fold{height:calc(100vh - 64px - 60px);display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;overflow:hidden}
 .hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(43,108,176,.1);color:var(--blue-600);padding:8px 16px;border-radius:100px;font-size:.85rem;font-weight:600;margin-bottom:24px}
 .hero-tag svg{width:18px;height:18px}
 .hero h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:800;color:var(--blue-900);line-height:1.15;max-width:700px;margin-bottom:16px}
@@ -145,15 +149,14 @@ body.lock-scroll{overflow:hidden}
 /* ===== STEP 2 — PROFIL ===== */
 .profil-step{position:relative;min-height:calc(100vh - 64px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px}
 .question-container{width:100%;max-width:960px;text-align:center;padding:0 24px}
-.q-progress{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:28px}
-.q-dot{width:36px;height:36px;border-radius:50%;border:2px solid var(--gray-300);background:var(--white);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:var(--gray-400);cursor:pointer;transition:var(--transition)}
-.q-dot:hover{border-color:var(--blue-400);color:var(--blue-400)}
-.q-dot.active{border-color:var(--blue-500);background:var(--blue-500);color:var(--white)}
-.q-dot.done{border-color:var(--green-500);background:var(--green-500);color:var(--white)}
-.q-dot.disabled{opacity:.4;cursor:not-allowed}
-.q-line{width:24px;height:2px;background:var(--gray-300);transition:var(--transition)}
-.q-line.filled{background:var(--green-500)}
-.question-num{font-size:.85rem;color:var(--gray-400);font-weight:600;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.q-progress{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:28px;width:100%;max-width:480px;margin-left:auto;margin-right:auto}
+.q-progress-label{font-size:.85rem;color:var(--gray-400);font-weight:600;letter-spacing:.5px}
+.q-progress-label span{color:var(--blue-600);font-weight:700}
+.q-segments{display:flex;gap:4px;width:100%;height:6px;border-radius:100px;overflow:hidden}
+.q-seg{flex:1;height:100%;border-radius:100px;background:var(--gray-200);transition:background .4s ease,box-shadow .4s ease}
+.q-seg.done{background:var(--green-500)}
+.q-seg.active{background:var(--blue-500);box-shadow:0 0 8px rgba(49,130,206,.4)}
+.question-num{display:none}
 .question-text{font-size:clamp(1.3rem,3vw,1.8rem);font-weight:700;color:var(--blue-900);margin-bottom:40px}
 .options-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;width:100%}
 .option-card{width:calc(33.333% - 8px);min-width:160px}
@@ -170,16 +173,47 @@ body.lock-scroll{overflow:hidden}
 .date-select-group select{padding:12px 16px;border:2px solid var(--gray-200);border-radius:var(--radius);font-size:1rem;font-weight:600;color:var(--gray-900);background:var(--white);transition:var(--transition);cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%234a5568' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px}
 .date-select-group select:focus{border-color:var(--blue-400);box-shadow:0 0 0 3px rgba(49,130,206,.1)}
 .date-select-group select option[value=""]{color:var(--gray-400)}
+.q-info-block{background:var(--blue-50);border:1px solid rgba(43,108,176,.15);border-radius:var(--radius);padding:20px 24px;margin-bottom:24px;text-align:left;max-width:520px;margin-left:auto;margin-right:auto;font-size:.95rem;color:var(--gray-700);line-height:1.7}
 .profil-nav{display:flex;gap:12px;margin-top:32px;justify-content:flex-end;width:100%}
 .nav-btn{padding:12px 28px;border-radius:100px;font-weight:600;font-size:.95rem;transition:var(--transition)}
 .nav-btn.primary{background:var(--blue-600);color:var(--white)}
 .nav-btn.primary:hover{background:var(--blue-700)}
 .nav-btn.primary:disabled{opacity:.4;cursor:not-allowed}
+/* TODO: remove — temp override to always enable nav buttons for design */
+.nav-btn.primary:disabled{opacity:1;cursor:pointer;pointer-events:auto}
 .nav-btn.secondary{background:var(--gray-100);color:var(--gray-700)}
 .nav-btn.secondary:hover{background:var(--gray-200)}
 
+/* ===== DEPENDANT WIZARD ===== */
+.dep-form-area{overflow:hidden;max-height:0;opacity:0;transition:max-height .4s ease,opacity .3s ease;width:100%}
+.dep-form-area.open{max-height:1200px;opacity:1}
+.dep-card{background:var(--white);border:2px solid var(--gray-200);border-radius:var(--radius-lg);padding:28px 24px;text-align:left;max-width:520px;margin:16px auto 0;width:100%;max-height:55vh;overflow-y:auto}
+.dep-add-btn{display:block;width:100%;padding:13px 0;border-radius:100px;font-weight:700;font-size:.95rem;background:var(--green-100);color:var(--green-600);border:2px solid rgba(56,161,105,.25);cursor:pointer;transition:var(--transition);margin-top:18px}
+.dep-add-btn:hover{background:var(--green-200);border-color:rgba(56,161,105,.4)}
+.dep-add-btn:disabled{opacity:.4;cursor:not-allowed}
+.dep-card-title{font-size:1.1rem;font-weight:700;color:var(--blue-900);margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.dep-field{margin-bottom:18px}
+.dep-field-label{font-size:.85rem;font-weight:600;color:var(--gray-700);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.dep-field-optional{font-size:.7rem;font-weight:400;color:var(--gray-400);background:var(--gray-100);padding:1px 6px;border-radius:4px}
+.dep-field-helper{font-size:.75rem;color:var(--gray-400);margin-top:4px}
+.dep-radios{display:flex;gap:8px;flex-wrap:wrap}
+.dep-radio{padding:8px 16px;border:2px solid var(--gray-200);border-radius:100px;font-size:.85rem;font-weight:600;color:var(--gray-600);cursor:pointer;transition:var(--transition);background:var(--white);user-select:none}
+.dep-radio:hover{border-color:var(--blue-400);color:var(--blue-600)}
+.dep-radio.selected{border-color:var(--blue-500);background:var(--blue-50);color:var(--blue-700)}
+.dep-input{width:100%;padding:12px 14px;border:1.5px solid var(--gray-200);border-radius:10px;font-size:.95rem;transition:var(--transition)}
+.dep-input:focus{border-color:var(--blue-400);box-shadow:0 0 0 3px rgba(49,130,206,.1)}
+.dep-conditional{display:none}
+.dep-conditional.show{display:block}
+.option-card-wrap{display:flex;flex-direction:column;align-items:center;width:calc(33.333% - 8px);min-width:160px}
+.option-card-wrap .option-card{width:100%;min-width:0}
+.dep-badge{display:flex;align-items:center;justify-content:center;gap:4px;width:100%;padding:6px 0;background:var(--green-100);border:1px solid rgba(56,161,105,.2);border-radius:var(--radius);font-size:.75rem;font-weight:700;color:var(--green-600);margin-top:6px}
+.dep-badge svg{width:12px;height:12px;flex-shrink:0}
+.dep-date-row{display:flex;gap:10px}
+.dep-date-row .date-select-group{flex:1}
+.dep-date-row .date-select-group select{width:100%;font-size:.9rem;padding:10px 32px 10px 12px}
+
 /* ===== AI SIDEBAR ===== */
-.ai-sidebar{position:fixed;top:56px;right:0;bottom:0;width:360px;background:var(--white);border-left:1px solid var(--gray-200);box-shadow:-4px 0 20px rgba(0,0,0,.06);display:flex;flex-direction:column;z-index:998;transform:translateX(0);transition:transform .35s cubic-bezier(.4,0,.2,1)}
+.ai-sidebar{position:fixed;top:53px;right:0;bottom:0;width:360px;background:var(--white);border-left:1px solid var(--gray-200);box-shadow:-4px 0 20px rgba(0,0,0,.06);display:flex;flex-direction:column;z-index:998;transform:translateX(0);transition:transform .35s cubic-bezier(.4,0,.2,1)}
 .ai-sidebar.hidden{transform:translateX(100%)}
 .ai-sidebar-header{padding:14px 16px;border-bottom:1px solid var(--gray-200);display:flex;align-items:center;gap:8px;flex-shrink:0}
 .ai-sidebar-title{font-size:.95rem;font-weight:700;color:var(--blue-900);flex:1;display:flex;align-items:center;gap:6px}
@@ -200,7 +234,7 @@ input:checked+.tips-toggle-track .tips-toggle-thumb{left:14px}
 .ai-sidebar-tab.show{display:flex;align-items:center;gap:6px}
 
 /* Main content adjustment when sidebar open */
-.app.sidebar-open{margin-right:360px;transition:margin-right .35s cubic-bezier(.4,0,.2,1)}
+.app.sidebar-open{margin-right:360px}
 
 /* Chat message styles (shared) */
 .msg{max-width:85%;padding:12px 16px;border-radius:16px;font-size:.9rem;line-height:1.5;animation:msgIn .3s ease}
@@ -381,7 +415,8 @@ input:checked+.tips-toggle-track .tips-toggle-thumb{left:14px}
 .timeline-info p{font-size:.8rem;color:var(--gray-400)}
 
 /* ===== FOOTER ===== */
-.footer{position:fixed;bottom:0;left:0;right:0;background:none;color:var(--gray-400);text-align:center;padding:12px 24px;font-size:.75rem;z-index:10;transition:background .3s,color .3s}
+.footer{position:fixed;bottom:0;left:0;right:0;background:none;color:var(--gray-400);text-align:center;padding:12px 24px;font-size:.75rem;z-index:10;transition:background .3s,color .3s,right .35s cubic-bezier(.4,0,.2,1)}
+body.sidebar-open .footer{right:360px}
 .footer a{color:var(--gray-400)}
 .footer a:hover{color:var(--gray-600)}
 .footer.footer-full{background:var(--blue-900);color:rgba(255,255,255,.6);padding:24px;font-size:.8rem}
@@ -393,6 +428,7 @@ input:checked+.tips-toggle-track .tips-toggle-thumb{left:14px}
   .ai-sidebar{display:none!important}
   .ai-sidebar-tab{display:none!important}
   .app.sidebar-open{margin-right:0!important}
+  body.sidebar-open .footer,body.sidebar-open .progress-bar{right:0!important}
   .ai-fab{display:flex}
 }
 @media(max-width:640px){
@@ -473,7 +509,7 @@ html.dark .auth-field input:focus{border-color:var(--blue-400);box-shadow:0 0 0 
     <div class="step-indicator" id="stepIndicator" style="display:none">
       <span>Étape 1</span> / 5
     </div>
-    <div style="display:flex;align-items:center;gap:32px">
+    <div class="header-right">
       <a href="#" class="nav-link-autre" onclick="event.preventDefault();document.getElementById('cpaModal').classList.add('show')">Intégrations pour Comptables & CPA</a>
       <a href="#" class="nav-link-autre" onclick="event.preventDefault()">Produire une autre année</a>
       <div class="lang-toggle" id="langToggle">
@@ -982,17 +1018,11 @@ const questions = [
     ]
   },
   {
-    id: 'dependent_type',
+    id: 'dependant_wizard',
     num: '3 / 8',
-    text: 'De qui s\'agit-il?',
-    multi: true,
+    type: 'dependant_wizard',
     conditional: true,
-    showIf: { id: 'dependents', value: 'oui' },
-    options: [
-      { label: 'Enfant', value: 'enfant', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="4"/><path d="M5.5 21c0-4.14 2.9-7.5 6.5-7.5s6.5 3.36 6.5 7.5"/></svg>' },
-      { label: 'Parent ou grand-parent', value: 'parent', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><circle cx="16" cy="3.13" r="3"/></svg>' },
-      { label: 'Autre membre de la famille', value: 'autre_famille', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' }
-    ]
+    showIf: { id: 'dependents', value: 'oui' }
   },
   {
     id: 'student',
@@ -1001,6 +1031,75 @@ const questions = [
     options: [
       { label: 'Oui', value: 'oui', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 3 3 6 3s6-1 6-3v-5"/></svg>' },
       { label: 'Non', value: 'non', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>' }
+    ]
+  },
+  {
+    id: 'student_status',
+    num: '4 / 8',
+    text: 'Étiez-vous étudiant\u2009:',
+    conditional: true,
+    showIf: { id: 'student', value: 'oui' },
+    options: [
+      { label: 'À temps plein', value: 'temps_plein', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>' },
+      { label: 'À temps partiel', value: 'temps_partiel', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>' }
+    ]
+  },
+  {
+    id: 'school_location',
+    num: '4 / 8',
+    text: 'Votre établissement était-il situé\u2009:',
+    conditional: true,
+    showIf: { id: 'student', value: 'oui' },
+    options: [
+      { label: 'Au Canada', value: 'canada', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l1.5 3 3-.5-1.5 3 2.5 2-3 .5.5 3-3-1.5-3 1.5.5-3-3-.5 2.5-2-1.5-3 3 .5z"/></svg>' },
+      { label: 'À l\'étranger', value: 'etranger', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>' }
+    ]
+  },
+  {
+    id: 'tuition_slip',
+    num: '4 / 8',
+    text: 'Relevé de frais de scolarité',
+    conditional: true,
+    showIf: { id: 'student', value: 'oui' },
+    info: 'Vous devriez avoir reçu un relevé de frais de scolarité\u2009:<br><strong>T2202</strong> (Canada) · <strong>Relevé 8</strong> (Québec)<br><span style="color:var(--gray-500);font-size:.85rem">Vous pouvez le trouver dans le portail étudiant de votre établissement.</span>',
+    options: [
+      { label: 'J\'ai mon relevé', value: 'have_it', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>' },
+      { label: 'Je vais le récupérer plus tard', value: 'get_later', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>' }
+    ]
+  },
+  {
+    id: 'student_loan',
+    num: '4 / 8',
+    text: 'Avez-vous un prêt étudiant?',
+    conditional: true,
+    showIf: { id: 'student', value: 'oui' },
+    options: [
+      { label: 'Oui', value: 'oui', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>' },
+      { label: 'Non', value: 'non', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>' }
+    ]
+  },
+  {
+    id: 'student_loan_interest',
+    num: '4 / 8',
+    text: 'Avez-vous payé des intérêts sur un prêt étudiant en 2025?',
+    conditional: true,
+    showIf: { id: 'student_loan', value: 'oui' },
+    options: [
+      { label: 'Oui', value: 'oui', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>' },
+      { label: 'Non', value: 'non', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>' },
+      { label: 'Je ne sais pas', value: 'ne_sais_pas', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r=".5"/></svg>' }
+    ]
+  },
+  {
+    id: 'student_loan_interest_slip',
+    num: '4 / 8',
+    text: 'Relevé d\'intérêts de prêt étudiant',
+    conditional: true,
+    showIf: { id: 'student_loan_interest', value: ['oui', 'ne_sais_pas'] },
+    info: 'Vous devriez avoir reçu un relevé indiquant les intérêts payés.<br><span style="color:var(--gray-500);font-size:.85rem">Vous pouvez généralement le trouver dans votre portail de prêt étudiant ou dans vos documents fiscaux.</span>',
+    options: [
+      { label: 'J\'ai mon relevé', value: 'have_it', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>' },
+      { label: 'Je vais le récupérer plus tard', value: 'get_later', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>' }
     ]
   },
   {
@@ -1142,6 +1241,7 @@ function showSidebar() {
   sidebar.classList.remove('hidden');
   tab.classList.remove('show');
   document.querySelector('.app').classList.add('sidebar-open');
+  document.body.classList.add('sidebar-open');
   sidebarOpen = true;
 }
 
@@ -1151,6 +1251,7 @@ function hideSidebar() {
   sidebar.classList.add('hidden');
   tab.classList.add('show');
   document.querySelector('.app').classList.remove('sidebar-open');
+  document.body.classList.remove('sidebar-open');
   sidebarOpen = false;
 }
 
@@ -1276,7 +1377,10 @@ function goToStep(n) {
 
 // ===== STEP 2 — PROFIL LOGIC =====
 function isConditionalHidden(q) {
-  return q.conditional && q.showIf && state.profile[q.showIf.id] !== q.showIf.value;
+  if (!q.conditional || !q.showIf) return false;
+  const val = state.profile[q.showIf.id];
+  if (Array.isArray(q.showIf.value)) return !q.showIf.value.includes(val);
+  return val !== q.showIf.value;
 }
 
 function getVisibleQuestions() {
@@ -1294,27 +1398,25 @@ function renderQuestion() {
     return;
   }
 
+  // Dependant wizard — custom renderer
+  if (q.type === 'dependant_wizard') { renderDependantWizard(); return; }
+
   const container = document.getElementById('questionContainer');
   const isMulti = q.multi || false;
 
-  // Build progress dots — only for visible questions
+  // Build segmented progress bar — adapts to visible question count
   const visible = getVisibleQuestions();
-  let dotsHtml = '';
   const visibleIndex = visible.indexOf(q);
-  for (let vi = 0; vi < visible.length; vi++) {
+  const totalVisible = visible.length;
+  let segsHtml = '';
+  for (let vi = 0; vi < totalVisible; vi++) {
     const vq = visible[vi];
-    const realIdx = questions.indexOf(vq);
     const isDone = state.profile[vq.id] !== undefined;
     const isActive = vi === visibleIndex;
-    const canClick = isDone || realIdx <= state.qIndex;
-    const cls = isActive ? 'active' : isDone ? 'done' : (!canClick ? 'disabled' : '');
-    const check = isDone && !isActive ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" width="16" height="16"><path d="M20 6L9 17l-5-5"/></svg>' : (vi + 1);
-    const onclick = canClick ? `onclick="jumpToQuestion(${realIdx})"` : '';
-    dotsHtml += `<div class="q-dot ${cls}" ${onclick}>${check}</div>`;
-    if (vi < visible.length - 1) {
-      dotsHtml += `<div class="q-line ${isDone ? 'filled' : ''}"></div>`;
-    }
+    const cls = isActive ? 'active' : isDone ? 'done' : '';
+    segsHtml += `<div class="q-seg ${cls}"></div>`;
   }
+  const progressHtml = `<div class="q-progress-label">Question <span>${visibleIndex + 1}</span> sur ${totalVisible}</div><div class="q-segments">${segsHtml}</div>`;
 
   // Date dropdowns rendering
   if (q.type === 'date') {
@@ -1331,8 +1433,7 @@ function renderQuestion() {
     for (let d = 1; d <= 31; d++) { const dv = String(d).padStart(2,'0'); dayOpts += `<option value="${dv}"${dv === selD ? ' selected' : ''}>${d}</option>`; }
 
     container.innerHTML = `
-      <div class="q-progress">${dotsHtml}</div>
-      <div class="question-num">${q.num}</div>
+      <div class="q-progress">${progressHtml}</div>
       <div class="question-text">${q.text}</div>
       <div class="date-input-wrap">
         <div class="date-select-group"><label>Jour</label><select id="dateDay">${dayOpts}</select></div>
@@ -1341,7 +1442,7 @@ function renderQuestion() {
       </div>
       <div class="profil-nav">
         ${state.qIndex > 0 ? '<button class="nav-btn secondary" onclick="prevQuestion()">← Retour</button>' : ''}
-        <button class="nav-btn primary" id="dateContinueBtn" onclick="nextQuestion()" ${existingVal ? '' : 'disabled'}>Continuer →</button>
+        <button class="nav-btn primary" id="dateContinueBtn" onclick="nextQuestion()">Continuer →</button>
       </div>
     `;
     function checkDateComplete() {
@@ -1351,9 +1452,6 @@ function renderQuestion() {
       const btn = document.getElementById('dateContinueBtn');
       if (y && m && d) {
         state.profile[q.id] = y + '-' + m + '-' + d;
-        if (btn) btn.disabled = false;
-      } else {
-        if (btn) btn.disabled = true;
       }
     }
     document.getElementById('dateDay').addEventListener('change', checkDateComplete);
@@ -1366,9 +1464,9 @@ function renderQuestion() {
   }
 
   container.innerHTML = `
-    <div class="q-progress">${dotsHtml}</div>
-    <div class="question-num">${q.num}</div>
+    <div class="q-progress">${progressHtml}</div>
     <div class="question-text">${q.text}</div>
+    ${q.info ? `<div class="q-info-block">${q.info}</div>` : ''}
     ${isMulti ? '<div class="multi-note">Vous pouvez sélectionner plusieurs options</div>' : ''}
     <div class="options-grid">
       ${q.options.map(o => {
@@ -1387,7 +1485,7 @@ function renderQuestion() {
     </div>
     <div class="profil-nav">
       ${state.qIndex > 0 ? '<button class="nav-btn secondary" onclick="prevQuestion()">← Retour</button>' : ''}
-      ${isMulti ? `<button class="nav-btn primary" id="nextQBtn" onclick="nextQuestion()" ${(!state.profile[q.id] || state.profile[q.id].length === 0) ? 'disabled' : ''}>Continuer →</button>` : ''}
+      ${isMulti ? `<button class="nav-btn primary" id="nextQBtn" onclick="nextQuestion()">Continuer →</button>` : ''}
     </div>
   `;
   container.style.animation = 'none';
@@ -1418,8 +1516,7 @@ function selectOption(el, qId, value, isMulti, hasInput) {
       const v = c.getAttribute('data-value');
       c.classList.toggle('selected', state.profile[qId].includes(v));
     });
-    const btn = document.getElementById('nextQBtn');
-    if (btn) btn.disabled = state.profile[qId].length === 0;
+    // btn validation disabled for design
   } else {
     el.parentElement.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
     el.classList.add('selected');
@@ -1446,6 +1543,235 @@ function confirmCustom(qId) {
   if (inp && inp.value.trim()) {
     state.profile[qId] = 'autre:' + inp.value.trim();
     nextQuestion();
+  }
+}
+
+// ===== DEPENDANT WIZARD =====
+if (!state.depWizard) state.depWizard = { current: {}, list: [] };
+
+function depWizardProgressHtml() {
+  const q = questions[state.qIndex];
+  const visible = getVisibleQuestions();
+  const visibleIndex = visible.indexOf(q);
+  const totalVisible = visible.length;
+  let segsHtml = '';
+  for (let vi = 0; vi < totalVisible; vi++) {
+    const vq = visible[vi];
+    const isDone = (vq.type === 'dependant_wizard') ? state.depWizard.list.length > 0 : state.profile[vq.id] !== undefined;
+    const isActive = vi === visibleIndex;
+    segsHtml += `<div class="q-seg ${isActive ? 'active' : isDone ? 'done' : ''}"></div>`;
+  }
+  return `<div class="q-progress-label">Question <span>${visibleIndex + 1}</span> sur ${totalVisible}</div><div class="q-segments">${segsHtml}</div>`;
+}
+
+function depBadgeHtml(type) {
+  const count = state.depWizard.list.filter(d => d.type === type).length;
+  if (!count) return '';
+  const check = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>';
+  return `<div class="dep-badge">${check}${count > 1 ? '×' + count : 'Ajouté'}</div>`;
+}
+
+function renderDependantWizard() {
+  const container = document.getElementById('questionContainer');
+  const wiz = state.depWizard;
+  const progressHtml = depWizardProgressHtml();
+  const typeIcons = {
+    child: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="4"/><path d="M5.5 21c0-4.14 2.9-7.5 6.5-7.5s6.5 3.36 6.5 7.5"/></svg>',
+    parent: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><circle cx="16" cy="3.13" r="3"/></svg>',
+    other: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>'
+  };
+  const sel = wiz.current.type || null;
+
+  // Build inline form HTML if a type is selected
+  let formHtml = '';
+  if (sel) {
+    const c = wiz.current;
+    const titles = { child: "Informations sur l'enfant", parent: 'Informations sur le parent', other: 'Informations sur la personne' };
+    let fieldsHtml = '';
+    if (c.type === 'child') {
+      fieldsHtml = depBirthDateField() +
+        depRadioField('livesWithYou', 'Vivait avec vous au 31 décembre?', ['Oui','Non','Garde partagée'], ['oui','non','garde_partagee']) +
+        depRadioField('careExpenses', 'Frais de garde payés en 2025?', ['Oui','Non'], ['oui','non']) +
+        `<div class="dep-conditional dep-field" id="depCond_careAmount">${depNumberField('careAmount', 'Montant des frais de garde ($)')}</div>` +
+        depRadioField('disability', 'Handicap reconnu (crédit d\'impôt)?', ['Oui','Non'], ['oui','non']);
+    } else if (c.type === 'parent') {
+      fieldsHtml = depRadioField('relation', 'Lien de parenté', ['Parent','Grand-parent'], ['parent','grandparent']) +
+        depRadioField('livedWithYou', 'Vivait avec vous au 31 décembre?', ['Oui','Non'], ['oui','non']) +
+        depRadioField('supported', 'Vous avez subvenu à ses besoins?', ['Oui','Non'], ['oui','non']) +
+        depRadioField('incomeRange', 'Son revenu approximatif en 2025', ['0 $','Moins de 10 000 $','Plus de 10 000 $'], ['zero','under_10k','over_10k']);
+    } else {
+      fieldsHtml = depRadioField('relation', 'Lien de parenté', ['Frère / sœur','Neveu / nièce','Autre'], ['sibling','niece_nephew','autre']) +
+        depRadioField('livedWithYou', 'Vivait avec vous au 31 décembre?', ['Oui','Non'], ['oui','non']) +
+        depRadioField('supported', 'Vous avez subvenu à ses besoins?', ['Oui','Non'], ['oui','non']) +
+        depTextField('incomeApprox', 'Revenu approximatif', true, 'Ex. 8 500 $');
+    }
+    formHtml = `<div class="dep-card">
+      <div class="dep-card-title">${titles[c.type]}</div>
+      ${fieldsHtml}
+      <button class="dep-add-btn" id="depContinueBtn" onclick="saveDependant()">Ajouter ✓</button>
+    </div>`;
+  }
+
+  container.innerHTML = `
+    <div class="q-progress">${progressHtml}</div>
+    <div class="question-text">De qui s'agit-il?</div>
+    <div class="options-grid">
+      <div class="option-card-wrap"><div class="option-card${sel === 'child' ? ' selected' : ''}" onclick="selectDependantType('child')">${typeIcons.child}Enfant</div>${depBadgeHtml('child')}</div>
+      <div class="option-card-wrap"><div class="option-card${sel === 'parent' ? ' selected' : ''}" onclick="selectDependantType('parent')">${typeIcons.parent}Parent ou grand-parent</div>${depBadgeHtml('parent')}</div>
+      <div class="option-card-wrap"><div class="option-card${sel === 'other' ? ' selected' : ''}" onclick="selectDependantType('other')">${typeIcons.other}Autre membre de la famille</div>${depBadgeHtml('other')}</div>
+    </div>
+    <div class="dep-form-area" id="depFormArea">${formHtml}</div>
+    <div class="profil-nav">
+      <button class="nav-btn secondary" onclick="depWizardBack()">← Retour</button>
+      <button class="nav-btn primary" onclick="depWizardContinue()">Continuer →</button>
+    </div>`;
+
+  // Slide open the form area after DOM paint
+  if (sel) {
+    requestAnimationFrame(() => {
+      const area = document.getElementById('depFormArea');
+      if (area) area.classList.add('open');
+    });
+    depCheckFormValid();
+    if (wiz.current.careExpenses === 'oui') {
+      const el = document.getElementById('depCond_careAmount');
+      if (el) el.classList.add('show');
+    }
+  }
+
+  container.style.animation = 'none';
+  container.offsetHeight;
+  container.style.animation = 'fadeSlideIn .4s ease forwards';
+}
+
+function depTextField(id, label, optional, placeholder) {
+  const val = state.depWizard.current[id] || '';
+  return `<div class="dep-field">
+    <div class="dep-field-label">${label}${optional ? ' <span class="dep-field-optional">(optionnel)</span>' : ''}</div>
+    <input class="dep-input" type="text" value="${val}" placeholder="${placeholder || ''}" oninput="depFieldChanged('${id}', this.value)">
+  </div>`;
+}
+
+function depNumberField(id, label) {
+  const val = state.depWizard.current[id] || '';
+  return `<div class="dep-field-label">${label}</div>
+    <input class="dep-input" type="number" min="0" value="${val}" placeholder="Ex. 5 000" oninput="depFieldChanged('${id}', this.value)">`;
+}
+
+function depBirthDateField() {
+  const c = state.depWizard.current;
+  const parts = c.birthDate ? c.birthDate.split('-') : ['','',''];
+  const selY = parts[0], selM = parts[1], selD = parts[2];
+  const moisNoms = ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Août','Sep','Oct','Nov','Déc'];
+  const currentYear = new Date().getFullYear();
+  let yearOpts = '<option value="">—</option>';
+  for (let y = currentYear; y >= currentYear - 30; y--) yearOpts += `<option value="${y}"${y == selY ? ' selected' : ''}>${y}</option>`;
+  let monthOpts = '<option value="">—</option>';
+  for (let m = 1; m <= 12; m++) { const mv = String(m).padStart(2,'0'); monthOpts += `<option value="${mv}"${mv === selM ? ' selected' : ''}>${moisNoms[m-1]}</option>`; }
+  let dayOpts = '<option value="">—</option>';
+  for (let d = 1; d <= 31; d++) { const dv = String(d).padStart(2,'0'); dayOpts += `<option value="${dv}"${dv === selD ? ' selected' : ''}>${d}</option>`; }
+  return `<div class="dep-field">
+    <div class="dep-field-label">Date de naissance</div>
+    <div class="dep-date-row">
+      <div class="date-select-group"><label>Jour</label><select onchange="depDateChanged()"  id="depBirthDay">${dayOpts}</select></div>
+      <div class="date-select-group"><label>Mois</label><select onchange="depDateChanged()" id="depBirthMonth">${monthOpts}</select></div>
+      <div class="date-select-group"><label>Année</label><select onchange="depDateChanged()" id="depBirthYear">${yearOpts}</select></div>
+    </div>
+  </div>`;
+}
+
+function depDateChanged() {
+  const y = document.getElementById('depBirthYear').value;
+  const m = document.getElementById('depBirthMonth').value;
+  const d = document.getElementById('depBirthDay').value;
+  if (y && m && d) state.depWizard.current.birthDate = y + '-' + m + '-' + d;
+  else delete state.depWizard.current.birthDate;
+  depCheckFormValid();
+}
+
+function depRadioField(id, label, labels, values) {
+  const cur = state.depWizard.current[id] || '';
+  return `<div class="dep-field">
+    <div class="dep-field-label">${label}</div>
+    <div class="dep-radios">${values.map((v, i) =>
+      `<div class="dep-radio${cur === v ? ' selected' : ''}" onclick="depFieldChanged('${id}','${v}')">${labels[i]}</div>`
+    ).join('')}</div>
+  </div>`;
+}
+
+function depFieldChanged(fieldId, value) {
+  state.depWizard.current[fieldId] = value;
+  // Re-render radio pills for this field
+  const field = event && event.target ? event.target.closest('.dep-field') : null;
+  if (field) {
+    field.querySelectorAll('.dep-radio').forEach(r => {
+      const txt = r.textContent.trim();
+      r.classList.toggle('selected', r === (event && event.target ? event.target.closest('.dep-radio') : null));
+    });
+    // Simpler: just re-highlight the clicked one
+    if (event && event.target) {
+      const parent = event.target.closest('.dep-radios');
+      if (parent) {
+        parent.querySelectorAll('.dep-radio').forEach(r => r.classList.remove('selected'));
+        const clicked = event.target.closest('.dep-radio');
+        if (clicked) clicked.classList.add('selected');
+      }
+    }
+  }
+  // Conditional: careAmount
+  if (fieldId === 'careExpenses') {
+    const el = document.getElementById('depCond_careAmount');
+    if (el) el.classList.toggle('show', value === 'oui');
+  }
+  depCheckFormValid();
+}
+
+function depCheckFormValid() {
+  const c = state.depWizard.current;
+  let valid = false;
+  if (c.type === 'child') {
+    valid = !!c.birthDate && !!c.livesWithYou && !!c.careExpenses && !!c.disability;
+    if (c.careExpenses === 'oui' && !c.careAmount) valid = false;
+  } else if (c.type === 'parent') {
+    valid = !!c.relation && !!c.livedWithYou && !!c.supported && !!c.incomeRange;
+  } else if (c.type === 'other') {
+    valid = !!c.relation && !!c.livedWithYou && !!c.supported;
+  }
+  // btn validation disabled for design
+}
+
+function selectDependantType(type) {
+  const wiz = state.depWizard;
+  if (wiz.current.type === type) {
+    wiz.current = {};
+  } else {
+    wiz.current = { type };
+  }
+  renderDependantWizard();
+}
+
+function saveDependant() {
+  const wiz = state.depWizard;
+  wiz.list.push({ ...wiz.current });
+  wiz.current = {};
+  renderDependantWizard();
+}
+
+function depWizardContinue() {
+  const wiz = state.depWizard;
+  state.profile.dependants = wiz.list.length ? wiz.list : [];
+  delete state.profile.dependent_type;
+  wiz.current = {};
+  nextQuestion();
+}
+
+function depWizardBack() {
+  const wiz = state.depWizard;
+  if (wiz.current.type) {
+    wiz.current = {};
+    renderDependantWizard();
+  } else {
+    prevQuestion();
   }
 }
 
