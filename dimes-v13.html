@@ -588,7 +588,7 @@
     .footer-links a{font-size:12px}
     .backers{padding:20px 16px 0;text-align:center}.backers .section-header{margin-bottom:32px}
     .backer-logos{overflow:hidden;display:block;margin-top:8px;padding:0;gap:0;-webkit-mask-image:linear-gradient(to right,transparent,black 10%,black 90%,transparent);mask-image:linear-gradient(to right,transparent,black 10%,black 90%,transparent)}
-    .backer-track{display:flex;align-items:center;width:max-content;animation:logo-scroll 7s linear infinite}
+    .backer-track{display:flex;align-items:center;width:max-content;animation:logo-scroll 5s linear infinite}
     .backer-item,.backer-item[data-cloned]{display:block;flex-shrink:0;margin-right:24px}
     .backer-item img{opacity:.15;height:18px;width:auto;filter:brightness(0) invert(1)}
     .backer-desc{display:none}
@@ -2405,7 +2405,6 @@ window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer
   const track = document.createElement('div');
   track.className = 'backer-track';
   items.forEach(el => track.appendChild(el));
-  // Clone items for seamless loop
   items.forEach(el => {
     const clone = el.cloneNode(true);
     clone.dataset.cloned = '';
@@ -2413,16 +2412,6 @@ window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer
     track.appendChild(clone);
   });
   logos.appendChild(track);
-  // After images load, set pixel-perfect loop
-  window.addEventListener('load', function() {
-    var w = 0;
-    items.forEach(function(el) { w += el.getBoundingClientRect().width; });
-    if (w > 0) {
-      var ss = document.styleSheets[0];
-      ss.insertRule('@keyframes backer-loop{from{transform:translateX(-' + w + 'px)}to{transform:translateX(0)}}', ss.cssRules.length);
-      track.style.animation = 'backer-loop 7s linear infinite';
-    }
-  });
 })();
 
 </script>
