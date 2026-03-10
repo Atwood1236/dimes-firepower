@@ -120,7 +120,8 @@
      PRODUCTS — TERMINAL v5
      ═══════════════════════════════════ */
   .mobile-products{display:none}
-  .products{padding:100px 48px 120px;max-width:1400px;margin:0 auto;overflow:visible;position:relative;z-index:51;margin-top:60px}
+  .products{padding:100px 48px 120px;max-width:1400px;margin:0 auto;overflow:visible;position:relative;z-index:51;margin-top:60px;transition:padding-bottom .6s cubic-bezier(.16,1,.3,1)}
+.products.fp-active{padding-bottom:320px}
   .page-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:50;opacity:0;pointer-events:none;transition:opacity .6s ease}
   .page-overlay.active{opacity:1}
   .products::before{content:'';position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:0;opacity:0;pointer-events:none;transition:opacity .6s ease}
@@ -978,6 +979,7 @@ function selectProduct(key) {
   streamPreview.classList.remove('selected');
   terminalEl.classList.remove('dimmed');
   terminalEl.classList.remove('zoomed-stream', 'zoomed-firepower', 'zoomed-multiply');
+  productsSection.classList.remove('fp-active');
   terminalEl.style.transform = 'scale(.85)';
   terminalEl.style.opacity = '';
 
@@ -1000,6 +1002,7 @@ function selectProduct(key) {
 
   /* Firepower: shift terminal right, dim (except firepower area), show popup */
   if (key === 'firepower') {
+    productsSection.classList.add('fp-active');
     terminalEl.style.transform = 'scale(.85) translateX(12%)';
     terminalEl.classList.add('dimmed');
     hlEls.forEach(el => el.classList.toggle('hl-active', el.dataset.hl === 'firepower'));
@@ -1048,6 +1051,7 @@ function selectProduct(key) {
 function resetProduct() {
   const wasMultiply = activeProduct === 'multiply';
   activeProduct = null;
+  productsSection.classList.remove('fp-active');
   fpPreview.classList.remove('selected');
   fpPreview.classList.remove('active');
   positionFpPreview();
