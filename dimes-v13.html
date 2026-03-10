@@ -3,7 +3,50 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dimes — Embedded Credit for Onchain Front-ends</title>
+<title>Dimes · Embedded Credit for Onchain Front-ends</title>
+<meta name="description" content="10x your users' buying power overnight. Dimes provides plug-and-play embedded credit products for onchain front-ends. Backed by Coinbase Ventures, Accel, and more.">
+<meta name="keywords" content="crypto credit, onchain lending, embedded finance, DeFi credit, crypto finance, buy now pay later crypto">
+<link rel="canonical" href="https://dimes.fi/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://dimes.fi/">
+<meta property="og:title" content="Dimes · Embedded Credit for Onchain Front-ends">
+<meta property="og:description" content="10x your users' buying power overnight. Plug-and-play embedded credit products for onchain front-ends.">
+<meta property="og:site_name" content="Dimes">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Dimes · Embedded Credit for Onchain Front-ends">
+<meta name="twitter:description" content="10x your users' buying power overnight. Plug-and-play embedded credit products for onchain front-ends.">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Dimes",
+  "url": "https://dimes.fi",
+  "description": "Embedded credit products for onchain front-ends",
+  "sameAs": []
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type":"Question","name":"What is Dimes?","acceptedAnswer":{"@type":"Answer","text":"Dimes is embedded credit infrastructure for onchain platforms. We let front-ends offer leverage, margining, and yield products to their users through a single integration, with no credit risk management required on their end."}},
+    {"@type":"Question","name":"How does onchain credit work with Dimes?","acceptedAnswer":{"@type":"Answer","text":"Dimes offers three core products that platforms can embed individually or together. Multiply provides up to 10x margin-funded directional leverage on assets not covered by perpetual futures, including prediction markets and liquid tokens. Firepower is native portfolio margining expanding to the top 50 most liquid tokens, freeing up capital without introducing leverage. Stream lets users maintain continuous synthetic exposure to assets like BTC or ETH, sized automatically against their existing holdings, without selling anything or managing positions manually."}},
+    {"@type":"Question","name":"Which platforms can integrate Dimes?","acceptedAnswer":{"@type":"Answer","text":"Any specialized onchain trading front-end. This includes trading terminals, mobile trading apps, token launchpads, wallets, and other platforms where users are actively deploying capital onchain. If your users trade, Dimes can amplify what they do with their capital."}},
+    {"@type":"Question","name":"How long does integration take?","acceptedAnswer":{"@type":"Answer","text":"Most teams go live within days. Dimes is a plug-and-play API designed to embed directly into your existing UI, so there's no need to rebuild your user experience or manage any credit operations."}},
+    {"@type":"Question","name":"What sets Dimes apart from other leverage solutions?","acceptedAnswer":{"@type":"Answer","text":"Three things. First, guaranteed liquidity: Dimes operates with a private counterparty under a guaranteed credit access agreement, ensuring that capital is always available to your users regardless of market conditions. Second, full risk outsourcing: all underwriting, monitoring, and liquidation management is handled by Dimes' risk engine, so your team never touches credit risk. Third, revenue sharing: platforms earn 30% of Dimes' revenues on every credit product their users access, turning leverage into a new revenue line with zero operational overhead."}},
+    {"@type":"Question","name":"What does integration look like for end users?","acceptedAnswer":{"@type":"Answer","text":"Users see leverage, margin, and streaming features natively inside the platform. There is no redirect, no separate account, and no additional KYC beyond what the platform already requires. From the user's perspective, it feels like a built-in feature."}},
+    {"@type":"Question","name":"How does revenue sharing work?","acceptedAnswer":{"@type":"Answer","text":"Platforms earn 30% of the fees generated every time a user borrows through Multiply, accesses margin through Firepower, or activates a stream. Revenue scales directly with user activity, and Dimes handles all billing and settlement. Your performance data is accessible at all times via your Partner Portal at partner.dimes.fi."}}
+  ]
+}
+</script>
+
 <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -414,6 +457,18 @@
   .backer-track{display:contents}
   .backer-item[data-cloned]{display:none}
 
+  .faq{padding:80px 48px;max-width:1050px;margin:0 auto}
+  .faq .section-header::before,.faq .section-header::after{}
+  .faq-list{display:flex;flex-direction:column;gap:2px}
+  .faq-item{background:rgba(255,255,255,.015);border:1px solid rgba(255,255,255,.04);border-radius:12px;overflow:hidden;transition:border-color .3s ease}
+  .faq-item:hover{border-color:rgba(255,255,255,.08)}
+  .faq-q{display:flex;justify-content:space-between;align-items:center;padding:24px 32px;cursor:pointer;font-size:18px;font-weight:500;color:var(--text);user-select:none;transition:color .3s}
+  .faq-q::after{content:'+';font-size:22px;font-weight:300;color:var(--text-muted);transition:transform .3s ease,color .3s ease;flex-shrink:0;margin-left:16px}
+  .faq-item.open .faq-q::after{transform:rotate(45deg);color:var(--yellow)}
+  .faq-item.open .faq-q{color:#fff}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.16,1,.3,1),padding .3s ease}
+  .faq-a p{padding:0 32px 24px;font-size:16px;color:var(--text-dim);line-height:1.65;margin:0}
+
   .cta-section{padding:0 48px 0}
   .cta-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:0;min-height:500px;overflow:visible}
   .cta-visual{display:flex;align-items:flex-end;justify-content:flex-start;align-self:end;overflow:visible}
@@ -467,20 +522,29 @@
   .cta-reveal.visible{opacity:1;transform:translateY(0)}
 
   @media(max-width:1100px){
-    .terminal-scene{flex-direction:column;align-items:center}
-    .terminal-center{margin-right:0;justify-content:center;overflow:hidden}
-    .terminal-wrapper{width:100%;max-width:700px;flex-shrink:1}
-    .product-tabs-side{position:static;flex-direction:row;min-width:auto;width:auto}
-    .product-tab{width:auto;font-size:16px}
-    .tab-for{display:none}
-    .tab-desc{font-size:13px}
+    .product-tabs-side{display:none}
+    .terminal-scene{min-height:auto;padding:20px 0 40px;margin:0;mask-image:linear-gradient(to right,transparent 0%,black 15%);-webkit-mask-image:linear-gradient(to right,transparent 0%,black 15%);mask-composite:add;-webkit-mask-composite:source-over}
+    .terminal-center{margin-right:clamp(0px, calc(100vw - 900px), 200px)}
+    .terminal-wrapper{width:150vw;transform:scale(.8);transform-origin:top right}
+    .mobile-products{display:flex;flex-direction:column;gap:48px;align-items:center;margin-top:40px}
+    .mobile-product{max-width:400px;width:100%}
+    .mobile-product-name{font-size:24px;font-weight:700;color:#fff;margin:0;display:flex;align-items:center;gap:12px}
+    .mobile-product-name::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(255,255,255,.15),transparent)}
+    .mobile-product-for{font-size:13px;color:rgba(255,255,255,.5);margin:0 0 16px}
+    .mobile-product-desc{font-size:14px;color:rgba(255,255,255,.75);line-height:1.4;margin:0 0 16px}
+    .mobile-leverage-box{width:100%;border-radius:16px;overflow:hidden;padding:32px;box-sizing:border-box;background:radial-gradient(ellipse 120% 250% at 50% 105%,rgba(238,255,0,0.18) 0%,rgba(238,255,0,0.06) 40%,transparent 70%),#0e0e0e;border:1px solid rgba(255,255,255,.04);box-shadow:inset 0 -20px 60px rgba(238,255,0,0.04),0 4px 20px rgba(0,0,0,.6)}
+    .mobile-product-preview{width:100%;border-radius:16px;overflow:hidden;background:transparent;border:1px solid rgba(255,255,255,.04);position:relative;box-shadow:inset 0 -20px 60px rgba(238,255,0,0.04),0 4px 20px rgba(0,0,0,.6)}
+    .mobile-fp-preview{height:365px;max-width:320px}
+    .mobile-fp-preview iframe{position:absolute;top:0;left:0;width:480px;height:548px;border:none;transform:scale(0.667);transform-origin:top left}
+    .mobile-stream-preview{height:446px;max-width:320px;border:none!important;box-shadow:0 4px 20px rgba(0,0,0,.6)!important}
+    .mobile-stream-preview iframe{position:absolute;top:0;left:0;width:380px;height:900px;border:none;transform:scale(0.842);transform-origin:top left}
   }
   @media(max-width:1000px){
     .process-grid{grid-template-columns:1fr}.process-step{border-left:none}
     .step-arrow{transform:scaleY(0.6) rotate(90deg)}
   }
   @media(max-width:900px){
-    .products{padding:80px 24px 140px}.terminal-body{grid-template-columns:1fr}.terminal-sidebar{border-left:none;border-top:1px solid var(--t-border)}
+    .products{padding:80px 40px 140px}
     .why{padding:80px 24px}.why-grid{grid-template-columns:1fr}.why-center{display:none}.why-card:nth-child(n){border-radius:16px;padding:40px 36px}.cta-inner{grid-template-columns:1fr;gap:40px}.cta-content{text-align:center}
     .backer-logos{flex-wrap:wrap;gap:32px}.social-proof{flex-direction:column;gap:20px}footer{flex-direction:column;gap:20px}.footer-links{flex-wrap:wrap;justify-content:center}
   }
@@ -511,9 +575,9 @@
     .products .section-header{margin-bottom:32px;justify-content:center}
     .products .section-header::before,.products .section-header::after{display:none}
     .product-tabs-side,.firepower-preview,.stream-preview{display:none!important}
-    .terminal-scene{display:block!important;overflow:visible!important;padding:32px 0!important;margin:-16px -16px 16px!important;min-height:auto!important;width:calc(100% + 32px)!important;-webkit-mask-image:linear-gradient(to right,transparent,black 18%,black 100%)!important;mask-image:linear-gradient(to right,transparent,black 18%,black 100%)!important;-webkit-mask-composite:source-over!important;mask-composite:add!important;z-index:auto!important}
+    .terminal-scene{display:block!important;overflow:visible!important;padding:32px 0!important;margin:-16px -16px 16px!important;min-height:auto!important;width:calc(100% + 32px)!important;-webkit-mask-image:linear-gradient(to right,transparent,black 28%,black 100%)!important;mask-image:linear-gradient(to right,transparent,black 28%,black 100%)!important;-webkit-mask-composite:source-over!important;mask-composite:add!important;z-index:auto!important}
     .terminal-center{display:flex!important;justify-content:flex-end!important;overflow:visible!important;margin:0!important;flex:none!important}
-    .terminal-wrapper{width:800px!important;min-width:800px!important;max-width:none!important;zoom:0.50!important;transform:none!important;transition:none!important;pointer-events:none!important;margin-left:0!important;margin-right:64px!important;flex-shrink:0!important;box-shadow:0 4px 20px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.05),inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(255,255,255,.02)!important}
+    .terminal-wrapper{width:800px!important;min-width:800px!important;max-width:none!important;zoom:0.8!important;transform:none!important;transition:none!important;pointer-events:none!important;margin-left:0!important;margin-right:40px!important;flex-shrink:0!important;box-shadow:0 4px 20px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.05),inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(255,255,255,.02)!important}
     .terminal-body{grid-template-columns:1fr 340px!important}
     .terminal-sidebar{border-left:1px solid var(--t-border)!important;border-top:none!important}
     #leverageStats{max-height:200px!important;opacity:1!important}
@@ -595,6 +659,7 @@
     .backer-item,.backer-item[data-cloned]{display:block;flex-shrink:0;margin-right:24px}
     .backer-item img{opacity:.15;height:18px;width:auto;filter:brightness(0) invert(1)}
     .backer-desc{display:none}
+    .faq{padding:40px 16px}.faq .section-header{margin-bottom:32px;justify-content:center}.faq .section-header::before,.faq .section-header::after{display:none}.faq-q{font-size:15px;padding:18px 20px}.faq-a p{font-size:14px;padding:0 20px 18px;line-height:1.55}
   }
 </style>
 </head>
@@ -892,12 +957,46 @@
 </section>
 
 <section class="backers">
-  <div class="section-header reveal"><h2 class="section-title">Backers</h2></div>
+  <div class="section-header reveal"><h2 class="section-title">Backers who understand onchain credit</h2></div>
   <div class="backer-logos reveal">
     <a class="backer-item" href="https://strobe.fund/" target="_blank" rel="noopener"><img src="assets/Strobe_Logo.svg" alt="Strobe"><div class="backer-desc">Crypto-native fund. Prev. Blocktower VC<br>Backed Ethena, Maple, Centrifuge, Morpho</div></a>
     <a class="backer-item" href="https://whitestarcapital.com/" target="_blank" rel="noopener"><img src="assets/White_Star_Capital_Logo.svg" alt="White Star Capital"><div class="backer-desc">Crypto-native fund<br>Backed Ledn, Haruko, Paraswap</div></a>
     <a class="backer-item" href="https://www.coinbase.com/en-ca/ventures" target="_blank" rel="noopener"><img src="assets/Coinbase_Ventures.svg" alt="Coinbase Ventures"><div class="backer-desc">Coinbase VC arm<br>Backed OpenSea, Uniswap, Dune</div></a>
     <a class="backer-item" href="https://www.accel.com/" target="_blank" rel="noopener"><img src="assets/Accel_Logo.svg" alt="Accel"><div class="backer-desc">Global, tier-1 fund<br>Backed Facebook, Circle, Slack</div></a>
+  </div>
+</section>
+
+<section class="faq">
+  <div class="section-header reveal"><h2 class="section-title">FAQ</h2></div>
+  <div class="faq-list">
+    <div class="faq-item reveal">
+      <div class="faq-q">What is Dimes?</div>
+      <div class="faq-a"><p>Dimes is embedded credit infrastructure for onchain platforms. We let front-ends offer leverage, margining, and yield products to their users through a single integration, with no credit risk management required on their end.</p></div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q">How does onchain credit work with Dimes?</div>
+      <div class="faq-a"><p>Dimes offers three core products that platforms can embed individually or together. Multiply provides up to 10x margin-funded directional leverage on assets not covered by perpetual futures, including prediction markets and liquid tokens. Firepower is native portfolio margining expanding to the top 50 most liquid tokens, freeing up capital without introducing leverage. Stream lets users maintain continuous synthetic exposure to assets like BTC or ETH, sized automatically against their existing holdings, without selling anything or managing positions manually.</p></div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q">Which platforms can integrate Dimes?</div>
+      <div class="faq-a"><p>Any specialized onchain trading front-end. This includes trading terminals, mobile trading apps, token launchpads, wallets, and other platforms where users are actively deploying capital onchain. If your users trade, Dimes can amplify what they do with their capital.</p></div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q">How long does integration take?</div>
+      <div class="faq-a"><p>Most teams go live within days. Dimes is a plug-and-play API designed to embed directly into your existing UI, so there's no need to rebuild your user experience or manage any credit operations.</p></div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q">What sets Dimes apart from other leverage solutions?</div>
+      <div class="faq-a"><p>Three things. First, guaranteed liquidity: Dimes operates with a private counterparty under a guaranteed credit access agreement, ensuring that capital is always available to your users regardless of market conditions. Second, full risk outsourcing: all underwriting, monitoring, and liquidation management is handled by Dimes' risk engine, so your team never touches credit risk. Third, revenue sharing: platforms earn 30% of Dimes' revenues on every credit product their users access, turning leverage into a new revenue line with zero operational overhead.</p></div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q">What does integration look like for end users?</div>
+      <div class="faq-a"><p>Users see leverage, margin, and streaming features natively inside the platform. There is no redirect, no separate account, and no additional KYC beyond what the platform already requires. From the user's perspective, it feels like a built-in feature.</p></div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q">How does revenue sharing work?</div>
+      <div class="faq-a"><p>Platforms earn 30% of the fees generated every time a user borrows through Multiply, accesses margin through Firepower, or activates a stream. Revenue scales directly with user activity, and Dimes handles all billing and settlement. Your performance data is accessible at all times via your Partner Portal at partner.dimes.fi.</p></div>
+    </div>
   </div>
 </section>
 
@@ -1243,17 +1342,18 @@ window.addEventListener('resize', centerTabs);
 hlEls.forEach(el => {
   el.style.cursor = 'pointer';
   el.addEventListener('mouseenter', () => {
-    if (activeProduct) return;
+    if (window.innerWidth <= 1100 || activeProduct) return;
     const key = el.dataset.hl;
     hoverProduct(key);
     tabs.forEach(t => t.classList.toggle('hovered', t.dataset.product === key));
   });
   el.addEventListener('mouseleave', () => {
-    if (activeProduct) return;
+    if (window.innerWidth <= 1100 || activeProduct) return;
     unhoverProduct();
     tabs.forEach(t => t.classList.remove('hovered'));
   });
   el.addEventListener('click', e => {
+    if (window.innerWidth <= 1100) return;
     e.stopPropagation();
     /* If already selected and click came from inside interactive controls, don't deselect */
     if (activeProduct === el.dataset.hl && e.target.closest('.leverage-track-wrap, .leverage-inner')) return;
@@ -2349,11 +2449,11 @@ window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer
 
 // ── Mobile terminal preview — tap icon → scroll to product ──────────────────
 (function(){
-  if (window.innerWidth > 768) return;
   var products = document.querySelectorAll('.mobile-product');
   var map = {stream: 2, firepower: 1, multiply: 0};
   document.querySelectorAll('.term-hl').forEach(function(el) {
     el.addEventListener('click', function(e) {
+      if (window.innerWidth > 1100) return;
       e.stopImmediatePropagation();
       var idx = map[el.dataset.hl];
       if (idx !== undefined && products[idx]) {
@@ -2420,6 +2520,20 @@ window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer
   });
   logos.appendChild(track);
 })();
+
+/* FAQ accordion */
+document.querySelectorAll('.faq-q').forEach(q=>{
+  q.addEventListener('click',()=>{
+    const item=q.parentElement;
+    const a=item.querySelector('.faq-a');
+    if(item.classList.contains('open')){
+      a.style.maxHeight='0';item.classList.remove('open');
+    }else{
+      document.querySelectorAll('.faq-item.open').forEach(o=>{o.querySelector('.faq-a').style.maxHeight='0';o.classList.remove('open')});
+      a.style.maxHeight=a.scrollHeight+'px';item.classList.add('open');
+    }
+  });
+});
 
 </script>
 </body>
