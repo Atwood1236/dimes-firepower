@@ -138,7 +138,7 @@
   .tab-group.active .tab-for{font-size:17px}
   .products-title{font-size:16px;font-weight:600;letter-spacing:-.01em;color:rgba(255,255,255,.5);position:relative;z-index:1;padding-bottom:5px}.products-title::after{content:'';display:block;margin-top:5px;height:1px;background:linear-gradient(to right,rgba(255,255,255,.25),transparent)}
   .product-tabs-side{display:flex;flex-direction:column;gap:36px;align-items:stretch;width:320px;z-index:10;position:absolute;right:60px}
-  .product-tabs-side::before{content:'';position:absolute;top:-200px;bottom:-200px;left:-80px;right:0;background:linear-gradient(to right,transparent,var(--black) 80px);pointer-events:none;z-index:0}
+  .product-tabs-side::before{content:'';position:absolute;top:-200px;bottom:-200px;left:-80px;right:-120px;background:linear-gradient(to right,transparent,var(--black) 80px);pointer-events:none;z-index:0}
   .tab-group{position:relative;z-index:1}
   .tab-group{display:flex;flex-direction:column;align-items:stretch;transition:opacity .4s ease}
   .tab-group+.tab-group{padding-top:36px;position:relative}
@@ -1000,7 +1000,7 @@ function selectProduct(key) {
 
   /* Firepower: shift terminal right, dim (except firepower area), show popup */
   if (key === 'firepower') {
-    terminalEl.style.transform = 'scale(.85) translateX(18%)';
+    terminalEl.style.transform = 'scale(.85) translateX(12%)';
     terminalEl.classList.add('dimmed');
     hlEls.forEach(el => el.classList.toggle('hl-active', el.dataset.hl === 'firepower'));
     fpPreview.classList.remove('active');
