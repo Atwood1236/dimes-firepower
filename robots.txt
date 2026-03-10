@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://dimes.fi/sitemap.xml
