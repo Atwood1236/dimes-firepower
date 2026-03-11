@@ -614,7 +614,9 @@
     .process-hand-bottom{width:300px;bottom:-50px;left:-40px;z-index:20}
     .why{padding-top:20px}.why .section-header{margin-bottom:24px;justify-content:center}.why .section-header::before,.why .section-header::after{}
     .why-grid{margin-top:0;gap:6px}
-    .why-card{min-height:auto;padding:20px 24px;text-align:left;display:flex;flex-direction:column;justify-content:center}
+    .why-card{min-height:auto;padding:20px 24px;text-align:left;display:flex;flex-direction:column;justify-content:center;backdrop-filter:none;-webkit-backdrop-filter:none}
+    .process-step{backdrop-filter:none;-webkit-backdrop-filter:none}
+    nav{backdrop-filter:none;-webkit-backdrop-filter:none}
     .why-card h3{font-size:17px}
     .why-card:hover h3{transform:none}
     .why-card p{opacity:1;transform:none;max-height:80px;margin-top:6px;font-size:12px;line-height:1.35}
@@ -1895,11 +1897,12 @@ document.querySelectorAll('.reveal').forEach(el => {
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
 
+  const isTouchDevice = window.matchMedia('(hover: none)').matches;
   const params = {
     amplifications: 8,
     captureWidth: 100,
     magnification: 1.25,
-    blurAmount: 16,
+    blurAmount: isTouchDevice ? 0 : 16,
     backgroundColor: '#191919'
   };
 
@@ -1938,10 +1941,14 @@ document.querySelectorAll('.reveal').forEach(el => {
     const duration = 2800;
     const imgStartOffset = -250;
     let startTime = null;
+    let lastIntroFrame = 0;
     function easeOutQuart(t){ return 1 - Math.pow(1 - t, 4); }
 
     function animate(timestamp){
       if (!startTime) startTime = timestamp;
+      // Throttle to ~30fps on touch devices
+      if (isTouchDevice && timestamp - lastIntroFrame < 33){ requestAnimationFrame(animate); return; }
+      lastIntroFrame = timestamp;
       const progress = Math.min((timestamp - startTime) / duration, 1);
       const eased = easeOutQuart(progress);
       const imgOffset = imgStartOffset * (1 - eased);
@@ -2055,8 +2062,17 @@ document.querySelectorAll('.reveal').forEach(el => {
 
   let isHovering = false;
   const RETURN_LERP = 0.012;
+  var heroVisible = true;
+  var heroIO = new IntersectionObserver(function(entries){ heroVisible = entries[0].isIntersecting; }, { rootMargin: '100px' });
+  heroIO.observe(document.querySelector('.hero'));
+  var lastHoverFrame = 0;
+  var HOVER_FRAME_INTERVAL = isTouchDevice ? 33 : 0; // ~30fps on mobile, uncapped on desktop
 
-  function hoverLoop(){
+  function hoverLoop(timestamp){
+    requestAnimationFrame(hoverLoop);
+    if (!heroVisible) return;
+    if (isTouchDevice && timestamp - lastHoverFrame < HOVER_FRAME_INTERVAL) return;
+    lastHoverFrame = timestamp;
     const lerp = isHovering ? HOVER_LERP : RETURN_LERP;
     hoverX += (targetHoverX - hoverX) * lerp;
     if (typeof ctaImgScale !== 'undefined') ctaImgScale += (ctaImgScaleTarget - ctaImgScale) * 0.05;
@@ -2068,9 +2084,8 @@ document.querySelectorAll('.reveal').forEach(el => {
     }
     var stripsSettled = true;
     for (var si = 0; si < 8; si++){ if (Math.abs(stripAlphas[si] - stripTargetAlphas[si]) > 0.005){ stripsSettled = false; break; } }
-    if (stripsSettled && Math.abs(hoverX) < 0.05 && targetHoverX === 0 && Math.abs(ctaImgScale - ctaImgScaleTarget) < 0.0005){ hoverX = 0; ctaImgScale = ctaImgScaleTarget; requestAnimationFrame(hoverLoop); return; }
+    if (stripsSettled && Math.abs(hoverX) < 0.05 && targetHoverX === 0 && Math.abs(ctaImgScale - ctaImgScaleTarget) < 0.0005){ hoverX = 0; ctaImgScale = ctaImgScaleTarget; return; }
     drawEffect(undefined, hoverX, params.amplifications, null, stripAlphas);
-    requestAnimationFrame(hoverLoop);
   }
 
   function drawEffect(posX, imgOffset, numVisible, stripRefractions, stripAlphasArg){
