@@ -575,7 +575,7 @@
     .products{padding:60px 16px 80px;margin-top:40px}
     .products .section-title{font-size:26px}
     .products .section-header{margin-bottom:32px;justify-content:center}
-    .products .section-header::before,.products .section-header::after{}
+    .products .section-header::before,.products .section-header::after{display:none}
     .product-tabs-side,.firepower-preview,.stream-preview{display:none!important}
     .mobile-products{display:flex;flex-direction:column;gap:48px;align-items:center;margin-top:80px}
     .mobile-product{max-width:320px;width:100%}
@@ -642,7 +642,7 @@
     .footer-logo svg{height:14px}
     .footer-links{justify-self:end!important;display:flex!important;flex-direction:column!important;align-items:flex-end!important;gap:8px!important}
     .footer-links a{font-size:12px}
-    .backers{padding:20px 16px 40px;text-align:center}.backers .section-header{margin-bottom:32px}
+    .backers{padding:20px 16px 40px;text-align:center}.backers .section-header{margin-bottom:32px;justify-content:center}.backers .section-header::before,.backers .section-header::after{}
     .backer-logos{overflow:hidden;display:block;margin-top:8px;padding:0;gap:0;-webkit-mask-image:linear-gradient(to right,transparent,black 10%,black 90%,transparent);mask-image:linear-gradient(to right,transparent,black 10%,black 90%,transparent)}
     .backer-track{display:flex;align-items:center;width:max-content;animation:logo-scroll 10s linear infinite}
     .backer-item,.backer-item[data-cloned]{display:block;flex:none;min-height:auto;flex-shrink:0;margin-right:24px}
@@ -664,6 +664,8 @@
     .terminal-wrapper.dimmed::before{opacity:0!important}
     .terminal-wrapper.dimmed .term-hl{opacity:1!important}
     .terminal-wrapper.zoomed-stream,.terminal-wrapper.zoomed-firepower,.terminal-wrapper.zoomed-multiply{-webkit-mask-image:none!important;mask-image:none!important}
+    .browser-section .section-header::before,.browser-section .section-header::after{display:none}
+    .backers .section-header::before,.backers .section-header::after{display:none}
   }
 </style>
 </head>
@@ -999,7 +1001,7 @@
     </div>
     <div class="faq-item reveal">
       <div class="faq-q">How does revenue sharing work?</div>
-      <div class="faq-a"><p>Platforms earn 30% of the fees generated every time a user borrows through Multiply, accesses margin through Firepower, or activates a stream. Revenue scales directly with user activity, and Dimes handles all billing and settlement. Your performance data is accessible at all times via your Partner Portal at partner.dimes.fi.</p></div>
+      <div class="faq-a"><p>Platforms earn 30% of the fees generated every time a user borrows through Multiply, accesses margin through Firepower, or activates a stream. Revenue scales directly with user activity, and Dimes handles all billing and settlement. Your performance data is accessible at all times via your Partner Portal at <a href="https://partner.dimes.fi/" target="_blank" style="color:inherit;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:0.5px">partner.dimes.fi</a>.</p></div>
     </div>
   </div>
 </section>
