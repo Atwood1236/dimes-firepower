@@ -1901,6 +1901,32 @@ document.querySelectorAll('.reveal').forEach(el => {
     canvas.width = img.width;
     canvas.height = img.height;
 
+    // Warm up sourceCanvas + edge fade texture so first hover is instant
+    sourceCanvas = document.createElement('canvas');
+    sourceCanvas.width = img.width;
+    sourceCanvas.height = img.height;
+    const warmCtx = sourceCanvas.getContext('2d');
+    warmCtx.drawImage(img, 0, 0, img.width, img.height);
+    const warmEdgeW = Math.min(100 * 0.05, 20);
+    edgeFadeCanvas = document.createElement('canvas');
+    edgeFadeCanvas._edgeW = warmEdgeW;
+    edgeFadeCanvas.width = warmEdgeW;
+    edgeFadeCanvas.height = img.height;
+    const eCtx = edgeFadeCanvas.getContext('2d');
+    const eGrad = eCtx.createLinearGradient(0, 0, warmEdgeW, 0);
+    eGrad.addColorStop(0, 'rgba(255,255,255,0.15)');
+    eGrad.addColorStop(0.5, 'rgba(255,255,255,0.08)');
+    eGrad.addColorStop(1, 'rgba(255,255,255,0)');
+    const fadeZone = img.height * 0.2;
+    for (let y = 0; y < img.height; y++){
+      let a = 1;
+      if (y < fadeZone) a = y / fadeZone;
+      else if (y > img.height - fadeZone) a = (img.height - y) / fadeZone;
+      eCtx.globalAlpha = a;
+      eCtx.fillStyle = eGrad;
+      eCtx.fillRect(0, y, warmEdgeW, 1);
+    }
+
     const duration = 2800;
     const imgStartOffset = -250;
     let startTime = null;
@@ -1911,6 +1937,13 @@ document.querySelectorAll('.reveal').forEach(el => {
       const progress = Math.min((timestamp - startTime) / duration, 1);
       const eased = easeOutQuart(progress);
       const imgOffset = imgStartOffset * (1 - eased);
+      // Lerp strip alphas during intro so hover responds immediately
+      for (var si = 0; si < 8; si++){
+        stripAlphas[si] += (stripTargetAlphas[si] - stripAlphas[si]) * STRIP_ALPHA_LERP;
+        if (stripAlphas[si] < 0.005) stripAlphas[si] = 0;
+        if (stripAlphas[si] > 0.995) stripAlphas[si] = 1;
+      }
+      if (typeof ctaImgScale !== 'undefined') ctaImgScale += (ctaImgScaleTarget - ctaImgScale) * 0.05;
       drawEffect(undefined, imgOffset, params.amplifications, null, stripAlphas);
       updateCta(eased);
       if (progress < 1) requestAnimationFrame(animate);
@@ -1992,8 +2025,14 @@ document.querySelectorAll('.reveal').forEach(el => {
     }
   }
 
-  // Pre-create source canvas for performance
+  // Pre-create canvases for performance
   let sourceCanvas = null;
+  const stripCanvases = [];
+  for (let i = 0; i < params.amplifications; i++){
+    const c = document.createElement('canvas');
+    stripCanvases.push({canvas: c, ctx: c.getContext('2d')});
+  }
+  let edgeFadeCanvas = null;
 
   // ── Hover parallax ──────────────────────────────────────────────────────────
   let hoverX = 0, targetHoverX = 0;
@@ -2100,11 +2139,13 @@ document.querySelectorAll('.reveal').forEach(el => {
       const sAlpha = stripAlphasArg ? stripAlphasArg[i] : 1;
       if (sAlpha < 0.001) continue;
 
-      // Copy captured strip from source
-      const tempCanvas = document.createElement('canvas');
-      const tempCtx = tempCanvas.getContext('2d');
-      tempCanvas.width = captureW;
-      tempCanvas.height = captureH;
+      // Copy captured strip from source (reuse pre-created canvas)
+      const sc_entry = stripCanvases[i];
+      const tempCanvas = sc_entry.canvas;
+      const tempCtx = sc_entry.ctx;
+      if (tempCanvas.width !== captureW) tempCanvas.width = captureW;
+      if (tempCanvas.height !== captureH) tempCanvas.height = captureH;
+      tempCtx.clearRect(0, 0, captureW, captureH);
       tempCtx.drawImage(sourceCanvas, captureX, 0, captureW, captureH, 0, 0, captureW, captureH);
 
       // Progressive blur
@@ -2127,22 +2168,29 @@ document.querySelectorAll('.reveal').forEach(el => {
       ctx.drawImage(tempCanvas, 0, 0, captureW, captureH, currentX, drawY, newWidth, newHeight);
       ctx.filter = 'none';
 
-      // Left edge highlight with vertical fade
+      // Left edge highlight with vertical fade (pre-rendered texture)
       const edgeW = Math.min(newWidth * 0.05, 20);
-      const edgeGrad = ctx.createLinearGradient(currentX, 0, currentX + edgeW, 0);
-      edgeGrad.addColorStop(0, 'rgba(255,255,255,0.15)');
-      edgeGrad.addColorStop(0.5, 'rgba(255,255,255,0.08)');
-      edgeGrad.addColorStop(1, 'rgba(255,255,255,0)');
-      const fadeZone = H * 0.2;
-      for (let y = 0; y < H; y++){
-        let a = 1;
-        if (y < fadeZone) a = y / fadeZone;
-        else if (y > H - fadeZone) a = (H - y) / fadeZone;
-        ctx.globalAlpha = a;
-        ctx.fillStyle = edgeGrad;
-        ctx.fillRect(currentX, y, edgeW, 1);
+      if (!edgeFadeCanvas || edgeFadeCanvas.height !== H || edgeFadeCanvas._edgeW !== edgeW){
+        edgeFadeCanvas = document.createElement('canvas');
+        edgeFadeCanvas._edgeW = edgeW;
+        edgeFadeCanvas.width = edgeW;
+        edgeFadeCanvas.height = H;
+        const eCtx = edgeFadeCanvas.getContext('2d');
+        const eGrad = eCtx.createLinearGradient(0, 0, edgeW, 0);
+        eGrad.addColorStop(0, 'rgba(255,255,255,0.15)');
+        eGrad.addColorStop(0.5, 'rgba(255,255,255,0.08)');
+        eGrad.addColorStop(1, 'rgba(255,255,255,0)');
+        const fadeZone = H * 0.2;
+        for (let y = 0; y < H; y++){
+          let a = 1;
+          if (y < fadeZone) a = y / fadeZone;
+          else if (y > H - fadeZone) a = (H - y) / fadeZone;
+          eCtx.globalAlpha = a;
+          eCtx.fillStyle = eGrad;
+          eCtx.fillRect(0, y, edgeW, 1);
+        }
       }
-      ctx.globalAlpha = 1;
+      ctx.drawImage(edgeFadeCanvas, currentX, 0);
 
       // Right edge shadow
       const shadowW = Math.min(newWidth * 0.03, 15);
