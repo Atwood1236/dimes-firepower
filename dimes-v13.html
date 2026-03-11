@@ -191,7 +191,7 @@
   .tab-group{display:flex;flex-direction:column;align-items:stretch;transition:opacity .4s ease}
   .tab-group+.tab-group{padding-top:36px;position:relative}
   .tab-group+.tab-group::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,rgba(255,255,255,.08),transparent)}
-  .product-tabs-side:hover .tab-group:not(:hover){opacity:.3}
+  .product-tabs-side:has(.tab-group:hover) .tab-group:not(:hover){opacity:.3}
   .tab-desc{max-height:0;overflow:hidden;opacity:0;transition:max-height .4s cubic-bezier(.16,1,.3,1),opacity .4s ease,margin .4s ease;font-size:15px;color:#fff;line-height:1.25;margin:0;padding:0 2px;width:300px}
   .tab-group.active .tab-desc{max-height:120px;opacity:1;margin:16px 0 20px}
   .docs-link{display:none;font-size:11px;font-weight:500;letter-spacing:.04em;color:var(--text-dim);text-decoration:none;padding:6px 16px;border-radius:100px;border:1px solid rgba(255,255,255,.15);background:var(--bg);cursor:pointer;font-family:var(--font);transition:all .3s ease;margin-right:auto}
@@ -1317,6 +1317,14 @@ let hoveredTabKey = null;
 
 tabsSide.addEventListener('mousemove', e => {
   if (activeProduct) return;
+  // Only trigger when mouse is within the tab groups area, not the title
+  const groups = tabsSide.querySelectorAll('.tab-group');
+  const firstRect = groups[0].getBoundingClientRect();
+  const lastRect = groups[groups.length - 1].getBoundingClientRect();
+  if (e.clientY < firstRect.top || e.clientY > lastRect.bottom) {
+    if (hoveredTabKey) { hoveredTabKey = null; unhoverProduct(); tabs.forEach(t => t.classList.remove('hovered')); }
+    return;
+  }
   let closest = null, minDist = Infinity;
   tabs.forEach(tab => {
     const r = tab.getBoundingClientRect();
