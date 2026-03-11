@@ -48,9 +48,9 @@ const T={
   r:14,
 };
 const TOKENS=[
-  {id:"sol", sym:"SOL",  color:"#9945FF", price:132.10, qty:312.4,  hc:0.85},
-  {id:"btc", sym:"BTC",  color:"#F7931A", price:82000,  qty:0.082,  hc:0.92},
-  {id:"eth", sym:"ETH",  color:"#627EEA", price:3400,   qty:1.24,   hc:0.88},
+  {id:"sol", sym:"SOL",  color:"#9945FF", price:130,    qty:300,    hc:0.85},
+  {id:"btc", sym:"BTC",  color:"#F7931A", price:80000,  qty:0.1,    hc:0.92},
+  {id:"eth", sym:"ETH",  color:"#627EEA", price:3500,   qty:2,      hc:0.88},
 ];
 const STREAM_ASSETS=[
   {id:"btc",sym:"BTC",color:"#F7931A",price:82000},
@@ -329,7 +329,7 @@ function SetupView({assetId,existing,onBack,onActivate}){
 
         {/* hero: USD big, token amount + % small */}
         <div style={{textAlign:"center",marginBottom:6}}>
-          <div style={{fontSize:12,color:T.faint,fontWeight:300,marginBottom:8,letterSpacing:"0.5px"}}>Unlock {asset.sym} exposure</div>
+          <div style={{fontSize:12,color:T.faint,fontWeight:300,marginBottom:8}}>Unlock passive {asset.sym} stream</div>
           <div style={{fontSize:32,fontWeight:600,color:T.text,letterSpacing:"-0.5px"}}>{fmt(expUSD)}</div>
           <div style={{fontSize:13,color:T.dim,fontWeight:300,marginTop:4}}>
             +{fmtQty(expQty,assetId)} {asset.sym} {"\u00b7"} <span style={{color:T.accent}}>{portPct.toFixed(1)}%</span> of your portfolio

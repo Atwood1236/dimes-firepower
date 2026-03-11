@@ -32,15 +32,15 @@ const ACCENT = "#EEFF00";
 const BLUE = "#4A90D9";
 
 const HOLDINGS = [
-  { id:"jup",  sym:"JUP",       price:1.24,    qty:12400,    maxLtv:70, logo:JUP_LOGO },
-  { id:"pump", sym:"PUMP",      price:0.0087,  qty:2800000,  maxLtv:45, logo:PUMP_LOGO },
-  { id:"hype", sym:"HYPE",      price:24.80,   qty:520,      maxLtv:75, logo:HYPE_LOGO },
-  { id:"fart", sym:"FARTCOIN",  price:1.42,    qty:8500,     maxLtv:40, logo:FART_LOGO },
-  { id:"pm1",  sym:"BTC >$100K'26", price:0.62, qty:4200,   maxLtv:55, logo:BTC100K_LOGO, pm:true, side:"Yes" },
+  { id:"jup",  sym:"JUP",       price:1.25,    qty:12000,    maxLtv:75, logo:JUP_LOGO },
+  { id:"pump", sym:"PUMP",      price:0.01,    qty:2500000,  maxLtv:75, logo:PUMP_LOGO },
+  { id:"hype", sym:"HYPE",      price:25.00,   qty:500,      maxLtv:80, logo:HYPE_LOGO },
+  { id:"fart", sym:"FARTCOIN",  price:1.50,    qty:8000,     maxLtv:65, logo:FART_LOGO },
+  { id:"pm1",  sym:"BTC >$100K'26", price:0.50, qty:5000,   maxLtv:50, logo:BTC100K_LOGO, pm:true, side:"Yes" },
 ];
 
-const RATE=0.0008;
-const ORIG=0.001;
+const COST_PCT=[0.01, 0.02, 0.03, 0.05]; // 1D, 7D, 14D, 30D
+const CROSS_BUMP=3;
 
 function fmt(n){
   if(n>=1000)return"$"+(n/1000).toFixed(1)+"k";
@@ -92,13 +92,12 @@ function Popup(){
         coll+=pledged;
         wMaxLtv+=h.maxLtv*pledged;
       });
-      const blendedMax=coll>0?wMaxLtv/coll:0;
+      const blendedMax=coll>0?wMaxLtv/coll+CROSS_BUMP:0;
       const effectiveLtv=globalLtv!==null?Math.min(globalLtv,blendedMax):blendedMax;
       const borrow=coll*(effectiveLtv/100);
       maxBorrow=coll*(blendedMax/100);
-      const days=durs[durIdx].d;
-      const cost=borrow*(RATE/100)*days*24+borrow*ORIG;
-      const costPct=borrow>0?(cost/borrow)*100:0;
+      const cost=borrow*COST_PCT[durIdx];
+      const costPct=COST_PCT[durIdx]*100;
       const liqValue=borrow;
       const bufferPct=coll>0?((coll-borrow)/coll)*100:0;
       return{coll,borrow,cost,costPct,effectiveLtv,blendedMax,maxBorrow,days:durs[durIdx].l,liqValue,bufferPct,perToken};
@@ -115,9 +114,8 @@ function Popup(){
         const bufferPct=h.price>0?((h.price-liqPrice)/h.price)*100:0;
         perToken.push({sym:h.sym,price:h.price,liqPrice,bufferPct,pm:h.pm,side:h.side});
       });
-      const days=durs[durIdx].d;
-      const cost=totalBorrow*(RATE/100)*days*24+totalBorrow*ORIG;
-      const costPct=totalBorrow>0?(cost/totalBorrow)*100:0;
+      const cost=totalBorrow*COST_PCT[durIdx];
+      const costPct=COST_PCT[durIdx]*100;
       const liqValue=totalBorrow;
       const bufferPct=coll>0?((coll-totalBorrow)/coll)*100:0;
       return{coll,borrow:totalBorrow,cost,costPct,effectiveLtv:coll>0?(totalBorrow/coll)*100:0,blendedMax:coll>0?(maxBorrow/coll)*100:0,maxBorrow,days:durs[durIdx].l,liqValue,bufferPct,perToken};

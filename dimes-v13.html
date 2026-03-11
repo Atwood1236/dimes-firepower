@@ -37,10 +37,10 @@
   "@type": "FAQPage",
   "mainEntity": [
     {"@type":"Question","name":"What is Dimes?","acceptedAnswer":{"@type":"Answer","text":"Dimes is embedded credit infrastructure for onchain platforms. We let front-ends offer leverage, margining, and yield products to their users through a single integration, with no credit risk management required on their end."}},
-    {"@type":"Question","name":"How does onchain credit work with Dimes?","acceptedAnswer":{"@type":"Answer","text":"Dimes offers three core products that platforms can embed individually or together. Multiply provides up to 10x margin-funded directional leverage on assets not covered by perpetual futures, including prediction markets and liquid tokens. Firepower is native portfolio margining expanding to the top 50 most liquid tokens, freeing up capital without introducing leverage. Stream lets users maintain continuous synthetic exposure to assets like BTC or ETH, sized automatically against their existing holdings, without selling anything or managing positions manually."}},
+    {"@type":"Question","name":"How does onchain credit work with Dimes?","acceptedAnswer":{"@type":"Answer","text":"Dimes offers three core products that platforms can embed individually or together. Multiply provides up to 10x margin-funded directional leverage on assets not covered by perpetual futures, including prediction markets and liquid tokens. Firepower is native portfolio margining expanding to the top 50 most liquid tokens, freeing up capital for your users to continue trading without selling conviction holdings. Stream lets users maintain continuous synthetic exposure to assets like BTC or ETH, sized automatically against their existing holdings, without selling anything or managing positions manually."}},
     {"@type":"Question","name":"Which platforms can integrate Dimes?","acceptedAnswer":{"@type":"Answer","text":"Any specialized onchain trading front-end. This includes trading terminals, mobile trading apps, token launchpads, wallets, and other platforms where users are actively deploying capital onchain. If your users trade, Dimes can amplify what they do with their capital."}},
     {"@type":"Question","name":"How long does integration take?","acceptedAnswer":{"@type":"Answer","text":"Most teams go live within days. Dimes is a plug-and-play API designed to embed directly into your existing UI, so there's no need to rebuild your user experience or manage any credit operations."}},
-    {"@type":"Question","name":"What sets Dimes apart from other leverage solutions?","acceptedAnswer":{"@type":"Answer","text":"Three things. First, guaranteed liquidity: Dimes operates with a private counterparty under a guaranteed credit access agreement, ensuring that capital is always available to your users regardless of market conditions. Second, full risk outsourcing: all underwriting, monitoring, and liquidation management is handled by Dimes' risk engine, so your team never touches credit risk. Third, revenue sharing: platforms earn 30% of Dimes' revenues on every credit product their users access, turning leverage into a new revenue line with zero operational overhead."}},
+    {"@type":"Question","name":"What sets Dimes apart from other leverage solutions?","acceptedAnswer":{"@type":"Answer","text":"Most leverage providers try to own the front-end and compete with the platforms they serve. Dimes is purely embedded, meaning we power credit behind the scenes while your platform keeps the user relationship. Beyond that: guaranteed liquidity ensuring capital is always available to your users, full risk outsourcing so your team never touches underwriting or liquidations, and revenue sharing where platforms earn 30% of Dimes' revenues on every credit product their users access."}},
     {"@type":"Question","name":"What does integration look like for end users?","acceptedAnswer":{"@type":"Answer","text":"Users see leverage, margin, and streaming features natively inside the platform. There is no redirect, no separate account, and no additional KYC beyond what the platform already requires. From the user's perspective, it feels like a built-in feature."}},
     {"@type":"Question","name":"How does revenue sharing work?","acceptedAnswer":{"@type":"Answer","text":"Platforms earn 30% of the fees generated every time a user borrows through Multiply, accesses margin through Firepower, or activates a stream. Revenue scales directly with user activity, and Dimes handles all billing and settlement. Your performance data is accessible at all times via your Partner Portal at partner.dimes.fi."}}
   ]
@@ -467,7 +467,7 @@
   .faq-item.open .faq-q::after{transform:rotate(45deg);color:var(--yellow)}
   .faq-item.open .faq-q{color:#fff}
   .faq-a{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.16,1,.3,1),padding .3s ease}
-  .faq-a p{padding:0 32px 24px;font-size:16px;color:var(--text-dim);line-height:1.65;margin:0}
+  .faq-a p{padding:0 32px 24px;font-size:16px;color:var(--text-dim);line-height:1.45;margin:0}
 
   .cta-section{padding:0 48px 0}
   .cta-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:0;min-height:500px;overflow:visible}
@@ -827,7 +827,7 @@
               <div class="leverage-stats" id="leverageStats">
                 <div class="leverage-stat"><span class="label">Shares</span><span class="stat-line"></span><span class="val" id="statShares">18,182</span></div>
                 <div class="leverage-stat"><span class="label">Position Value</span><span class="stat-line"></span><span class="val" id="statPosition">$6,000</span></div>
-                <div class="leverage-stat"><span class="label">Liquidation Price</span><span class="stat-line"></span><span class="val" id="statLiquidation">¢26</span></div>
+                <div class="leverage-stat"><span class="label">Liquidation Price</span><span class="stat-line"></span><span class="val" id="statLiquidation">¢28</span></div>
                 <div class="leverage-stat"><span class="val sm">Leverage auto-decays as resolution approaches</span></div>
               </div>
             </div>
@@ -887,7 +887,7 @@
           <div class="leverage-stats" style="max-height:200px;opacity:1">
             <div class="leverage-stat"><span class="label">Shares</span><span class="stat-line"></span><span class="val" id="mStatShares">24,242</span></div>
             <div class="leverage-stat"><span class="label">Position Value</span><span class="stat-line"></span><span class="val" id="mStatPos">$8,000</span></div>
-            <div class="leverage-stat"><span class="label">Liquidation Price</span><span class="stat-line"></span><span class="val" id="mStatLiq">¢26</span></div>
+            <div class="leverage-stat"><span class="label">Liquidation Price</span><span class="stat-line"></span><span class="val" id="mStatLiq">¢29</span></div>
             <div class="leverage-stat"><span class="val sm">Leverage auto-decays as resolution approaches</span></div>
           </div>
         </div>
@@ -978,7 +978,7 @@
     </div>
     <div class="faq-item reveal">
       <div class="faq-q">How does onchain credit work with Dimes?</div>
-      <div class="faq-a"><p>Dimes offers three core products that platforms can embed individually or together. Multiply provides up to 10x margin-funded directional leverage on assets not covered by perpetual futures, including prediction markets and liquid tokens. Firepower is native portfolio margining expanding to the top 50 most liquid tokens, freeing up capital without introducing leverage. Stream lets users maintain continuous synthetic exposure to assets like BTC or ETH, sized automatically against their existing holdings, without selling anything or managing positions manually.</p></div>
+      <div class="faq-a"><p>Dimes offers three core products that platforms can embed individually or together. Multiply provides up to 10x margin-funded directional leverage on assets not covered by perpetual futures, including prediction markets and liquid tokens. Firepower is native portfolio margining expanding to the top 50 most liquid tokens, freeing up capital for your users to continue trading without selling conviction holdings. Stream lets users maintain continuous synthetic exposure to assets like BTC or ETH, sized automatically against their existing holdings, without selling anything or managing positions manually.</p></div>
     </div>
     <div class="faq-item reveal">
       <div class="faq-q">Which platforms can integrate Dimes?</div>
@@ -990,7 +990,7 @@
     </div>
     <div class="faq-item reveal">
       <div class="faq-q">What sets Dimes apart from other leverage solutions?</div>
-      <div class="faq-a"><p>Three things. First, guaranteed liquidity: Dimes operates with a private counterparty under a guaranteed credit access agreement, ensuring that capital is always available to your users regardless of market conditions. Second, full risk outsourcing: all underwriting, monitoring, and liquidation management is handled by Dimes' risk engine, so your team never touches credit risk. Third, revenue sharing: platforms earn 30% of Dimes' revenues on every credit product their users access, turning leverage into a new revenue line with zero operational overhead.</p></div>
+      <div class="faq-a"><p>Most leverage providers try to own the front-end and compete with the platforms they serve. Dimes is purely embedded, meaning we power credit behind the scenes while your platform keeps the user relationship. Beyond that: guaranteed liquidity ensuring capital is always available to your users, full risk outsourcing so your team never touches underwriting or liquidations, and revenue sharing where platforms earn 30% of Dimes' revenues on every credit product their users access.</p></div>
     </div>
     <div class="faq-item reveal">
       <div class="faq-q">What does integration look like for end users?</div>
@@ -1011,9 +1011,8 @@
       </div>
     </div>
     <div class="cta-content">
-      <h2 class="cta-reveal" style="transition-delay:.2s">Stop capping your flow.<br><em style="white-space:nowrap">Let your users size up with Dimes.</em></h2>
-      <p class="cta-sub cta-reveal" style="transition-delay:.4s">30% of borrow fees flowing right back to you.</p>
-      <div class="cta-btn-wrap cta-reveal" style="transition-delay:.6s">
+      <h2 class="cta-reveal" style="transition-delay:.2s;margin-bottom:56px">Stop capping your flow.<br><em style="white-space:nowrap">Let your users size up with Dimes.</em></h2>
+            <div class="cta-btn-wrap cta-reveal" style="transition-delay:.6s">
         <div class="cta-btn-glow"><div class="glow-atmo"></div><div class="glow-mid"></div><div class="glow-core"></div><div class="glow-slit"></div><div class="glow-spill"></div></div>
         <div class="cta-btn-echo echo-8"></div>
         <div class="cta-btn-echo echo-7"></div>
@@ -1423,7 +1422,7 @@ function _renderPrompt(step,cb){
   const txt=_el('div',{fontFamily:_S,fontSize:'13px',color:'#e8e8e8',fontWeight:'400',lineHeight:'20px',whiteSpace:'pre-wrap'});
   txt.appendChild(document.createTextNode(''));
   wrap.appendChild(txt);_cliBody.appendChild(wrap);_scroll();
-  _typeInto(txt,full,22,()=>setTimeout(cb,300));
+  _typeInto(txt,full,15,()=>setTimeout(cb,300));
 }
 
 function _renderAgent(step,cb){
@@ -1431,7 +1430,7 @@ function _renderAgent(step,cb){
   const span=_el('span',{fontFamily:_M+',monospace',fontSize:'12px',color:'#c8c8c8',lineHeight:'18px'});
   span.appendChild(document.createTextNode(''));
   wrap.appendChild(span);_cliBody.appendChild(wrap);_scroll();
-  _typeInto(span,step.text,14,cb);
+  _typeInto(span,step.text,9,cb);
 }
 
 function _renderCmd(step,cb){
@@ -1463,7 +1462,7 @@ function _renderCmd(step,cb){
     if(i<text.length)span.appendChild(cur);
     _scroll();
     if(i>=text.length){clearInterval(iv);setTimeout(cb,200);}
-  },12);
+  },8);
   _cliIds.push(iv);
 }
 
@@ -2330,7 +2329,7 @@ window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer
       statsEl.style.maxHeight = '200px';
       sharesEl.textContent   = Math.round((1000 * lev) / 0.33).toLocaleString();
       posEl.textContent      = '$' + (1000 * lev).toLocaleString();
-      liqEl.textContent      = '¢' + Math.max(1, Math.round(100 / lev * 0.78));
+      liqEl.textContent      = '¢' + Math.max(1, Math.round(33 * (1 - 1/lev)));
     }
   }
 
