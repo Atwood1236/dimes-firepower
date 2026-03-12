@@ -539,10 +539,10 @@
     .mobile-product-desc{font-size:14px;color:rgba(255,255,255,.75);line-height:1.4;margin:0 0 16px}
     .mobile-leverage-box{width:100%;border-radius:16px;overflow:hidden;padding:32px;box-sizing:border-box;background:radial-gradient(ellipse 120% 250% at 50% 105%,rgba(238,255,0,0.18) 0%,rgba(238,255,0,0.06) 40%,transparent 70%),#0e0e0e;border:1px solid rgba(255,255,255,.04);box-shadow:inset 0 -20px 60px rgba(238,255,0,0.04),0 4px 20px rgba(0,0,0,.6)}
     .mobile-product-preview{width:100%;border-radius:16px;overflow:hidden;background:transparent;border:1px solid rgba(255,255,255,.04);position:relative;box-shadow:inset 0 -20px 60px rgba(238,255,0,0.04),0 4px 20px rgba(0,0,0,.6)}
-    .mobile-fp-preview{height:365px;max-width:320px;margin:0 auto}
-    .mobile-fp-preview iframe{position:absolute;top:0;left:0;width:480px;height:548px;border:none;transform:scale(0.667);transform-origin:top left}
-    .mobile-stream-preview{height:446px;max-width:320px;margin:0 auto;border:none!important;box-shadow:0 4px 20px rgba(0,0,0,.6)!important}
-    .mobile-stream-preview iframe{position:absolute;top:0;left:0;width:380px;height:900px;border:none;transform:scale(0.842);transform-origin:top left}
+    .mobile-fp-preview{height:457px}
+    .mobile-fp-preview iframe{position:absolute;top:0;left:0;width:480px;height:548px;border:none;transform:scale(0.833);transform-origin:top left}
+    .mobile-stream-preview{height:558px;border:none!important;box-shadow:0 4px 20px rgba(0,0,0,.6)!important}
+    .mobile-stream-preview iframe{position:absolute;top:0;left:0;width:380px;height:900px;border:none;transform:scale(1.053);transform-origin:top left}
     .backer-logos{flex-wrap:wrap;column-gap:clamp(24px,4vw,64px);row-gap:48px}
     .backer-item{flex:0 0 calc(50% - 40px)}
   }
@@ -589,9 +589,9 @@
     .mobile-product-desc{font-size:13px;color:rgba(255,255,255,.75);line-height:1.4;margin:0 0 16px}
     .mobile-leverage-box{width:100%;border-radius:16px;overflow:hidden;padding:32px;box-sizing:border-box;background:radial-gradient(ellipse 120% 250% at 50% 105%,rgba(238,255,0,0.18) 0%,rgba(238,255,0,0.06) 40%,transparent 70%),#0e0e0e;border:1px solid rgba(255,255,255,.04);box-shadow:inset 0 -20px 60px rgba(238,255,0,0.04),0 4px 20px rgba(0,0,0,.6)}
     .mobile-product-preview{width:100%;border-radius:16px;overflow:hidden;background:transparent;border:1px solid rgba(255,255,255,.04);position:relative;box-shadow:inset 0 -20px 60px rgba(238,255,0,0.04),0 4px 20px rgba(0,0,0,.6)}
-    .mobile-fp-preview{height:365px}
+    .mobile-fp-preview{height:365px;max-width:320px;margin:0 auto}
     .mobile-fp-preview iframe{position:absolute;top:0;left:0;width:480px;height:548px;border:none;transform:scale(0.667);transform-origin:top left}
-    .mobile-stream-preview{height:446px;border:none!important;box-shadow:0 4px 20px rgba(0,0,0,.6)!important}
+    .mobile-stream-preview{height:446px;max-width:320px;margin:0 auto;border:none!important;box-shadow:0 4px 20px rgba(0,0,0,.6)!important}
     .mobile-stream-preview iframe{position:absolute;top:0;left:0;width:380px;height:900px;border:none;transform:scale(0.842);transform-origin:top left}
     .browser-section{padding:40px 32px 80px}
     .browser-section .section-header{justify-content:center}
@@ -1258,8 +1258,9 @@ window.addEventListener('message', e => {
     if (mw) {
       var mf = mw.querySelector('iframe');
       if (mf && e.source === mf.contentWindow) {
+        var scale = window.innerWidth <= 768 ? 0.842 : 1.053;
         mf.style.height = e.data.h + 'px';
-        mw.style.height = Math.ceil(e.data.h * 0.842) + 'px';
+        mw.style.height = Math.ceil(e.data.h * scale) + 'px';
       }
     }
   }
@@ -1268,8 +1269,9 @@ window.addEventListener('message', e => {
     if (mfw) {
       var mff = mfw.querySelector('iframe');
       if (mff && e.source === mff.contentWindow) {
+        var scale = window.innerWidth <= 768 ? 0.667 : 0.833;
         mff.style.height = e.data.h + 'px';
-        mfw.style.height = Math.ceil(e.data.h * 0.667) + 'px';
+        mfw.style.height = Math.ceil(e.data.h * scale) + 'px';
       }
     }
   }
