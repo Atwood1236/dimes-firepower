@@ -2420,10 +2420,18 @@ window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer
 
   function leverageFromPointer(clientX) {
     const rect = trackEl.getBoundingClientRect();
-    /* Map pointer to dot range, not full track */
+    /* Safari: getBCR inside CSS-zoomed ancestor returns pre-zoom coords,
+       but clientX is in screen space — detect and compensate */
+    const cssW = trackEl.offsetWidth;
+    let cx = clientX;
+    if (cssW > 0 && Math.abs(rect.width - cssW) < 2) {
+      const tw = trackEl.closest('.terminal-wrapper');
+      const z = tw ? parseFloat(getComputedStyle(tw).zoom) || 1 : 1;
+      cx = clientX / z;
+    }
     const dotStart = DOT_INSET;
     const dotEnd = rect.width - DOT_INSET;
-    const px = clientX - rect.left;
+    const px = cx - rect.left;
     const ratio = Math.max(0, Math.min(1, (px - dotStart) / (dotEnd - dotStart)));
     return Math.round(MIN + ratio * (MAX - MIN));
   }
