@@ -2493,7 +2493,7 @@ window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer
         if (lev > 1) {
           sharesEl.textContent = Math.round((1000 * lev) / 0.33).toLocaleString();
           posEl.textContent = '$' + (1000 * lev).toLocaleString();
-          liqEl.textContent = '¢' + Math.max(1, Math.round(100 / lev * 0.78));
+          liqEl.textContent = '¢' + Math.max(1, Math.round(33 * (1 - 1/lev)));
         }
       }
       if (progress < 1) requestAnimationFrame(tick);
