@@ -2527,7 +2527,7 @@ window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer
     dots.forEach(function(d,i){ d.style.opacity = i<l?'0':''; });
     sh.textContent = Math.round((1000*l)/0.33).toLocaleString();
     po.textContent = '$'+(1000*l).toLocaleString();
-    lq.textContent = '¢'+Math.max(1,Math.round(100/l*0.78));
+    lq.textContent = '¢'+Math.max(1,Math.round(33*(1-1/l)));
   }
   function fromPtr(cx){
     var r=t.getBoundingClientRect();
