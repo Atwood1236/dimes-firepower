@@ -1252,14 +1252,15 @@ window.addEventListener('message', e => {
   if (!e.data) return;
   if (e.data.type === 'fp-height' && e.source === fpPreview.querySelector('iframe').contentWindow) fpPreview.style.height = e.data.h + 'px';
   if (e.data.type === 'stream-height' && e.source === streamPreview.querySelector('iframe').contentWindow) streamPreview.style.height = e.data.h + 'px';
-  // Mobile auto-height
+  // Mobile auto-height — use current scale factor from computed transform
   if (e.data.type === 'stream-height') {
     var mw = document.querySelector('.mobile-stream-preview');
     if (mw) {
       var mf = mw.querySelector('iframe');
       if (mf && e.source === mf.contentWindow) {
+        var sScale = parseFloat(getComputedStyle(mf).transform.split(',')[3]) || 0.842;
         mf.style.height = e.data.h + 'px';
-        mw.style.height = Math.ceil(e.data.h * 0.842) + 'px';
+        mw.style.height = Math.ceil(e.data.h * sScale) + 'px';
       }
     }
   }
@@ -1268,8 +1269,9 @@ window.addEventListener('message', e => {
     if (mfw) {
       var mff = mfw.querySelector('iframe');
       if (mff && e.source === mff.contentWindow) {
+        var fScale = parseFloat(getComputedStyle(mff).transform.split(',')[3]) || 0.667;
         mff.style.height = e.data.h + 'px';
-        mfw.style.height = Math.ceil(e.data.h * 0.667) + 'px';
+        mfw.style.height = Math.ceil(e.data.h * fScale) + 'px';
       }
     }
   }
