@@ -1258,6 +1258,7 @@ window.addEventListener('message', e => {
     if (mw) {
       var mf = mw.querySelector('iframe');
       if (mf && e.source === mf.contentWindow) {
+        window._lastStreamH = e.data.h;
         var scale = window.innerWidth <= 768 ? 0.842 : 1.053;
         mf.style.height = e.data.h + 'px';
         mw.style.height = Math.ceil(e.data.h * scale) + 'px';
@@ -1269,11 +1270,23 @@ window.addEventListener('message', e => {
     if (mfw) {
       var mff = mfw.querySelector('iframe');
       if (mff && e.source === mff.contentWindow) {
+        window._lastFpH = e.data.h;
         var scale = window.innerWidth <= 768 ? 0.667 : 0.833;
         mff.style.height = e.data.h + 'px';
         mfw.style.height = Math.ceil(e.data.h * scale) + 'px';
       }
     }
+  }
+});
+// Recalc mobile preview heights on resize (CSS scale changes at 768px breakpoint)
+window.addEventListener('resize', function() {
+  if (window._lastFpH) {
+    var mfw = document.querySelector('.mobile-fp-preview');
+    if (mfw) { mfw.style.height = Math.ceil(window._lastFpH * (window.innerWidth <= 768 ? 0.667 : 0.833)) + 'px'; }
+  }
+  if (window._lastStreamH) {
+    var mw = document.querySelector('.mobile-stream-preview');
+    if (mw) { mw.style.height = Math.ceil(window._lastStreamH * (window.innerWidth <= 768 ? 0.842 : 1.053)) + 'px'; }
   }
 });
 
