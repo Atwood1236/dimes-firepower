@@ -382,7 +382,7 @@
   .leverage-info{width:9px;height:9px;border-radius:50%;border:.5px solid rgba(255,255,255,.25);display:inline-flex;align-items:center;justify-content:center;font-size:6px;line-height:1;color:rgba(255,255,255,.3);background:transparent;box-sizing:border-box}
   .leverage-value{font-size:15px;font-weight:700;color:var(--yellow);text-shadow:0 0 20px rgba(238,255,0,.7),0 0 50px rgba(238,255,0,.35),0 0 80px rgba(238,255,0,.15);flex-shrink:0;min-width:28px;text-align:right}
 
-  .leverage-track-wrap{position:relative;height:24px;margin-bottom:14px;display:flex;align-items:center;gap:10px;cursor:ew-resize;transition:margin .6s cubic-bezier(.16,1,.3,1);touch-action:none}
+  .leverage-track-wrap{position:relative;height:24px;margin-bottom:14px;display:flex;align-items:center;gap:10px;cursor:ew-resize;transition:margin .6s cubic-bezier(.16,1,.3,1)}
   .leverage-section.lev-min .leverage-track-wrap{margin-bottom:0}
   .leverage-track{flex:1;height:2px;border-radius:1px;background:rgba(255,255,255,0.06);position:relative}
   .leverage-fill{height:100%;border-radius:1px;background:linear-gradient(to right, transparent, var(--yellow));width:48%;position:absolute;left:0;top:0;z-index:1}
@@ -2503,7 +2503,7 @@ window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer
 
 // ── Mobile leverage slider ───────────────────────────────────────────────────
 (function(){
-  if (window.innerWidth > 1100) return;
+  if (window.innerWidth > 768) return;
   var t = document.getElementById('mLevTrack');
   if (!t) return;
   var f = document.getElementById('mLevFill'), th = document.getElementById('mLevThumb');
@@ -2524,12 +2524,11 @@ window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer
     return Math.round(MIN+ratio*(MAX-MIN));
   }
   var drag=false;
-  var tw=t.parentElement; // leverage-track-wrap — 24px tall touch target
   function mv(cx){ var l=fromPtr(cx); if(l!==cur){cur=l;ui(l);} }
-  tw.addEventListener('mousedown',function(e){drag=true;mv(e.clientX);e.preventDefault();});
+  t.addEventListener('mousedown',function(e){drag=true;mv(e.clientX);e.preventDefault();});
   window.addEventListener('mousemove',function(e){if(drag)mv(e.clientX);});
   window.addEventListener('mouseup',function(){drag=false;});
-  tw.addEventListener('touchstart',function(e){drag=true;mv(e.touches[0].clientX);e.preventDefault();},{passive:false});
+  t.addEventListener('touchstart',function(e){drag=true;mv(e.touches[0].clientX);e.preventDefault();},{passive:false});
   window.addEventListener('touchmove',function(e){if(drag)mv(e.touches[0].clientX);},{passive:true});
   window.addEventListener('touchend',function(){drag=false;});
   ui(cur);
