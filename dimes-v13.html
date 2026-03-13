@@ -537,6 +537,10 @@
     .mobile-product-name::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(255,255,255,.15),transparent)}
     .mobile-product-for{font-size:13px;color:rgba(255,255,255,.5);margin:0 0 16px}
     .mobile-product-desc{font-size:14px;color:rgba(255,255,255,.75);line-height:1.4;margin:0 0 16px}
+    .mobile-product-btn{display:inline-block;font-size:11px;font-weight:500;letter-spacing:.04em;color:var(--text-dim);text-decoration:none;padding:6px 16px;border-radius:100px;border:1px solid rgba(255,255,255,.15);background:var(--bg);cursor:pointer;font-family:var(--font);margin-bottom:16px;opacity:.7;transition:opacity .3s ease,border-color .3s ease}
+    .mobile-product-btn:hover{opacity:1;border-color:rgba(255,255,255,.3)}
+    .mobile-product-btn .docs-arrow{display:inline-block;font-size:10px;margin-left:4px;transition:transform .25s ease}
+    .mobile-product-btn:hover .docs-arrow{transform:translateX(3px)}
     .mobile-leverage-box{width:100%;border-radius:16px;overflow:hidden;padding:32px;box-sizing:border-box;background:radial-gradient(ellipse 120% 250% at 50% 105%,rgba(238,255,0,0.18) 0%,rgba(238,255,0,0.06) 40%,transparent 70%),#0e0e0e;border:1px solid rgba(255,255,255,.04);box-shadow:inset 0 -20px 60px rgba(238,255,0,0.04),0 4px 20px rgba(0,0,0,.6)}
     .mobile-product-preview{width:100%;border-radius:16px;overflow:hidden;background:transparent;border:1px solid rgba(255,255,255,.04);position:relative;box-shadow:inset 0 -20px 60px rgba(238,255,0,0.04),0 4px 20px rgba(0,0,0,.6)}
     .mobile-fp-preview{height:457px}
@@ -880,6 +884,7 @@
       <h3 class="mobile-product-name">Multiply</h3>
       <p class="mobile-product-for">For prediction market terminals</p>
       <p class="mobile-product-desc">Offer your users up to 10x leverage on Polymarket and Kalshi.</p>
+      <a href="https://docs.dimes.fi/" class="mobile-product-btn">Read doc <span class="docs-arrow">&#8594;</span></a>
       <div class="mobile-leverage-box" style="padding:32px 32px;box-sizing:border-box">
         <div style="padding:0">
           <div class="leverage-header">
@@ -906,12 +911,14 @@
       <h3 class="mobile-product-name">Firepower</h3>
       <p class="mobile-product-for">For launchpads, wallets and terminals</p>
       <p class="mobile-product-desc">Let your users unlock new trades using their existing positions as collateral.</p>
+      <span class="mobile-product-btn mobile-product-timeline">H2 2026</span>
       <div class="mobile-product-preview mobile-fp-preview"><iframe data-src="Firepower.html" loading="lazy" title="Firepower product preview"></iframe></div>
     </div>
     <div class="mobile-product">
       <h3 class="mobile-product-name">Stream</h3>
       <p class="mobile-product-for">For wallets</p>
       <p class="mobile-product-desc">Turn any portfolio into a self-managing BTC accumulation engine. No selling, no margin calls.</p>
+      <span class="mobile-product-btn mobile-product-timeline">Q4 2026</span>
       <div class="mobile-product-preview mobile-stream-preview"><iframe data-src="Stream.html?v=4" loading="lazy" title="Stream product preview"></iframe></div>
     </div>
   </div>
