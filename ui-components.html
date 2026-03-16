@@ -45,8 +45,8 @@
   @media (max-width: 600px) { .page-logo { position: static; margin-bottom: 16px; } }
   .container { max-width: 480px; margin: 0 auto; }
 
-  .page-title { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
-  .page-sub { color: var(--text-sec); font-size: 12px; margin-top: 2px; font-weight: 400; line-height: 1.5; }
+  .page-title { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; padding-left: 14px; }
+  .page-sub { color: var(--text-sec); font-size: 12px; margin-top: 2px; font-weight: 400; line-height: 1.5; padding-left: 14px; }
 
   /* ── Tabs ── */
   .tabs { display: flex; gap: 4px; margin: 22px 0 18px; flex-wrap: wrap; }
@@ -358,29 +358,6 @@
       </div>
     </div>
 
-    <div class="impl-block">
-      <div class="impl-title">Minimal implementation</div>
-      <pre>// 1. Capture leverage from any input
-const leverage = 5;
-
-// 2. Pass to quote endpoint
-const quote = await fetch(BASE_URL + "/quotes", {
-  method: "POST",
-  headers,
-  body: JSON.stringify({
-    market_id: "mkt_btc_100k_jun",
-    side: "yes",
-    leverage,
-    collateral_amount: 1000,
-    user_id: "usr_abc123",
-  }),
-}).then(res => res.json());
-
-// 3. Display from response:
-//    quote.notional_exposure
-//    quote.liquidation.price
-//    quote.liquidation.estimated_odds_pct</pre>
-    </div>
   </div>
 
   <!-- ═══════ Tab 1: Position Card (Open) ═══════ -->
@@ -412,15 +389,6 @@ const quote = await fetch(BASE_URL + "/quotes", {
           <div style="text-align:center;margin-top:10px"><span class="pos-link">More info on deleveraging</span></div>
         </div>
       </div>
-      <div class="field-map">
-        <div class="field-map-title">API Field Mapping</div>
-        <div class="field-map-item">margin.health_pct → ring color + fill</div>
-        <div class="field-map-item">margin.buffer_amount → $850.00</div>
-        <div class="field-map-item">margin.buffer_distance_pct → drop 25%</div>
-        <div class="field-map-item">pnl.unrealized → PnL row</div>
-        <div class="field-map-item">leverage.so_far → Effective Leverage</div>
-        <div class="field-map-item">interest_rate → Interest Rate row</div>
-      </div>
     </div>
   </div>
 
@@ -446,12 +414,6 @@ const quote = await fetch(BASE_URL + "/quotes", {
         <div class="pos-footer" style="text-align:center">
           <span class="pos-settled-link">View full settlement details →</span>
         </div>
-      </div>
-      <div class="field-map">
-        <div class="field-map-title">API Field Mapping</div>
-        <div class="field-map-item">settlement.fees.total → Fees</div>
-        <div class="field-map-item">settlement.net_pnl → Net P&amp;L</div>
-        <div class="field-map-item">settlement.close_reason → status</div>
       </div>
     </div>
   </div>
@@ -501,20 +463,11 @@ const quote = await fetch(BASE_URL + "/quotes", {
       </div>
 
       </div>
-      <div class="field-map">
-        <div class="field-map-title">API Field Mapping</div>
-        <div class="field-map-item">liquidation.price → red line position</div>
-        <div class="field-map-item">entry_price → dashed entry line</div>
-        <div class="field-map-item">mark_price → green current line</div>
-        <div class="field-map-item">Drag → POST /quotes with implied leverage</div>
-      </div>
     </div>
   </div>
 
   <!-- ═══════ Footer Note ═══════ -->
-  <div class="footer-note" id="footer-note">
-    The leverage slider is optional. Partners may implement their own input — the only requirement is passing the selected leverage to the /quotes endpoint.
-  </div>
+  <div class="footer-note" id="footer-note" style="display:none"></div>
 </div>
 
 <script>
@@ -523,9 +476,9 @@ const quote = await fetch(BASE_URL + "/quotes", {
 
   // ── Tabs ──
   const footerNotes = [
-    "The leverage slider is optional. Partners may implement their own input — the only requirement is passing the selected leverage to the /quotes endpoint.",
-    "All values come from API responses. Your app never computes these — render what Dimes returns.",
-    "All values come from API responses. Your app never computes these — render what Dimes returns.",
+    "",
+    "",
+    "",
     "The draggable liquidation line is an optional advanced pattern. When dragged, request a new quote with the implied leverage.",
   ];
 
@@ -536,7 +489,10 @@ const quote = await fetch(BASE_URL + "/quotes", {
       document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
       btn.classList.add('active');
       document.getElementById('tab-' + idx).classList.add('active');
-      document.getElementById('footer-note').textContent = footerNotes[idx];
+      const note = footerNotes[idx];
+      const noteEl = document.getElementById('footer-note');
+      noteEl.textContent = note;
+      noteEl.style.display = note ? 'block' : 'none';
       if (idx === '3' && !chartRendered) renderChart();
     });
   });
