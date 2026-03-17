@@ -1867,6 +1867,14 @@ document.querySelectorAll('.reveal').forEach(el => {
     entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
   }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' }).observe(el);
 });
+// Catch elements already scrolled past on load (browser scroll restoration)
+function revealScrolledPast() {
+  document.querySelectorAll('.reveal:not(.visible)').forEach(function(el) {
+    if (el.getBoundingClientRect().bottom < window.innerHeight) el.classList.add('visible');
+  });
+}
+revealScrolledPast();
+setTimeout(revealScrolledPast, 150);
 
 // Process hands scroll-synced glide
 (function(){
@@ -1924,6 +1932,18 @@ document.querySelectorAll('.reveal').forEach(el => {
     }
   }
   requestAnimationFrame(update);
+
+  // Catch steps already scrolled past on load (browser scroll restoration)
+  function revealStepsIfPast() {
+    if (stepsRevealed || !grid) return;
+    var r = section.getBoundingClientRect();
+    if (r.top < window.innerHeight * 0.65) {
+      stepsRevealed = true;
+      grid.querySelectorAll('.step-reveal').forEach(function(s) { s.classList.add('visible'); });
+    }
+  }
+  revealStepsIfPast();
+  setTimeout(revealStepsIfPast, 150);
 })();
 
 // ── Amplifier Effect Hero ───────────────────────────────────────────────────
