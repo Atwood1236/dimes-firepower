@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dimes · UI Component Reference</title>
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0C0C0C;
+    --card: #141414;
+    --inner: #1a1a1a;
+    --border: rgba(255,255,255,0.06);
+    --border-hover: rgba(255,255,255,0.1);
+    --green: #44FF97;
+    --green-bg: rgba(68,255,151,0.08);
+    --green-border: rgba(68,255,151,0.2);
+    --yellow: #EEFF00;
+    --yellow-bar: #484D00;
+    --yellow-bg: rgba(238,255,0,0.08);
+    --yellow-border: rgba(238,255,0,0.2);
+    --amber: #F5A623;
+    --red: #E05252;
+    --red-bg: rgba(224,82,82,0.08);
+    --red-border: rgba(224,82,82,0.2);
+    --text: #e8e8e8;
+    --text-sec: #888888;
+    --text-muted: #555555;
+    --font: 'Bai Jamjuree', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    font-family: var(--font);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 28px 20px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page-logo { position: fixed; top: 20px; left: 20px; opacity: 0.2; z-index: 100; }
+  .page-logo svg { height: 22px; width: auto; display: block; }
+  @media (max-width: 600px) { .page-logo { position: static; margin-bottom: 16px; } }
+  .container { max-width: 480px; margin: 0 auto; }
+
+  .page-title { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; padding-left: 14px; }
+  .page-sub { color: var(--text-sec); font-size: 12px; margin-top: 2px; font-weight: 400; line-height: 1.5; padding-left: 14px; }
+
+  /* ── Tabs ── */
+  .tabs { display: flex; gap: 4px; margin: 22px 0 18px; flex-wrap: wrap; }
+  .tab-btn {
+    padding: 6px 14px; border-radius: 6px; background: transparent;
+    color: var(--text-sec); font-weight: 400; font-size: 12px;
+    cursor: pointer; font-family: var(--font);
+    border: 1px solid transparent; transition: all 0.15s;
+  }
+  .tab-btn:hover { color: var(--text-sec); }
+  .tab-btn.active {
+    background: var(--yellow-bg); color: var(--yellow);
+    font-weight: 600; border-color: var(--yellow-border);
+  }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── Footer note ── */
+  .footer-note {
+    margin-top: 16px; padding: 10px 14px;
+    background: var(--inner); border-radius: 8px;
+    border: 1px solid var(--border);
+    color: var(--text-sec); font-size: 11px; line-height: 1.6; font-weight: 400;
+  }
+
+  /* ── Leverage Slider ── */
+  .lev-box {
+    border-radius: 14px; position: relative; overflow: hidden; width: 100%;
+    background: radial-gradient(ellipse 120% 250% at 50% 105%, rgba(238,255,0,0.18) 0%, rgba(238,255,0,0.06) 40%, transparent 70%), #0e0e0e;
+    border: 1px solid rgba(255,255,255,0.06);
+    box-shadow: inset 0 -20px 60px rgba(238,255,0,0.04), 0 4px 20px rgba(0,0,0,.6);
+    transition: box-shadow 0.6s cubic-bezier(.16,1,.3,1);
+  }
+  .lev-box::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(to right, transparent 2%, rgba(238,255,0,0.3) 15%, rgba(238,255,0,0.3) 85%, transparent 98%);
+    pointer-events: none;
+  }
+  .lev-inner { position: relative; z-index: 1; padding: 22px 24px 20px; transition: padding 0.6s cubic-bezier(.16,1,.3,1); }
+  .lev-inner.collapsed { padding-bottom: 28px; }
+  .lev-header { display: flex; align-items: center; justify-content: flex-start; margin-bottom: 10px; }
+  .lev-label { font-size: 18px; font-weight: 600; display: flex; align-items: center; gap: 7px; color: #fff; position: relative; }
+  .lev-info {
+    width: 12px; height: 12px; border-radius: 50%;
+    border: 0.5px solid rgba(255,255,255,0.45);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 8px; line-height: 1; color: rgba(255,255,255,0.5);
+    background: transparent; cursor: pointer;
+  }
+  .lev-tooltip {
+    display: none; position: absolute; top: 50%; left: 100%; transform: translateY(-50%);
+    margin-left: 8px;
+    background: #222; border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px; padding: 6px 10px;
+    font-size: 12px; color: var(--text-sec); white-space: nowrap;
+    z-index: 10; font-weight: 400; font-style: italic;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  }
+  .lev-label:hover .lev-tooltip { display: block; }
+  .lev-value {
+    font-size: 20px; font-weight: 700; color: var(--yellow);
+    text-shadow: 0 0 20px rgba(238,255,0,.7), 0 0 50px rgba(238,255,0,.35), 0 0 80px rgba(238,255,0,.15);
+    flex-shrink: 0; min-width: 32px; text-align: right;
+    transition: color 0.2s, text-shadow 0.3s;
+  }
+
+  .slider-track-wrap {
+    position: relative; height: 28px; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 18px;
+    cursor: ew-resize; touch-action: none;
+    transition: margin 0.6s cubic-bezier(.16,1,.3,1);
+  }
+  .slider-track-wrap.collapsed { margin-bottom: 0; }
+  .slider-track {
+    flex: 1; height: 2px; border-radius: 1px;
+    background: transparent; position: relative;
+  }
+  .slider-track-bg {
+    position: absolute; top: 0; right: 0; height: 100%;
+    background: rgba(255,255,255,0.06); border-radius: 1px;
+    transition: width 0.08s;
+  }
+  .slider-fill {
+    height: 100%; border-radius: 1px;
+    background: linear-gradient(to right, transparent, var(--yellow));
+    position: absolute; left: 0; top: 0; z-index: 1;
+    transition: width 0.08s;
+  }
+  .slider-dots {
+    position: absolute; top: 50%; left: 0; right: 0;
+    display: flex; justify-content: space-between;
+    transform: translateY(-50%);
+  }
+  .slider-dot {
+    width: 2px; height: 2px; border-radius: 50%;
+    background: var(--yellow);
+    transition: opacity 0.08s;
+  }
+  .slider-dot.hidden { opacity: 0; }
+  .slider-input {
+    position: absolute; top: 0; left: 0; width: calc(100% - 44px); height: 28px;
+    opacity: 0; cursor: ew-resize; z-index: 2; margin: 0;
+  }
+  .slider-thumb {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--yellow); border: none;
+    position: absolute; top: 50%; transform: translate(-50%, -50%);
+    box-shadow: 0 0 8px rgba(238,255,0,0.3);
+    z-index: 3; pointer-events: none;
+    transition: left 0.08s;
+  }
+  .slider-thumb::before {
+    content: ''; position: absolute; top: 50%; left: 50%;
+    width: 36px; height: 36px; transform: translate(-50%,-50%);
+    border-radius: 50%;
+  }
+
+  .lev-stats {
+    display: flex; flex-direction: column; gap: 2px;
+    padding-top: 6px; overflow: hidden;
+    transition: max-height 0.6s cubic-bezier(.16,1,.3,1), opacity 0.6s ease, padding 0.6s cubic-bezier(.16,1,.3,1);
+  }
+  .lev-stats.collapsed { max-height: 0 !important; opacity: 0; pointer-events: none; padding-top: 0; }
+  .lev-stat {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 14px; line-height: 220%;
+  }
+  .lev-stat .label { color: #fff; font-weight: 400; }
+  .lev-stat .val { color: #fff; font-weight: 600; text-align: right; }
+  .lev-stat .val.sm { color: rgba(255,255,255,0.5); font-size: 11px; font-weight: 400; line-height: 1.4; }
+  .lev-stat .stat-line { flex: 1; margin: 0 10px; border-bottom: 1px dotted rgba(255,255,255,0.18); }
+
+  /* ── Minimal implementation block ── */
+  .impl-block {
+    margin-top: 14px; padding: 14px 16px;
+    background: var(--inner); border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  .impl-block .impl-title {
+    color: var(--text-muted); font-size: 9px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;
+  }
+  .impl-block pre {
+    margin: 0; font-size: 11px; color: var(--text-sec); line-height: 1.6;
+    white-space: pre-wrap; word-break: break-all; font-family: var(--font);
+  }
+
+  /* ── Position Card ── */
+  .pos-card {
+    border-radius: 14px; position: relative; overflow: hidden; width: 100%;
+    background: radial-gradient(ellipse 120% 250% at 50% 105%, rgba(238,255,0,0.18) 0%, rgba(238,255,0,0.06) 40%, transparent 70%), #0e0e0e;
+    border: 1px solid rgba(255,255,255,0.06);
+    box-shadow: inset 0 -20px 60px rgba(238,255,0,0.04), 0 4px 20px rgba(0,0,0,.6);
+  }
+  .pos-card::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(to right, transparent 2%, rgba(238,255,0,0.3) 15%, rgba(238,255,0,0.3) 85%, transparent 98%);
+    pointer-events: none;
+  }
+  .pos-card.settled {
+    background: radial-gradient(ellipse 120% 250% at 50% 105%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.06) 40%, transparent 70%), #0e0e0e;
+    box-shadow: inset 0 -20px 60px rgba(255,255,255,0.04), 0 4px 20px rgba(0,0,0,.6);
+  }
+  .pos-card.settled::after {
+    background: linear-gradient(to right, transparent 2%, rgba(255,255,255,0.3) 15%, rgba(255,255,255,0.3) 85%, transparent 98%);
+  }
+  .pos-inner { position: relative; z-index: 1; padding: 22px 24px 20px; }
+  .pos-header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 14px;
+  }
+  .pos-title { font-size: 18px; font-weight: 600; color: #fff; letter-spacing: -0.01em; margin-bottom: 6px; }
+  .pos-buffer { font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.5; }
+  .pos-buffer .amount { color: var(--green); font-weight: 700; font-size: 15px; }
+  .pos-buffer-sub { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.5; }
+  .pos-settled-label { color: rgba(255,255,255,0.7); font-size: 14px; line-height: 1.5; }
+  .pos-stat {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 14px; line-height: 220%;
+  }
+  .pos-stat .label { color: #fff; font-weight: 400; }
+  .pos-stat .val { color: #fff; font-weight: 600; text-align: right; }
+  .pos-stat .stat-line { flex: 1; margin: 0 10px; border-bottom: 1px dotted rgba(255,255,255,0.18); }
+  .pos-footer { margin-top: 16px; }
+  .pos-close-btn {
+    width: 100%; padding: 12px; background: transparent;
+    border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;
+    color: rgba(255,255,255,0.6); font-weight: 500; cursor: pointer;
+    font-size: 14px; font-family: var(--font);
+    transition: border-color 0.2s;
+  }
+  .pos-close-btn:hover { border-color: rgba(255,255,255,0.2); }
+  .pos-link {
+    color: rgba(255,255,255,0.4); font-size: 12px;
+    text-decoration: underline; cursor: pointer;
+    text-underline-offset: 2px;
+  }
+  .pos-settled-link {
+    color: rgba(255,255,255,0.4); font-size: 12px;
+    text-decoration: underline; cursor: pointer;
+  }
+
+  /* ── Health Ring ── */
+  .health-ring { transform: rotate(-90deg); flex-shrink: 0; }
+  .health-ring .track { fill: none; stroke: rgba(255,255,255,0.06); stroke-width: 3.5; }
+  .health-ring .fill { fill: none; stroke-width: 3.5; stroke-linecap: round; transition: stroke-dashoffset 0.5s ease, stroke 0.3s; }
+
+  /* ── Field Map ── */
+  .field-map {
+    margin: 14px 24px 24px; padding: 10px 14px;
+    background: var(--bg); border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  .field-map-title {
+    color: var(--yellow); font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px;
+  }
+  .field-map-item { color: var(--text-muted); font-size: 12px; line-height: 1.8; }
+
+  /* ── Liquidation Chart ── */
+  .chart-card {
+    border-radius: 14px; position: relative; overflow: hidden; width: 100%;
+    background: radial-gradient(ellipse 120% 250% at 50% 105%, rgba(238,255,0,0.18) 0%, rgba(238,255,0,0.06) 40%, transparent 70%), #0e0e0e;
+    border: 1px solid rgba(255,255,255,0.06);
+    box-shadow: inset 0 -20px 60px rgba(238,255,0,0.04), 0 4px 20px rgba(0,0,0,.6);
+  }
+  .chart-card::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(to right, transparent 2%, rgba(238,255,0,0.3) 15%, rgba(238,255,0,0.3) 85%, transparent 98%);
+    pointer-events: none;
+  }
+  .chart-inner { position: relative; z-index: 1; padding: 22px 24px 20px; }
+  .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .chart-label {
+    color: #fff; font-size: 18px; font-weight: 600;
+  }
+  .chart-legends { display: flex; gap: 14px; }
+  .legend { display: flex; align-items: center; gap: 5px; }
+  .legend-line { width: 12px; height: 0; }
+  .legend-text { color: rgba(255,255,255,0.5); font-size: 12px; }
+  .chart-area { position: relative; height: 210px; width: 100%; user-select: none; }
+  .chart-stats { display: flex; gap: 10px; margin-top: 14px; }
+  .chart-stat {
+    flex: 1; background: rgba(255,255,255,0.04); border-radius: 8px;
+    padding: 10px 12px; text-align: center;
+  }
+  .chart-stat .stat-label {
+    color: rgba(255,255,255,0.5); font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.04em; margin-bottom: 3px; font-weight: 600;
+  }
+  .chart-stat .stat-val { font-size: 15px; font-weight: 600; }
+  .chart-drag-handle {
+    position: absolute;
+    width: 20px; height: 20px; border-radius: 4px;
+    background: var(--red); cursor: ns-resize;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 1px;
+    box-shadow: 0 0 8px var(--red-bg);
+    transform: translate(-50%, -50%);
+  }
+  .chart-drag-handle span { color: #fff; font-size: 8px; line-height: 0.6; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="page-logo"><svg viewBox="0 0 230 243.24" xmlns="http://www.w3.org/2000/svg"><path fill="#fff" d="M216.65,173.09c-15.47,18.94-42.61,33.06-75.01,38.1-8.3,1.49-17.16,2.3-26.37,2.3v29.74c63.66,0,115.26-34.28,115.26-76.57,0-5.14-.77-10.16-2.22-15.02-2.28,7.61-6.25,14.82-11.66,21.44Z"/><path fill="#fff" d="M31.6,159.27c-5.48-3.84-10.37-8.06-14.57-12.6-.67-.73-1.33-1.46-1.97-2.21-2.17-2.52-4.12-5.14-5.85-7.83-3.07-4.78-5.42-9.8-6.98-15.02-1.45,4.86-2.22,9.88-2.22,15.02s.77,10.16,2.22,15.02c2.28,7.61,6.25,14.82,11.66,21.44,15.47,18.94,42.61,33.06,75.01,38.1,8.47,1.32,17.3,2.3,26.37,2.3v-30.32c-32.95,0-62.66-9.18-83.67-23.91Z"/><path fill="#fff" d="M213.5,146.68c.67-.73,1.33-1.46,1.97-2.21,2.17-2.52,4.12-5.14,5.85-7.83,3.07-4.78,5.42-9.8,6.98-15.02,1.45-4.86,2.22-9.88,2.22-15.02s-.77-10.16-2.22-15.02c-10.23-34.18-54.71-60.16-108.67-61.5-.02,0-.04,0-.06,0-1.43-.04-2.86-.06-4.31-.06v30.03c1.39,0,2.76.04,4.13.07,32.98.87,61.01,12.05,73.6,27.8.67.84,1.31,1.68,1.89,2.55,3.38,5.02,5.23,10.44,5.23,16.1,0,2.54-.39,5.04-1.1,7.47-.64,2.16-1.53,4.27-2.69,6.32-5.41-5.35-11.73-10.15-18.79-14.27-17.21-10.04-38.81-16.01-62.26-16.01v30.36c2.74,0,5.45.08,8.13.22,22.53,1.17,42.48,7.18,56.38,16.11-15.56,9.99-38.68,16.32-64.52,16.32v30.07c32.95,0,62.66-9.18,83.67-23.91,5.48-3.84,10.37-8.06,14.57-12.6Z"/><path fill="#fff" d="M107.13,120.24c-21.38-1.1-40.42-6.06-54.13-14.13,17.21-10.04,38.81-16.01,62.26-16.01v-30.03c-1.12,0-2.23.02-3.33.05-29.94.74-56.58,11.41-74.4,27.82-.74.68-1.47,1.38-2.18,2.09-1.32-2.1-2.36-4.27-3.1-6.5-.87-2.62-1.35-5.31-1.35-8.06,0-24.3,35.43-44.14,80-45.37.02,0,.04,0,.06,0,1.43-.03,2.86-.06,4.31-.06V0C51.61,0,0,34.28,0,76.57c0,5.14.77,10.16,2.22,15.02,1.56,5.22,3.92,10.24,6.98,15.02,2.42,3.76,5.28,7.37,8.54,10.8,1.37,1.44,2.81,2.85,4.31,4.22,1.98,1.81,4.07,3.55,6.28,5.24,5.81,4.43,12.38,8.41,19.56,11.85,18.95,9.08,42.22,14.4,67.37,14.4v-32.65c-2.74,0-5.45-.08-8.13-.21Z"/></svg></div>
+  <h1 class="page-title">UI Component Reference</h1>
+  <p class="page-sub">Interactive examples — Adapt to your design system.</p>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="0">Leverage Slider</button>
+    <button class="tab-btn" data-tab="1">Position Card</button>
+    <button class="tab-btn" data-tab="2">Settled Position</button>
+    <button class="tab-btn" data-tab="3">Liquidation Chart</button>
+  </div>
+
+  <!-- ═══════ Tab 0: Leverage Slider ═══════ -->
+  <div class="tab-panel active" id="tab-0">
+    <div class="lev-box">
+      <div class="lev-inner">
+        <div class="lev-header">
+          <span class="lev-label">
+            Leverage
+            <div class="lev-info" id="lev-info-btn">?</div>
+            <div class="lev-tooltip" id="lev-tooltip">Leverage auto-decays as resolution approaches</div>
+          </span>
+        </div>
+
+        <div class="slider-track-wrap" id="slider-track-wrap">
+          <div class="slider-track" id="slider-track">
+            <div class="slider-track-bg" id="slider-track-bg" style="width:22.22%"></div>
+            <div class="slider-fill" id="slider-fill" style="width:77.78%"></div>
+            <div class="slider-dots" id="slider-dots"></div>
+            <div class="slider-thumb" id="slider-thumb" style="left:77.78%"></div>
+          </div>
+          <input class="slider-input" type="range" min="1" max="10" step="1" value="8" id="lev-slider">
+          <span class="lev-value" id="lev-display">8x</span>
+        </div>
+
+        <div class="lev-stats" id="lev-stats" style="max-height:200px">
+          <div class="lev-stat"><span class="label">Entry Price</span><span class="stat-line"></span><span class="val" id="lev-entry">$0.33</span></div>
+          <div class="lev-stat"><span class="label">Shares</span><span class="stat-line"></span><span class="val" id="lev-shares">24,242</span></div>
+          <div class="lev-stat"><span class="label">Position Value</span><span class="stat-line"></span><span class="val" id="lev-pos-val">$8,000</span></div>
+          <div class="lev-stat"><span class="label">Liquidation Price</span><span class="stat-line"></span><span class="val" id="lev-liq">$0.30</span></div>
+          <div class="lev-stat" style="margin-top:14px"><span class="val sm">Quote includes 1.0% [partner fee] and 1.0% Dimes fee</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════ Tab 1: Position Card (Open) ═══════ -->
+  <div class="tab-panel" id="tab-1">
+    <div class="pos-card">
+      <div class="pos-inner">
+        <div class="pos-header">
+          <div style="flex:1">
+            <div class="pos-title">Positions</div>
+            <div class="pos-buffer">You have a <span class="amount">$850.00</span> margin buffer.</div>
+            <div class="pos-buffer-sub">(Price needs to drop 25% to trigger liquidation)</div>
+          </div>
+          <svg class="health-ring" width="50" height="50">
+            <circle class="track" cx="25" cy="25" r="22"></circle>
+            <circle class="fill" cx="25" cy="25" r="22" stroke="var(--green)"
+              stroke-dasharray="138.23" stroke-dashoffset="35.94"></circle>
+          </svg>
+        </div>
+        <div class="pos-stat"><span class="label">Side</span><span class="stat-line"></span><span class="val">Yes / No</span></div>
+        <div class="pos-stat"><span class="label">Entry Price</span><span class="stat-line"></span><span class="val">$0.35</span></div>
+        <div class="pos-stat"><span class="label">Liquidation Price</span><span class="stat-line"></span><span class="val">$0.35</span></div>
+        <div class="pos-stat"><span class="label">PnL / (ROE %)</span><span class="stat-line"></span><span class="val" style="color:var(--green)">$158.59 (17.2%)</span></div>
+        <div class="pos-stat"><span class="label">Starting Leverage</span><span class="stat-line"></span><span class="val">8x</span></div>
+        <div class="pos-stat"><span class="label">Effective Leverage</span><span class="stat-line"></span><span class="val">7.4x</span></div>
+        <div class="pos-stat"><span class="label">Interest Rate (4h)</span><span class="stat-line"></span><span class="val">0.01%</span></div>
+        <div class="pos-stat"><span class="label">Time to Resolution</span><span class="stat-line"></span><span class="val">00:14:23</span></div>
+        <div class="pos-footer">
+          <button class="pos-close-btn">Close Position</button>
+          <div style="text-align:center;margin-top:10px"><span class="pos-link">More info on deleveraging</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ Tab 2: Settled Position ═══════ -->
+  <div class="tab-panel" id="tab-2">
+    <div class="pos-card settled">
+      <div class="pos-inner">
+        <div class="pos-header">
+          <div style="flex:1">
+            <div class="pos-title">Positions</div>
+            <div class="pos-settled-label">Position settled</div>
+          </div>
+        </div>
+        <div class="pos-stat"><span class="label">Side</span><span class="stat-line"></span><span class="val">Yes / No</span></div>
+        <div class="pos-stat"><span class="label">Entry Price</span><span class="stat-line"></span><span class="val">$0.35</span></div>
+        <div class="pos-stat"><span class="label">Exit Price</span><span class="stat-line"></span><span class="val">$0.52</span></div>
+        <div class="pos-stat"><span class="label">PnL / (ROE %)</span><span class="stat-line"></span><span class="val" style="color:var(--green)">$158.59 (17.2%)</span></div>
+        <div class="pos-stat"><span class="label">Starting Leverage</span><span class="stat-line"></span><span class="val">8x</span></div>
+        <div class="pos-stat"><span class="label">Effective Leverage</span><span class="stat-line"></span><span class="val">7.4x</span></div>
+        <div class="pos-stat"><span class="label">Interest Rate (4h)</span><span class="stat-line"></span><span class="val">0.01%</span></div>
+        <div class="pos-stat"><span class="label">Fees</span><span class="stat-line"></span><span class="val">$68.87</span></div>
+        <div class="pos-stat"><span class="label">Net P&amp;L</span><span class="stat-line"></span><span class="val" style="color:var(--green)">$89.72 (8.97%)</span></div>
+        <div class="pos-footer" style="text-align:center">
+          <span class="pos-settled-link">View full settlement details →</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ Tab 3: Liquidation Chart ═══════ -->
+  <div class="tab-panel" id="tab-3">
+    <div class="chart-card">
+      <div class="chart-inner">
+      <div class="chart-header">
+        <span class="chart-label">Price Chart</span>
+        <div class="chart-legends">
+          <div class="legend">
+            <div class="legend-line" style="border-top:2px dashed var(--text-muted)"></div>
+            <span class="legend-text">Entry</span>
+          </div>
+          <div class="legend">
+            <div class="legend-line" style="border-top:1px solid var(--green)"></div>
+            <span class="legend-text">Current</span>
+          </div>
+          <div class="legend">
+            <div class="legend-line" style="border-top:1px solid var(--red)"></div>
+            <span class="legend-text">Liquidation</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-area" id="chart-area">
+        <svg id="chart-svg" width="100%" height="210" preserveAspectRatio="none" style="position:absolute;inset:0"></svg>
+        <div class="chart-drag-handle" id="chart-drag" style="top:0">
+          <span style="transform:rotate(90deg)">‹</span><span style="transform:rotate(90deg)">›</span>
+        </div>
+      </div>
+
+      <div class="chart-stats">
+        <div class="chart-stat">
+          <div class="stat-label">Liq. Price</div>
+          <div class="stat-val" id="stat-liq" style="color:var(--red)">$0.220</div>
+        </div>
+        <div class="chart-stat">
+          <div class="stat-label">Distance</div>
+          <div class="stat-val" id="stat-dist">42.1%</div>
+        </div>
+        <div class="chart-stat">
+          <div class="stat-label">Implied Lev.</div>
+          <div class="stat-val" id="stat-lev">2.5x</div>
+        </div>
+      </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ Footer Note ═══════ -->
+  <div class="footer-note" id="footer-note" style="display:none"></div>
+</div>
+
+<script>
+(function () {
+  const fmt = (n, d = 2) => Number(n).toFixed(d);
+
+  // ── Tabs ──
+  const footerNotes = [
+    "",
+    "",
+    "",
+    "The draggable liquidation line is an optional advanced pattern. When dragged, request a new quote with the implied leverage.",
+  ];
+
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = btn.dataset.tab;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + idx).classList.add('active');
+      const note = footerNotes[idx];
+      const noteEl = document.getElementById('footer-note');
+      noteEl.textContent = note;
+      noteEl.style.display = note ? 'block' : 'none';
+      if (idx === '3' && !chartRendered) renderChart();
+    });
+  });
+
+  // ── Leverage Slider ──
+  const MAX_LEV = 10;
+  const COLLATERAL = 1000;
+  const ENTRY = 0.33;
+  const slider = document.getElementById('lev-slider');
+  const dotsEl = document.getElementById('slider-dots');
+
+  // Build dots
+  for (let i = 1; i <= MAX_LEV; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'slider-dot' + (i <= 8 ? ' hidden' : '');
+    dot.dataset.idx = i;
+    dotsEl.appendChild(dot);
+  }
+
+  slider.addEventListener('input', () => {
+    const lev = Number(slider.value);
+    const pct = ((lev - 1) / (MAX_LEV - 1)) * 100;
+    const isOpen = lev > 1;
+
+    document.getElementById('lev-display').textContent = lev + 'x';
+
+    document.getElementById('slider-fill').style.width = pct + '%';
+    document.getElementById('slider-thumb').style.left = pct + '%';
+    document.getElementById('slider-track-bg').style.width = (100 - pct) + '%';
+
+    document.querySelectorAll('.slider-dot').forEach(d => {
+      d.classList.toggle('hidden', Number(d.dataset.idx) <= lev);
+    });
+
+    const trackWrap = document.getElementById('slider-track-wrap');
+    trackWrap.classList.toggle('collapsed', !isOpen);
+
+    document.querySelector('.lev-inner').classList.toggle('collapsed', !isOpen);
+
+    const stats = document.getElementById('lev-stats');
+    stats.classList.toggle('collapsed', !isOpen);
+    if (isOpen) stats.style.maxHeight = '200px';
+
+    const shares = Math.round((COLLATERAL * lev) / ENTRY);
+    const posValue = COLLATERAL * lev;
+    const liqPrice = lev > 1 ? ENTRY * (1 - 0.82 / lev) : null;
+
+    document.getElementById('lev-shares').textContent = shares.toLocaleString();
+    document.getElementById('lev-pos-val').textContent = '$' + posValue.toLocaleString();
+    document.getElementById('lev-liq').textContent = liqPrice ? '$' + fmt(liqPrice) : '—';
+  });
+
+  // ── Liquidation Chart ──
+  let chartRendered = false;
+  const CHART_H = 210;
+  const CHART_W = 460;
+  const CHART_L = 52;
+  const CHART_R = 424;
+  const P_MIN = 0.12;
+  const P_MAX = 0.48;
+  const CHART_ENTRY = 0.33;
+  const CHART_MARK = 0.38;
+  let chartLiqPrice = 0.22;
+
+  const toY = p => CHART_H - ((p - P_MIN) / (P_MAX - P_MIN)) * CHART_H;
+  const toP = y => P_MAX - (y / CHART_H) * (P_MAX - P_MIN);
+
+  function renderChart() {
+    chartRendered = true;
+    const svg = document.getElementById('chart-svg');
+    svg.setAttribute('viewBox', '0 0 ' + CHART_W + ' ' + CHART_H);
+
+    // Price line data
+    const pts = [];
+    for (let i = 0; i < 60; i++) {
+      const t = i / 59;
+      const p = 0.28 + t * 0.10 + Math.sin(t * 14) * 0.015 + Math.sin(t * 6) * 0.01 + Math.cos(t * 22) * 0.008;
+      pts.push({ x: CHART_L + (i / 59) * (CHART_R - CHART_L), y: toY(p) });
+    }
+    const pathD = pts.map((p, i) => (i === 0 ? 'M' : 'L') + ' ' + p.x + ' ' + p.y).join(' ');
+
+    drawChartSVG(svg, pathD);
+    updateChartDrag();
+  }
+
+  function drawChartSVG(svg, pathD) {
+    const ns = 'http://www.w3.org/2000/svg';
+    svg.innerHTML = '';
+
+    // Grid lines + labels
+    [0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45].forEach(p => {
+      const line = document.createElementNS(ns, 'line');
+      line.setAttribute('x1', CHART_L); line.setAttribute('y1', toY(p));
+      line.setAttribute('x2', CHART_R); line.setAttribute('y2', toY(p));
+      line.setAttribute('stroke', 'rgba(255,255,255,0.06)'); line.setAttribute('stroke-width', 1);
+      svg.appendChild(line);
+
+      const txt = document.createElementNS(ns, 'text');
+      txt.setAttribute('x', CHART_W - 2); txt.setAttribute('y', toY(p) + 3);
+      txt.setAttribute('fill', 'rgba(255,255,255,0.5)'); txt.setAttribute('font-size', 9);
+      txt.setAttribute('text-anchor', 'end'); txt.setAttribute('dominant-baseline', 'middle'); txt.setAttribute('font-family', "'Bai Jamjuree', sans-serif");
+      txt.textContent = fmt(p);
+      svg.appendChild(txt);
+    });
+
+    // Liquidation zone
+    const liqZone = document.createElementNS(ns, 'rect');
+    liqZone.setAttribute('x', CHART_L); liqZone.setAttribute('width', CHART_R - CHART_L);
+    liqZone.setAttribute('fill', '#E05252'); liqZone.setAttribute('opacity', 0.05);
+    liqZone.id = 'liq-zone';
+    svg.appendChild(liqZone);
+
+    // Price path
+    const path = document.createElementNS(ns, 'path');
+    path.setAttribute('d', pathD); path.setAttribute('fill', 'none');
+    path.setAttribute('stroke', '#ffffff'); path.setAttribute('stroke-width', 1.5);
+    path.setAttribute('opacity', 0.8);
+    svg.appendChild(path);
+
+    // Entry line
+    const entryLine = document.createElementNS(ns, 'line');
+    entryLine.setAttribute('x1', CHART_L); entryLine.setAttribute('y1', toY(CHART_ENTRY));
+    entryLine.setAttribute('x2', CHART_R); entryLine.setAttribute('y2', toY(CHART_ENTRY));
+    entryLine.setAttribute('stroke', '#555'); entryLine.setAttribute('stroke-width', 1);
+    entryLine.setAttribute('stroke-dasharray', '5 4');
+    svg.appendChild(entryLine);
+
+    const entryBg = document.createElementNS(ns, 'rect');
+    entryBg.setAttribute('x', 0); entryBg.setAttribute('y', toY(CHART_ENTRY) - 9);
+    entryBg.setAttribute('width', 38); entryBg.setAttribute('height', 17); entryBg.setAttribute('rx', 3);
+    entryBg.setAttribute('fill', '#1a1a1a');
+    svg.appendChild(entryBg);
+
+    const entryTxt = document.createElementNS(ns, 'text');
+    entryTxt.setAttribute('x', 19); entryTxt.setAttribute('y', toY(CHART_ENTRY) + 3);
+    entryTxt.setAttribute('fill', 'rgba(255,255,255,0.5)'); entryTxt.setAttribute('font-size', 9);
+    entryTxt.setAttribute('text-anchor', 'middle');
+    entryTxt.setAttribute('font-family', "'Bai Jamjuree', sans-serif"); entryTxt.setAttribute('font-weight', 500);
+    entryTxt.textContent = 'Entry';
+    svg.appendChild(entryTxt);
+
+    // Mark price line
+    const markLine = document.createElementNS(ns, 'line');
+    markLine.setAttribute('x1', CHART_L); markLine.setAttribute('y1', toY(CHART_MARK));
+    markLine.setAttribute('x2', CHART_R); markLine.setAttribute('y2', toY(CHART_MARK));
+    markLine.setAttribute('stroke', '#44FF97'); markLine.setAttribute('stroke-width', 0.75);
+    svg.appendChild(markLine);
+
+    const markBg = document.createElementNS(ns, 'rect');
+    markBg.setAttribute('x', 0); markBg.setAttribute('y', toY(CHART_MARK) - 9);
+    markBg.setAttribute('width', 42); markBg.setAttribute('height', 17); markBg.setAttribute('rx', 3);
+    markBg.setAttribute('fill', 'rgba(68,255,151,0.08)');
+    svg.appendChild(markBg);
+
+    const markTxt = document.createElementNS(ns, 'text');
+    markTxt.setAttribute('x', 21); markTxt.setAttribute('y', toY(CHART_MARK) + 3);
+    markTxt.setAttribute('fill', '#44FF97'); markTxt.setAttribute('font-size', 9);
+    markTxt.setAttribute('text-anchor', 'middle');
+    markTxt.setAttribute('font-family', "'Bai Jamjuree', sans-serif"); markTxt.setAttribute('font-weight', 500);
+    markTxt.textContent = '$' + fmt(CHART_MARK);
+    svg.appendChild(markTxt);
+
+    // Liquidation line + label (updated dynamically)
+    const liqLine = document.createElementNS(ns, 'line');
+    liqLine.setAttribute('x1', CHART_L); liqLine.setAttribute('x2', CHART_R);
+    liqLine.setAttribute('stroke', '#E05252'); liqLine.setAttribute('stroke-width', 0.75);
+    liqLine.id = 'liq-line';
+    svg.appendChild(liqLine);
+
+    const liqBg = document.createElementNS(ns, 'rect');
+    liqBg.setAttribute('x', 0); liqBg.setAttribute('width', 48);
+    liqBg.setAttribute('height', 17); liqBg.setAttribute('rx', 3);
+    liqBg.setAttribute('fill', 'rgba(224,82,82,0.08)');
+    liqBg.id = 'liq-bg';
+    svg.appendChild(liqBg);
+
+    const liqTxt = document.createElementNS(ns, 'text');
+    liqTxt.setAttribute('x', 24); liqTxt.setAttribute('text-anchor', 'middle');
+    liqTxt.setAttribute('fill', '#E05252');
+    liqTxt.setAttribute('font-size', 9); liqTxt.setAttribute('font-weight', 600);
+    liqTxt.setAttribute('font-family', "'Bai Jamjuree', sans-serif");
+    liqTxt.id = 'liq-txt';
+    svg.appendChild(liqTxt);
+
+    updateLiqElements();
+  }
+
+  function updateLiqElements() {
+    const y = toY(chartLiqPrice);
+    const line = document.getElementById('liq-line');
+    const bg = document.getElementById('liq-bg');
+    const txt = document.getElementById('liq-txt');
+    const zone = document.getElementById('liq-zone');
+    if (!line) return;
+
+    line.setAttribute('y1', y); line.setAttribute('y2', y);
+    bg.setAttribute('y', y - 9);
+    txt.setAttribute('y', y + 3);
+    txt.textContent = '$' + fmt(chartLiqPrice, 3);
+    zone.setAttribute('y', y);
+    zone.setAttribute('height', CHART_H - y);
+  }
+
+  function updateChartDrag() {
+    const handle = document.getElementById('chart-drag');
+    const midX = (CHART_L + CHART_R) / 2;
+    handle.style.top = (toY(chartLiqPrice)) + 'px';
+    handle.style.left = (midX / CHART_W * 100) + '%';
+
+    const distance = (CHART_MARK - chartLiqPrice) / CHART_MARK * 100;
+    const impliedLev = 1 / ((CHART_ENTRY - chartLiqPrice) / CHART_ENTRY / 0.82);
+
+    document.getElementById('stat-liq').textContent = '$' + fmt(chartLiqPrice, 3);
+
+    const distEl = document.getElementById('stat-dist');
+    distEl.textContent = fmt(distance, 1) + '%';
+    distEl.style.color = distance < 20 ? 'var(--red)' : distance < 35 ? 'var(--amber)' : 'var(--green)';
+
+    document.getElementById('stat-lev').textContent = fmt(impliedLev, 1) + 'x';
+  }
+
+  // Drag interaction
+  let dragActive = false;
+  const chartArea = document.getElementById('chart-area');
+
+  document.getElementById('chart-drag').addEventListener('mousedown', e => {
+    e.preventDefault();
+    dragActive = true;
+    chartArea.style.cursor = 'ns-resize';
+  });
+
+  document.addEventListener('mousemove', e => {
+    if (!dragActive) return;
+    const rect = chartArea.getBoundingClientRect();
+    const y = Math.max(0, Math.min(CHART_H, e.clientY - rect.top));
+    const p = toP(y);
+    if (p >= P_MIN + 0.02 && p < CHART_ENTRY - 0.03) {
+      chartLiqPrice = p;
+      updateLiqElements();
+      updateChartDrag();
+    }
+  });
+
+  document.addEventListener('mouseup', () => {
+    dragActive = false;
+    chartArea.style.cursor = 'default';
+  });
+
+  // Touch support for drag
+  document.getElementById('chart-drag').addEventListener('touchstart', e => {
+    e.preventDefault();
+    dragActive = true;
+  });
+
+  document.addEventListener('touchmove', e => {
+    if (!dragActive) return;
+    const touch = e.touches[0];
+    const rect = chartArea.getBoundingClientRect();
+    const y = Math.max(0, Math.min(CHART_H, touch.clientY - rect.top));
+    const p = toP(y);
+    if (p >= P_MIN + 0.02 && p < CHART_ENTRY - 0.03) {
+      chartLiqPrice = p;
+      updateLiqElements();
+      updateChartDrag();
+    }
+  });
+
+  document.addEventListener('touchend', () => { dragActive = false; });
+
+  // Render chart if it's the active tab on load (it's not, but just in case)
+  if (document.getElementById('tab-3').classList.contains('active')) renderChart();
+})();
+</script>
+
+</body>
+</html>
