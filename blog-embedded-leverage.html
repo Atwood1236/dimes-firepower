@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Embedded Leverage for Prediction Markets: Why the B2B Infrastructure Layer Matters | Dimes</title>
+    <meta name="description" content="Prediction markets handle over $50 billion in annual volume, yet no native leverage infrastructure exists. Dimes is building Multiply -- an embedded leverage layer any frontend can integrate. Think Stripe for prediction market leverage.">
+    <link rel="canonical" href="https://dimes.fi/blog/embedded-leverage-infrastructure">
+    <meta property="og:title" content="Embedded Leverage for Prediction Markets: Why the B2B Infrastructure Layer Matters">
+    <meta property="og:description" content="Prediction markets handle over $50B in annual volume, yet no native leverage infrastructure exists. Dimes is building Multiply -- think Stripe for prediction market leverage.">
+    <meta property="og:url" content="https://dimes.fi/blog/embedded-leverage-infrastructure">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Dimes">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Embedded Leverage for Prediction Markets: Why the B2B Infrastructure Layer Matters">
+    <meta name="twitter:description" content="Dimes is building Multiply -- think Stripe for prediction market leverage.">
+    <meta name="article:published_time" content="2026-04-14">
+    <meta name="article:author" content="Dimes">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Embedded Leverage for Prediction Markets: Why the B2B Infrastructure Layer Matters",
+        "description": "Prediction markets now handle over $50 billion in annual volume, yet no native leverage infrastructure exists for the frontends serving those traders. Dimes is building Multiply -- an embedded leverage layer that any prediction market frontend can integrate.",
+        "datePublished": "2026-04-14",
+        "dateModified": "2026-04-14",
+        "author": {
+            "@type": "Organization",
+            "name": "Dimes",
+            "url": "https://dimes.fi"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "Dimes",
+            "url": "https://dimes.fi"
+        },
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://dimes.fi/blog/embedded-leverage-infrastructure"
+        },
+        "keywords": ["prediction markets", "leverage", "B2B infrastructure", "Polymarket", "embedded finance", "Multiply", "Dimes"]
+    }
+    </script>
+    <style>
+        :root {
+            --black: #191919;
+            --yellow: #EEFF00;
+            --text: #e8e8e8;
+            --font: 'Bai Jamjuree', sans-serif;
+            --muted: #a0a0a0;
+            --border: #2a2a2a;
+            --surface: #1e1e1e;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: var(--font);
+            background: var(--black);
+            color: var(--text);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+        header {
+            padding: 20px 40px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        header a {
+            color: var(--yellow);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 18px;
+        }
+        header nav a {
+            color: var(--muted);
+            font-size: 14px;
+            margin-left: 24px;
+        }
+        header nav a:hover { color: var(--text); }
+        .container {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 60px 24px 100px;
+        }
+        .blog-meta {
+            font-size: 14px;
+            color: var(--muted);
+            margin-bottom: 12px;
+        }
+        h1 {
+            font-size: 36px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 24px;
+        }
+        .answer-capsule {
+            background: var(--surface);
+            border-left: 3px solid var(--yellow);
+            padding: 20px 24px;
+            margin-bottom: 48px;
+            border-radius: 0 8px 8px 0;
+            font-size: 16px;
+            line-height: 1.7;
+        }
+        h2 {
+            font-size: 26px;
+            font-weight: 600;
+            margin-top: 48px;
+            margin-bottom: 16px;
+        }
+        h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-top: 32px;
+            margin-bottom: 12px;
+        }
+        p { margin-bottom: 16px; }
+        a { color: var(--yellow); }
+        ul, ol { margin-bottom: 16px; padding-left: 24px; }
+        li { margin-bottom: 8px; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            font-size: 14px;
+        }
+        th {
+            text-align: left;
+            padding: 12px 16px;
+            background: var(--surface);
+            color: var(--yellow);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border);
+        }
+        td {
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        .code-block {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 24px 0;
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-x: auto;
+            color: var(--muted);
+        }
+        .divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 48px 0;
+        }
+        .key-takeaways {
+            background: var(--surface);
+            border-radius: 8px;
+            padding: 32px;
+            margin-top: 48px;
+        }
+        .key-takeaways h3 {
+            margin-top: 0;
+            color: var(--yellow);
+        }
+        .key-takeaways li { color: var(--text); }
+        .disclaimer {
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 48px;
+            font-style: italic;
+        }
+        strong { color: var(--text); font-weight: 600; }
+        @media (max-width: 640px) {
+            header { padding: 16px 20px; }
+            .container { padding: 40px 16px 60px; }
+            h1 { font-size: 28px; }
+            h2 { font-size: 22px; }
+            table { font-size: 12px; }
+            th, td { padding: 8px 10px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="https://dimes.fi">dimes.fi</a>
+        <nav>
+            <a href="/multiply">About</a>
+            <a href="/faq">FAQ</a>
+            <a href="/compare">Compare</a>
+            <a href="https://docs.dimes.fi">Docs</a>
+        </nav>
+    </header>
+    <main class="container">
+        <p class="blog-meta">By the Dimes team | April 2026</p>
+        <h1>Embedded Leverage for Prediction Markets: Why the B2B Infrastructure Layer Matters</h1>
+
+        <div class="answer-capsule">
+            Prediction markets now handle over $50 billion in annual volume, yet no native leverage infrastructure exists for the frontends serving those traders. Dimes is building Multiply -- an embedded leverage layer that any prediction market frontend can integrate in days, handling all credit, hedging, and risk management so frontends can focus on user experience. Think Stripe for prediction market leverage.
+        </div>
+
+        <h2>The Prediction Market Explosion Is Real -- and Underleveraged</h2>
+        <p>The numbers are no longer speculative. In 2025, prediction markets crossed $50 billion in total trading volume. Monthly volumes that hovered around $1.2 billion in mid-2025 surged past $8 billion by early 2026. Monthly active wallets nearly tripled in six months, reaching 840,000 by February 2026.</p>
+        <p>These are not toy markets anymore. They are financial instruments with institutional-grade volume, real price discovery, and increasingly sophisticated participants.</p>
+        <p>But there is a critical gap: <strong>leverage infrastructure is virtually nonexistent.</strong></p>
+        <p>In traditional finance, leverage is table stakes. Every mature asset class offers leveraged exposure as a baseline capability. Prediction markets in 2026 are where equity markets were before margin accounts existed. The volume is there. The demand is there. The plumbing is not.</p>
+
+        <h2>Why Leverage on Prediction Markets Is Hard</h2>
+
+        <h3>The Terminal Asset Problem</h3>
+        <p>Unlike equities or perpetual futures, prediction market positions are <strong>terminal assets</strong>. They resolve to 0 or 1 at a specific moment. A stock can be gradually liquidated as it declines. A prediction market position can collapse to zero in a single resolution event with no liquidation window.</p>
+        <p>This creates <strong>jump-to-settlement risk</strong>: the probability that an event resolves against a leveraged position before any intervention is possible.</p>
+
+        <h3>The Fee Paradox</h3>
+        <p>If a financier tries to charge a single upfront fee that covers the total risk of a leveraged prediction market position, that fee often offsets the entire benefit of leverage. The breakthrough insight is to decompose risk into <strong>epochs</strong> -- pricing short-term risk rather than full-duration risk.</p>
+        <div class="code-block">
+Fee = L(Jump Risk + Creep Risk) + Funding Cost
+        </div>
+        <p>This is structurally identical to how perpetual futures funding rates work: continuous repricing of short-term risk rather than one-shot long-term estimates.</p>
+
+        <h3>The Operational Complexity</h3>
+        <p>Even with the math solved, execution is demanding. A leverage provider must simultaneously hedge dynamically on the underlying venue, net inventory across thousands of concurrent positions, manage slippage-bounded exposure sizing, model jump risk in real time, handle settlement flows, and provision credit across diverse market types. This is not a feature you bolt onto a frontend over a weekend.</p>
+
+        <hr class="divider">
+
+        <h2>The Fragmentation Problem: Why Consumer-Facing Leverage Terminals Are Insufficient</h2>
+        <p>Despite the difficulty, multiple teams have attempted to solve prediction market leverage. The approaches fall into three categories:</p>
+        <table>
+            <thead><tr><th>Approach</th><th>How It Works</th><th>Limitations</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Perps on PM outcomes</strong></td><td>Synthetic perpetual futures tracking PM prices</td><td>Separate liquidity pool, basis risk, limited coverage</td></tr>
+                <tr><td><strong>Consumer leverage terminals</strong></td><td>Standalone apps offering leveraged PM trading</td><td>Must build everything: UX, user acquisition, risk engine, liquidity</td></tr>
+                <tr><td><strong>Embedded infrastructure</strong></td><td>B2B layer that any frontend integrates</td><td>Requires trust in third-party risk management</td></tr>
+            </tbody>
+        </table>
+        <p>Consumer-facing leverage terminals face <strong>redundant infrastructure build</strong>. Every team independently solves the same problems: credit provisioning, risk modeling, delta-neutral hedging, settlement, and compliance. Only user acquisition is the differentiator -- yet every consumer app rebuilds the entire stack from scratch.</p>
+
+        <hr class="divider">
+
+        <h2>The Stripe Analogy: Infrastructure Layers Win</h2>
+        <p>The most instructive parallel is payments. In 2009, accepting credit card payments online meant building your own payment processing stack. Stripe abstracted the entire payment stack into an API that any developer could integrate in an afternoon.</p>
+        <p>Prediction market leverage is at the same inflection point. Every frontend that wants to offer leveraged trading is rebuilding the same risk engine, the same hedging logic, the same capital stack. The frontends that will win are not the ones with the best risk models -- they are the ones with the best user experiences.</p>
+        <p><strong>The leverage infrastructure should be invisible.</strong></p>
+
+        <hr class="divider">
+
+        <h2>How Multiply Works: The Embedded Leverage Layer</h2>
+        <p>Multiply is a middle-layer protocol that sits between prediction market frontends and the underlying venues. It does one thing: extend credit on top of prediction market positions while managing all liquidity, hedging, and risk.</p>
+
+        <div class="code-block">
+[User] --> [Frontend App] --> [Multiply API] --> [Polymarket CLOB]
+                                    |
+                              [Risk Engine]
+                                    |
+                          [Underwriting Facility]
+                          ($100M+/mo capacity)
+        </div>
+
+        <p>Multiply explicitly does not create its own markets, host an orderbook, compete with prediction market venues, or pursue direct user acquisition.</p>
+
+        <h3>What Multiply Handles</h3>
+        <ul>
+            <li><strong>Credit provisioning.</strong> Up to 10x leveraged exposure on Polymarket positions, backed by an institutionally-sourced underwriting facility with $100M+ monthly capacity.</li>
+            <li><strong>Delta-neutral hedging.</strong> Every leveraged position is hedged on the underlying venue in real time with slippage-bounded sizing.</li>
+            <li><strong>Jump-risk management.</strong> Continuous modeling of adverse resolution probability across all active positions.</li>
+            <li><strong>Inventory netting.</strong> Opposing exposures across thousands of positions are netted to minimize capital requirements.</li>
+            <li><strong>Settlement operations.</strong> Full settlement flow when markets resolve: closing hedges, reconciling P&L, distributing proceeds.</li>
+        </ul>
+
+        <h3>The Integration Experience</h3>
+        <p>For a frontend developer, integrating Multiply is designed to feel like integrating Stripe:</p>
+        <ol>
+            <li>Get API credentials from Dimes</li>
+            <li>Configure risk parameters (max leverage, eligible markets, position limits)</li>
+            <li>Embed the SDK in your frontend</li>
+            <li>Route leverage requests through Multiply's API</li>
+            <li>Display positions and P&L using Multiply's data feeds</li>
+        </ol>
+        <p>The frontend retains full control over the user experience. Multiply is invisible to the end user.</p>
+
+        <hr class="divider">
+
+        <h2>Why B2B Infrastructure Wins</h2>
+        <p><strong>Capital efficiency at scale.</strong> A single underwriting facility serving multiple frontends achieves dramatically better capital utilization than fragmented pools. Inventory netting across diverse frontends and user bases reduces net exposure.</p>
+        <p><strong>Risk model improvement.</strong> Every position processed improves the risk engine. Jump-risk models trained on thousands of market resolutions become progressively more accurate.</p>
+        <p><strong>Regulatory scalability.</strong> One compliance framework serving every frontend in the ecosystem. Each additional integration adds marginal revenue with near-zero marginal compliance cost.</p>
+        <p><strong>Frontend innovation unleashed.</strong> When leverage infrastructure is abstracted away, frontend teams can focus exclusively on what differentiates them: user experience, market coverage, social features, analytics, and community building.</p>
+
+        <hr class="divider">
+
+        <h2>The Market Opportunity</h2>
+        <ul>
+            <li>$50B+ annual prediction market volume in 2025, growing at 10x year-over-year</li>
+            <li>Less than 1% of volume currently has access to leverage</li>
+            <li>Traditional finance leverage penetration: 40-60% of volume</li>
+            <li>Conservative estimate: 10-20% leverage penetration within 3 years = $10-20B+ in leveraged volume annually</li>
+        </ul>
+        <p>The prediction market ecosystem does not need more frontends. It needs the infrastructure that makes every existing frontend more powerful.</p>
+
+        <div class="key-takeaways">
+            <h3>Key Takeaways</h3>
+            <ul>
+                <li>Prediction markets exceeded $50B in annual volume in 2025 but lack native leverage infrastructure</li>
+                <li>Leverage on prediction markets is technically difficult due to jump-to-settlement risk and the terminal nature of binary outcomes</li>
+                <li>Consumer-facing leverage terminals redundantly rebuild the same infrastructure; the real unlock is an embedded B2B layer</li>
+                <li>Multiply by Dimes provides up to 10x leverage, delta-neutral hedging, and $100M+/mo underwriting capacity as an API any frontend can integrate</li>
+                <li>This follows the proven Stripe model: abstract hard infrastructure so application developers can focus on user experience</li>
+            </ul>
+        </div>
+
+        <p class="disclaimer">Dimes builds Multiply, the embedded leverage layer for prediction markets. Learn more at <a href="https://dimes.fi">dimes.fi</a> or read the technical documentation at <a href="https://docs.dimes.fi">docs.dimes.fi</a>.</p>
+    </main>
+</body>
+</html>
