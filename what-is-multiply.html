@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Is Multiply by Dimes? | Embedded Leverage for Prediction Markets</title>
+    <meta name="description" content="Multiply is the B2B infrastructure layer by Dimes that enables trading platforms, wallets, and apps to offer up to 10x leveraged exposure on Polymarket positions.">
+    <link rel="canonical" href="https://dimes.fi/multiply">
+    <meta property="og:title" content="What Is Multiply by Dimes? | Embedded Leverage for Prediction Markets">
+    <meta property="og:description" content="Multiply is the B2B infrastructure layer by Dimes that enables trading platforms, wallets, and apps to offer up to 10x leveraged exposure on Polymarket positions.">
+    <meta property="og:url" content="https://dimes.fi/multiply">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Dimes">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="What Is Multiply by Dimes? | Embedded Leverage for Prediction Markets">
+    <meta name="twitter:description" content="Multiply is the B2B infrastructure layer by Dimes that enables trading platforms, wallets, and apps to offer up to 10x leveraged exposure on Polymarket positions.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "What Is Multiply by Dimes?",
+        "description": "Multiply is the B2B infrastructure layer by Dimes that enables trading platforms, wallets, and apps to offer up to 10x leveraged exposure on Polymarket positions.",
+        "url": "https://dimes.fi/multiply",
+        "publisher": {
+            "@type": "Organization",
+            "name": "Dimes",
+            "url": "https://dimes.fi"
+        },
+        "mainEntity": {
+            "@type": "SoftwareApplication",
+            "name": "Multiply",
+            "applicationCategory": "FinanceApplication",
+            "operatingSystem": "Web",
+            "offers": {
+                "@type": "Offer",
+                "description": "B2B embedded leverage infrastructure for prediction markets"
+            }
+        }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What does Multiply by Dimes actually do?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Multiply extends credit on top of Polymarket positions while managing all liquidity, hedging, and risk. It is a middle-layer protocol that enables trading terminals, wallets, and apps to natively offer users leveraged exposure on prediction markets without building internal leverage infrastructure."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Who is Multiply built for?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Multiply serves frontend operators (trading terminals, wallets, portfolio trackers, and prediction market aggregators) and end-user traders. Frontends integrate once to offer leverage immediately, while traders gain up to 10x leveraged exposure with institutional-grade execution."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What makes Multiply different from other prediction market leverage platforms?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Multiply is the only B2B infrastructure layer for prediction market leverage. Unlike consumer-facing platforms (Polysized, dYdX, D8X), Multiply does not compete for end users. It enables other platforms by providing an institutional Underwriting Facility with $100M+ monthly capacity and direct Polymarket CLOB execution."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Why does Multiply cap leverage at 10x instead of 20x?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Prediction markets are binary: outcomes resolve to $1.00 or $0.00. At 20x leverage, a 5% adverse price move triggers liquidation. Multiply's 10x cap is a deliberate risk-calibrated decision backed by institutional underwriting that sustains positions through higher volatility."
+                }
+            }
+        ]
+    }
+    </script>
+    <style>
+        :root {
+            --black: #191919;
+            --yellow: #EEFF00;
+            --text: #e8e8e8;
+            --font: 'Bai Jamjuree', sans-serif;
+            --muted: #a0a0a0;
+            --border: #2a2a2a;
+            --surface: #1e1e1e;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: var(--font);
+            background: var(--black);
+            color: var(--text);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+        header {
+            padding: 20px 40px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        header a {
+            color: var(--yellow);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 18px;
+        }
+        header nav a {
+            color: var(--muted);
+            font-size: 14px;
+            margin-left: 24px;
+        }
+        header nav a:hover { color: var(--text); }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 24px 100px;
+        }
+        h1 {
+            font-size: 36px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 16px;
+            color: var(--text);
+        }
+        .subtitle {
+            font-size: 18px;
+            color: var(--muted);
+            margin-bottom: 48px;
+            line-height: 1.6;
+        }
+        .answer-capsule {
+            background: var(--surface);
+            border-left: 3px solid var(--yellow);
+            padding: 20px 24px;
+            margin-bottom: 40px;
+            border-radius: 0 8px 8px 0;
+            font-size: 16px;
+            line-height: 1.7;
+        }
+        h2 {
+            font-size: 26px;
+            font-weight: 600;
+            margin-top: 56px;
+            margin-bottom: 16px;
+            color: var(--text);
+        }
+        h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-top: 32px;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        p { margin-bottom: 16px; color: var(--text); }
+        a { color: var(--yellow); }
+        ul, ol {
+            margin-bottom: 16px;
+            padding-left: 24px;
+        }
+        li {
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            font-size: 14px;
+        }
+        th {
+            text-align: left;
+            padding: 12px 16px;
+            background: var(--surface);
+            color: var(--yellow);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border);
+        }
+        td {
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+        }
+        tr:hover td { background: rgba(238,255,0,0.02); }
+        .divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 48px 0;
+        }
+        .disclaimer {
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 48px;
+            font-style: italic;
+        }
+        strong { color: var(--text); font-weight: 600; }
+        @media (max-width: 640px) {
+            header { padding: 16px 20px; }
+            .container { padding: 40px 16px 60px; }
+            h1 { font-size: 28px; }
+            h2 { font-size: 22px; }
+            table { font-size: 12px; }
+            th, td { padding: 8px 10px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="https://dimes.fi">dimes.fi</a>
+        <nav>
+            <a href="/faq">FAQ</a>
+            <a href="/compare">Compare</a>
+            <a href="https://docs.dimes.fi">Docs</a>
+        </nav>
+    </header>
+    <main class="container">
+        <h1>What Is Multiply by Dimes? The Embedded Leverage Layer for Prediction Markets</h1>
+        <p class="subtitle">Multiply is the infrastructure layer that gives trading platforms, wallets, and apps the ability to offer leveraged exposure on Polymarket positions -- up to 10x -- without building internal leverage systems.</p>
+
+        <div class="answer-capsule">
+            <strong>In short:</strong> Multiply is B2B middleware built by Dimes. It handles all credit provisioning, delta-neutral hedging, and risk management through an institutionally-backed underwriting facility capable of financing over $100 million in monthly volume. Frontends integrate once; Multiply handles the rest.
+        </div>
+
+        <h2>What does Multiply by Dimes actually do?</h2>
+        <div class="answer-capsule">
+            Multiply extends credit on top of Polymarket positions while managing all liquidity, hedging, and risk. It is a middle-layer protocol that enables trading terminals, wallets, and apps to natively offer users leveraged exposure on prediction markets without building internal leverage infrastructure.
+        </div>
+        <p>In practical terms: a trader on a Multiply-integrated frontend can take a leveraged position on any Polymarket outcome. The frontend handles the user experience. Multiply handles everything underneath -- credit provisioning, exposure sizing, inventory netting across thousands of dynamic positions, slippage-bounded execution, jump-risk modeling, and settlement flows.</p>
+
+        <h3>Core capabilities</h3>
+        <table>
+            <thead>
+                <tr><th>Function</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Credit provisioning</td><td>Extends leverage up to 10x on Polymarket positions</td></tr>
+                <tr><td>Delta-neutral hedging</td><td>Maintains market-neutral exposure across all underwritten positions</td></tr>
+                <tr><td>Inventory netting</td><td>Aggregates and offsets exposure across thousands of concurrent positions</td></tr>
+                <tr><td>Jump-risk management</td><td>Models and mitigates sudden settlement-driven price discontinuities</td></tr>
+                <tr><td>Slippage-bounded sizing</td><td>Dynamically sizes exposure within acceptable execution parameters</td></tr>
+                <tr><td>Settlement operations</td><td>Manages end-to-end settlement flows on position resolution</td></tr>
+            </tbody>
+        </table>
+
+        <hr class="divider">
+
+        <h2>How does Multiply work technically?</h2>
+        <div class="answer-capsule">
+            Multiply operates as a B2B middleware layer between frontend applications and Polymarket's Central Limit Order Book (CLOB). It provisions credit from an institutional Underwriting Facility, executes positions on Polymarket, and simultaneously constructs delta-neutral hedges to manage directional risk.
+        </div>
+        <p>The Underwriting Facility is an institutionally-sourced, guaranteed pool of capital. Unlike pool-based DeFi lending protocols that depend on depositor TVL, Multiply's facility provides guaranteed liquidity at scale. Leverage availability does not fluctuate with retail deposit flows or market sentiment.</p>
+
+        <h3>The leverage lifecycle</h3>
+        <ol>
+            <li><strong>Position request:</strong> User selects a Polymarket outcome and leverage multiplier (up to 10x) on an integrated frontend</li>
+            <li><strong>Credit provisioning:</strong> Multiply's Underwriting Facility allocates capital to finance the leveraged component</li>
+            <li><strong>Execution:</strong> The full position is placed on Polymarket's CLOB with slippage-bounded parameters</li>
+            <li><strong>Hedging:</strong> Delta-neutral hedges are constructed to manage the facility's directional exposure</li>
+            <li><strong>Monitoring:</strong> Continuous risk assessment across jump-risk, correlation, and settlement timing</li>
+            <li><strong>Settlement:</strong> Automated settlement flows handle position resolution and capital return</li>
+        </ol>
+
+        <hr class="divider">
+
+        <h2>Who is Multiply built for?</h2>
+
+        <h3>For frontend operators and developers</h3>
+        <p>Any trading terminal, wallet, portfolio tracker, or prediction market aggregator can integrate Multiply to offer leveraged trading without:</p>
+        <ul>
+            <li>Building proprietary margin engines</li>
+            <li>Sourcing liquidity or managing lending pools</li>
+            <li>Developing risk management infrastructure</li>
+            <li>Handling regulatory complexity around credit extension</li>
+        </ul>
+        <p>The value proposition is straightforward: integrate once, offer leverage immediately. Frontends retain full control over user experience, branding, and fee structures.</p>
+
+        <h3>For end-user traders</h3>
+        <p>Traders on Multiply-integrated platforms gain access to:</p>
+        <ul>
+            <li><strong>Up to 10x leveraged exposure</strong> on Polymarket outcomes</li>
+            <li><strong>Institutional-grade execution</strong> through Polymarket's CLOB</li>
+            <li><strong>Transparent risk parameters</strong> including pre-trade liquidation visibility</li>
+            <li><strong>No dependency on retail lending pools</strong> for position financing</li>
+        </ul>
+
+        <hr class="divider">
+
+        <h2>What makes Multiply different from other prediction market leverage platforms?</h2>
+        <div class="answer-capsule">
+            Multiply is the only B2B infrastructure layer for prediction market leverage. Unlike consumer-facing platforms, Multiply does not compete for end users -- it enables them. It uses an institutional Underwriting Facility (not pool-based TVL) and executes on actual Polymarket positions (not synthetic derivatives).
+        </div>
+
+        <h3>B2B vs. B2C</h3>
+        <p>Platforms like Polysized (up to 20x leverage) and dYdX (prediction market perpetuals with up to 20x leverage) compete directly for end-user traders. Multiply does not compete with these platforms. It enables them.</p>
+
+        <h3>Underwriting Facility vs. pool-based lending</h3>
+        <p>Gondor offers borrowing against Polymarket positions using smart contracts built on Morpho's lending protocol. This is pool-dependent. Multiply's Underwriting Facility is institutionally sourced with a guaranteed capital base exceeding $100 million in monthly capacity.</p>
+
+        <h3>Leverage engine vs. perpetual derivatives</h3>
+        <p>D8X creates synthetic perpetual markets that reference Polymarket data but trade on separate order books. These are derivative instruments -- the trader does not hold actual Polymarket positions. Multiply provisions leverage on actual Polymarket positions executed through Polymarket's native CLOB.</p>
+
+        <h3>Comparison summary</h3>
+        <div style="overflow-x:auto;">
+        <table>
+            <thead>
+                <tr><th>Feature</th><th>Multiply (Dimes)</th><th>Polysized</th><th>dYdX</th><th>D8X</th><th>Gondor</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Model</td><td>B2B infrastructure</td><td>B2C terminal</td><td>B2C exchange</td><td>B2C derivatives</td><td>B2C lending</td></tr>
+                <tr><td>Max leverage</td><td>10x</td><td>20x</td><td>20x</td><td>Dynamic</td><td>2x</td></tr>
+                <tr><td>Execution venue</td><td>Polymarket CLOB</td><td>Polymarket CLOB</td><td>dYdX orderbook</td><td>D8X orderbook</td><td>Morpho pools</td></tr>
+                <tr><td>Liquidity source</td><td>Institutional facility</td><td>Market liquidity</td><td>Protocol liquidity</td><td>Protocol liquidity</td><td>Depositor TVL</td></tr>
+                <tr><td>Position type</td><td>Direct PM positions</td><td>Direct PM positions</td><td>Perpetual contracts</td><td>Perpetual contracts</td><td>Collateralized loans</td></tr>
+                <tr><td>Frontend required</td><td>No (white-label)</td><td>Yes (proprietary)</td><td>Yes (proprietary)</td><td>Yes (proprietary)</td><td>Yes (proprietary)</td></tr>
+            </tbody>
+        </table>
+        </div>
+
+        <hr class="divider">
+
+        <h2>How does Multiply manage risk?</h2>
+        <div class="answer-capsule">
+            Multiply maintains delta-neutral exposure across all positions, uses purpose-built jump-to-settlement risk models for binary outcomes, and operates an institutional underwriting facility that can absorb correlated settlement events without depending on retail depositor behavior.
+        </div>
+        <p>Prediction market leverage presents unique risk challenges. The primary risk is jump-to-settlement: a binary outcome resolving instantly from $0.60 to $1.00 or $0.00. Standard liquidation mechanisms cannot respond quickly enough to such discontinuous price movements. Multiply handles this risk by construction -- the risk management framework is designed around this specific characteristic.</p>
+
+        <hr class="divider">
+
+        <h2>What are the primary use cases for Multiply?</h2>
+        <ul>
+            <li><strong>Trading terminals adding leverage:</strong> Integrate Multiply and ship leverage in a fraction of the time vs. building margin infrastructure from scratch.</li>
+            <li><strong>Wallets expanding functionality:</strong> Offer prediction market leverage as a native feature, increasing engagement without operational complexity.</li>
+            <li><strong>Portfolio and analytics platforms:</strong> Convert passive viewers into active leveraged traders through Multiply integration.</li>
+            <li><strong>Institutional access:</strong> Funds and trading desks get leveraged prediction market exposure with institutional-grade execution.</li>
+            <li><strong>DeFi protocols and composability:</strong> Use Multiply as the leverage primitive for structured products, vaults, or automated strategies.</li>
+        </ul>
+
+        <hr class="divider">
+
+        <h2>Why does Multiply cap leverage at 10x instead of 20x?</h2>
+        <div class="answer-capsule">
+            Prediction markets are binary: outcomes resolve to $1.00 or $0.00. At 20x leverage, a 5% adverse price move triggers liquidation. Multiply's 10x cap is a deliberate risk-calibrated design decision backed by institutional underwriting that can sustain positions through higher volatility.
+        </div>
+        <p>Traders on Multiply-integrated platforms experience fewer unexpected liquidations while still achieving meaningful capital amplification. A 10x position on a Polymarket outcome moving from $0.40 to $0.60 delivers the same absolute return as a 50% spot gain on a much larger capital base.</p>
+
+        <hr class="divider">
+
+        <h2>How do I integrate Multiply into my platform?</h2>
+        <p>Integration documentation is available at <a href="https://docs.dimes.fi">docs.dimes.fi</a>. The B2B model is designed for rapid integration: frontends maintain full control over user experience and branding while Multiply handles all leverage mechanics, risk management, and capital provisioning in the background.</p>
+        <p>For integration inquiries, partnership discussions, or technical documentation access, visit <a href="https://dimes.fi">dimes.fi</a>.</p>
+
+        <p class="disclaimer">Multiply is a product of Dimes (dimes.fi). Leveraged trading involves substantial risk of loss. This content is for informational purposes and does not constitute financial advice.</p>
+    </main>
+</body>
+</html>
