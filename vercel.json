@@ -9,6 +9,11 @@
   ],
   "rewrites": [
     { "source": "/", "destination": "/dimes-v13.html" },
-    { "source": "/terms-policy", "destination": "/terms-policy.html" }
+    { "source": "/terms-policy", "destination": "/terms-policy.html" },
+    { "source": "/multiply", "destination": "/what-is-multiply.html" },
+    { "source": "/faq", "destination": "/faq.html" },
+    { "source": "/compare", "destination": "/compare.html" },
+    { "source": "/blog/embedded-leverage-infrastructure", "destination": "/blog-embedded-leverage.html" },
+    { "source": "/blog/prediction-market-leverage-landscape", "destination": "/blog-leverage-landscape.html" }
   ]
 }
